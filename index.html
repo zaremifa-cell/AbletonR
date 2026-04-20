@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ableton — Instruments for music makers</title>
+<meta name="description" content="Live, Push, Move and Note — four instruments built around one idea: music as a grid, not a timeline.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Ableton — Braun / dasprogramm redesign
+   Paper-ink palette. Grotesque + mono. Hairlines only.
+   Single functional accent. No rounded corners anywhere.
+   ============================================================ */
+
+:root{
+  /* Palette */
+  --paper:        #70756D;   /* Ableton Live graphite */
+  --paper-deep:   #62675F;   /* darker graphite for strips */
+  --ink:          #F3F2EA;   /* warm off-white */
+  --ink-2:        #E1DFD5;
+  --mute:         #C7C9C0;   /* soft metadata grey */
+  --mute-2:       #AEB1A8;
+  --line:         rgba(243,242,234,0.22);
+  --line-strong:  rgba(243,242,234,0.7);
+  --accent:       #D84315;   /* Braun functional orange — used rarely */
+
+  /* Product signatures — drawn from the images themselves */
+  --live:   #F59E0B;
+  --push:   #4ADE80;
+  --move:   #D946EF;
+  --note:   #14B8A6;
+
+  /* Scale (base-8) */
+  --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px;
+  --s5: 48px; --s6: 64px; --s7: 96px; --s8: 144px;
+
+  --max: 1680px;
+  --pad: 40px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth; -webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-size:15px;
+  line-height:1.5;
+  font-feature-settings:"ss01","kern","liga";
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+img,svg{display:block;max-width:100%}
+::selection{background:var(--ink);color:var(--paper)}
+
+.mono{font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:0}
+.upper{text-transform:uppercase;letter-spacing:0}
+.tiny{font-size:11px}
+.small{font-size:12px}
+.muted{color:var(--mute)}
+
+.container{max-width:var(--max);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
+
+/* ============================================================
+   01 — PROMO BAR (Rent-to-Own)
+   ============================================================ */
+.promo{
+  background:var(--ink);
+  color:var(--paper);
+  text-align:center;
+  padding:7px var(--pad);
+  position:relative;
+}
+.promo-inner{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-size:12px;
+  letter-spacing:0;
+}
+.promo-dot{
+  width:5px;height:5px;background:var(--live);display:inline-block;
+  animation:breathe 2.4s ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:.35}}
+.promo a{
+  text-decoration:none;
+  border-bottom:1px solid rgba(243,242,234,0.35);
+  padding-bottom:1px;
+  transition:border-color .2s;
+}
+.promo a:hover{border-color:var(--paper)}
+.promo .arr{display:inline-block;transition:transform .2s}
+.promo a:hover .arr{transform:translateX(3px)}
+
+/* ============================================================
+   02 — NAVIGATION
+   ============================================================ */
+.nav{
+  background:var(--paper);
+  border-bottom:1px solid var(--line-strong);
+  position:sticky;top:0;z-index:60;
+}
+.nav-inner{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:43px;
+  padding:8px var(--pad);
+  max-width:var(--max);
+  margin:0 auto;
+}
+.logo{
+  display:inline-flex;
+  align-items:center;
+  line-height:1;
+}
+.logo-mark{
+  display:block;
+  flex-shrink:0;
+}
+.nav-main{
+  display:flex;
+  gap:var(--s4);
+  justify-content:center;
+}
+.nav-main a{
+  font-size:13px;
+  font-weight:400;
+  padding:6px 0;
+  position:relative;
+  color:var(--ink);
+}
+.nav-main a::after{
+  content:"";
+  position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:var(--ink);transform:scaleX(0);transform-origin:left;
+  transition:transform .25s cubic-bezier(.2,.8,.2,1);
+}
+.nav-main a:hover::after{transform:scaleX(1)}
+.nav-end{
+  display:flex;align-items:center;gap:var(--s3);
+}
+.nav-end .login{
+  font-size:10px;
+  letter-spacing:0;
+  text-transform:uppercase;
+  color:var(--mute);
+}
+.nav-end .login:hover{color:var(--ink)}
+.nav-end .btn{
+  padding:11px 22px;
+  font-size:11px;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--ink);color:var(--paper);
+  padding:12px 18px;
+  font-size:12px;
+  font-weight:400;
+  letter-spacing:0;
+  text-transform:uppercase;
+  transition:background .2s;
+}
+.btn:hover{background:var(--accent)}
+.btn .arr{transition:transform .2s}
+.btn:hover .arr{transform:translateX(3px)}
+
+/* ============================================================
+   03 — MICRO-HERO
+   ============================================================ */
+.hero{
+  padding:0 var(--pad);
+  border-bottom:1px solid var(--line-strong);
+}
+.hero-layout{
+  max-width:var(--max);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:minmax(260px, 33.333%) 1px minmax(0, 1fr);
+  height:calc(100svh - 150px);
+  min-height:0;
+}
+.hero-copy{
+  min-height:0;
+  padding:var(--s3) var(--s3) var(--s3) 0;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.hero-divider{
+  background:var(--line-strong);
+  min-height:100%;
+}
+.hero-label{
+  display:flex;flex-direction:column;gap:8px;
+  font-size:11px;letter-spacing:0;text-transform:uppercase;
+  color:var(--mute);
+}
+.hero-label::before{
+  content:"";
+  width:32px;height:1px;background:var(--ink);
+  margin-bottom:14px;
+}
+h1.hero-title{
+  font-size:clamp(38px, 5.2vw, 82px);
+  font-weight:400;
+  letter-spacing:0;
+  line-height:0.94;
+  max-width:14ch;
+}
+h1.hero-title .stop{display:block}
+.hero-sub{
+  max-width:30ch;
+  font-size:14px;
+  line-height:1.42;
+  color:var(--ink-2);
+  text-align:left;
+}
+.hero-sub em{
+  font-style:normal;
+  color:var(--ink);
+  font-weight:400;
+  border-bottom:1px solid var(--accent);
+  padding-bottom:1px;
+}
+
+/* ============================================================
+   04 — FOUR WINDOWS (Live / Push / Move / Note)
+   ============================================================ */
+.quartet{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;
+}
+.hero .quartet{
+  height:100%;
+  min-height:0;
+}
+.window{
+  position:relative;
+  background:var(--paper);
+  aspect-ratio:auto;
+  min-height:0;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  padding:18px;
+  transition:background .6s cubic-bezier(.2,.8,.2,1);
+  cursor:pointer;
+}
+/* hairline dividers on a 2x2 — no borders per card */
+.window:nth-child(1){border-right:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong)}
+.window:nth-child(2){border-bottom:1px solid var(--line-strong)}
+.window:nth-child(3){border-right:1px solid var(--line-strong)}
+
+/* Accent bar on top — invisible by default, reveals on hover */
+.window::before{
+  content:"";
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--window-color, var(--accent));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .6s cubic-bezier(.2,.8,.2,1);
+  z-index:4;
+}
+.window:hover::before,.window:focus-within::before{transform:scaleX(1)}
+
+.window-label{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;letter-spacing:0;text-transform:uppercase;
+  color:var(--mute);
+  z-index:3;position:relative;
+}
+.window-label .type-of{display:flex;align-items:center;gap:10px}
+.window-label .cat{color:var(--ink)}
+.window-label .status{
+  display:inline-flex;align-items:center;gap:6px;
+}
+.window-label .status::before{
+  content:"";width:5px;height:5px;
+  background:var(--window-color,var(--accent));
+  display:inline-block;
+}
+
+.window-image{
+  flex:1;
+  display:flex;align-items:center;justify-content:center;
+  padding:var(--s2);
+  position:relative;
+  z-index:2;
+}
+.window-image img{
+  max-height:100%;max-width:100%;
+  width:auto;height:auto;
+  object-fit:contain;
+  filter:grayscale(100%) contrast(1.04) brightness(0.98);
+  opacity:.5;
+  transition:filter .8s cubic-bezier(.2,.8,.2,1), opacity .8s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1);
+  will-change:filter,opacity,transform;
+}
+.window:hover .window-image img,
+.window:focus-within .window-image img{
+  filter:grayscale(0%) contrast(1) brightness(1);
+  opacity:1;
+  transform:scale(1.015);
+}
+
+.window-foot{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:var(--s3);
+  align-items:end;
+  z-index:3;position:relative;
+}
+.window-name{
+  font-size:clamp(22px, 2.1vw, 34px);
+  font-weight:400;
+  letter-spacing:0;
+  line-height:0.95;
+  display:flex;flex-direction:column;
+}
+.window-name .ver{
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-size:11px;
+  font-weight:400;
+  color:var(--mute);
+  letter-spacing:0;
+  margin-top:10px;
+}
+.window-desc{
+  max-width:32ch;
+  font-size:13px;
+  line-height:1.45;
+  color:var(--ink-2);
+  opacity:0;transform:translateY(6px);
+  transition:opacity .5s ease .1s, transform .5s cubic-bezier(.2,.8,.2,1) .1s;
+}
+.window:hover .window-desc,
+.window:focus-within .window-desc{opacity:1;transform:translateY(0)}
+
+.window-go{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-size:11px;letter-spacing:0;text-transform:uppercase;
+  margin-top:var(--s2);
+  color:var(--ink);
+  opacity:0;transform:translateY(6px);
+  transition:opacity .5s ease .18s, transform .5s cubic-bezier(.2,.8,.2,1) .18s;
+}
+.window:hover .window-go,
+.window:focus-within .window-go{opacity:1;transform:translateY(0)}
+.window-go .arr{display:inline-block;transition:transform .3s}
+.window:hover .window-go .arr{transform:translateX(4px)}
+
+/* Per-product accent variables */
+.window.live{--window-color:var(--live)}
+.window.push{--window-color:var(--push)}
+.window.move{--window-color:var(--move)}
+.window.note{--window-color:var(--note)}
+
+/* ============================================================
+   05 — SESSION VIEW DEEP DIVE (philosophical centerpiece)
+   ============================================================ */
+.session{
+  padding:var(--s8) var(--pad) var(--s7);
+  border-bottom:1px solid var(--line-strong);
+}
+.session-head{
+  max-width:var(--max);margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:var(--s5);align-items:end;
+  padding-bottom:var(--s6);
+}
+.session-head .kicker{
+  font-size:11px;letter-spacing:0;text-transform:uppercase;
+  color:var(--mute);
+}
+.session-head .kicker::before{
+  content:"";
+  display:inline-block;width:40px;height:1px;background:var(--ink);
+  vertical-align:middle;margin-right:16px;
+}
+.session-head h2{
+  font-size:clamp(40px, 5vw, 84px);
+  font-weight:400;
+  letter-spacing:0;
+  line-height:0.98;
+  max-width:14ch;
+}
+.session-head p{
+  font-size:16px;
+  line-height:1.55;
+  color:var(--ink-2);
+  max-width:48ch;
+  justify-self:end;
+  padding-bottom:8px;
+}
+
+.session-body{
+  max-width:var(--max);margin:0 auto;
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  gap:var(--s5);
+  align-items:stretch;
+}
+.session-visual{
+  background:var(--paper-deep);
+  aspect-ratio: 16/10;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  padding:var(--s5);
+}
+/* Diagram — timeline vs grid, drawn in SVG for crisp lines */
+.session-diagram{width:100%;max-width:620px}
+.session-diagram text{
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-size:10px;
+  fill:var(--mute);
+  letter-spacing:0;
+  text-transform:uppercase;
+}
+.session-diagram .timeline-track rect{fill:var(--paper)}
+.session-diagram .timeline-track .clip{fill:var(--mute-2)}
+.session-diagram .grid-cell{fill:var(--paper);stroke:var(--ink);stroke-width:1}
+.session-diagram .grid-cell.active{fill:var(--live)}
+.session-diagram .grid-cell.active.green{fill:var(--push)}
+.session-diagram .grid-cell.active.magenta{fill:var(--move)}
+.session-diagram .grid-cell.active.teal{fill:var(--note)}
+.session-diagram .divider{stroke:var(--ink);stroke-width:1}
+
+.session-text{
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:var(--s3) 0;
+}
+.session-text p{
+  font-size:15px;line-height:1.65;color:var(--ink-2);
+  max-width:40ch;
+  margin-bottom:var(--s4);
+}
+.session-text p em{
+  font-style:normal;font-weight:400;color:var(--ink);
+}
+.session-list{
+  list-style:none;margin:var(--s3) 0;
+  border-top:1px solid var(--line);
+}
+.session-list li{
+  display:grid;grid-template-columns:52px 1fr;
+  padding:14px 0;
+  border-bottom:1px solid var(--line);
+  font-size:14px;line-height:1.45;
+}
+.session-list .n{
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-size:11px;color:var(--mute);
+}
+.session-link{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:13px;font-weight:400;
+  margin-top:var(--s3);
+  border-bottom:1px solid var(--ink);
+  padding-bottom:2px;width:fit-content;
+  transition:color .2s;
+}
+.session-link:hover{color:var(--accent);border-color:var(--accent)}
+.session-link .arr{transition:transform .25s}
+.session-link:hover .arr{transform:translateX(4px)}
+
+/* ============================================================
+   06 — ARTIST FOCUS
+   ============================================================ */
+.artists{
+  padding:var(--s8) var(--pad) var(--s7);
+  border-bottom:1px solid var(--line-strong);
+}
+.artists-head{
+  max-width:var(--max);margin:0 auto;
+  display:grid;grid-template-columns:1fr auto;gap:var(--s4);
+  align-items:end;
+  padding-bottom:var(--s6);
+}
+.artists-head .kicker{
+  font-size:11px;letter-spacing:0;text-transform:uppercase;color:var(--mute);
+}
+.artists-head .kicker::before{
+  content:"";display:inline-block;width:40px;height:1px;background:var(--ink);
+  vertical-align:middle;margin-right:16px;
+}
+.artists-head h2{
+  font-size:clamp(36px,4.2vw,64px);
+  font-weight:400;letter-spacing:0;line-height:1;
+  grid-column:1;margin-top:var(--s3);
+  max-width:18ch;
+}
+.artists-head .all{
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-size:12px;letter-spacing:0;
+  border-bottom:1px solid var(--ink);padding-bottom:2px;
+  transition:color .2s;
+}
+.artists-head .all:hover{color:var(--accent);border-color:var(--accent)}
+
+.artist-grid{
+  max-width:var(--max);margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:var(--s5);
+}
+.artist{
+  display:flex;flex-direction:column;gap:var(--s3);
+}
+.artist-frame{
+  aspect-ratio:4/5;
+  background:var(--paper-deep);
+  position:relative;overflow:hidden;
+  border:1px solid var(--line);
+}
+.artist-frame::before{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(135deg, rgba(20,20,20,0.9) 0%, rgba(20,20,20,0.55) 60%, rgba(20,20,20,0.8) 100%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 4px);
+}
+.artist-frame::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.14) 0%, transparent 55%);
+}
+.artist-frame .tag{
+  position:absolute;top:16px;left:16px;
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-size:10px;letter-spacing:0;text-transform:uppercase;
+  color:var(--paper);opacity:0.85;z-index:2;
+  display:flex;align-items:center;gap:8px;
+}
+.artist-frame .tag::before{
+  content:"";width:4px;height:4px;background:var(--tag-color,var(--accent));display:inline-block;
+}
+.artist-frame .initials{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-weight:400;
+  font-size:clamp(72px,9vw,144px);
+  letter-spacing:0;
+  color:var(--paper);
+  opacity:0.97;
+  z-index:1;
+  line-height:1;
+}
+.artist-meta{
+  display:flex;justify-content:space-between;
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-size:11px;letter-spacing:0;
+  color:var(--mute);text-transform:uppercase;
+}
+.artist h3{
+  font-size:22px;font-weight:400;letter-spacing:0;line-height:1.15;
+  max-width:22ch;
+}
+.artist p{
+  font-size:13px;line-height:1.55;color:var(--ink-2);
+  max-width:36ch;
+}
+.artist .read{
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-size:11px;letter-spacing:0;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:4px;
+  border-bottom:1px solid var(--ink);padding-bottom:2px;
+  width:fit-content;
+}
+.artist .read .arr{transition:transform .25s}
+.artist:hover .read .arr{transform:translateX(4px)}
+
+/* ============================================================
+   07 — LEARN
+   ============================================================ */
+.learn{
+  padding:var(--s8) var(--pad) var(--s7);
+  background:var(--ink);color:var(--paper);
+  border-bottom:1px solid var(--ink);
+}
+.learn-head{
+  max-width:var(--max);margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:var(--s5);align-items:end;
+  padding-bottom:var(--s6);
+}
+.learn-head .kicker{
+  font-size:11px;letter-spacing:0;text-transform:uppercase;
+  color:var(--mute-2);
+}
+.learn-head .kicker::before{
+  content:"";display:inline-block;width:40px;height:1px;
+  background:var(--paper);vertical-align:middle;margin-right:16px;
+}
+.learn-head h2{
+  font-size:clamp(40px,5vw,84px);
+  font-weight:400;letter-spacing:0;line-height:0.98;
+  max-width:14ch;color:var(--paper);
+  margin-top:var(--s3);
+}
+.learn-head p{
+  font-size:16px;line-height:1.55;color:rgba(243,242,234,0.7);
+  max-width:46ch;padding-bottom:8px;
+}
+.learn-grid{
+  max-width:var(--max);margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-top:1px solid rgba(243,242,234,0.2);
+}
+.learn-item{
+  padding:var(--s5) var(--s4) var(--s4);
+  border-right:1px solid rgba(243,242,234,0.2);
+  border-bottom:1px solid rgba(243,242,234,0.2);
+  display:flex;flex-direction:column;gap:var(--s3);
+  min-height:300px;
+  transition:background .3s;
+  cursor:pointer;
+}
+.learn-item:last-child{border-right:none}
+.learn-item:hover{background:rgba(243,242,234,0.04)}
+.learn-item .n{
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-size:11px;letter-spacing:0;color:var(--mute-2);
+}
+.learn-item h3{
+  font-size:28px;font-weight:400;letter-spacing:0;line-height:1.1;
+  margin-top:var(--s2);
+}
+.learn-item p{
+  font-size:13px;line-height:1.55;color:rgba(243,242,234,0.65);
+  max-width:36ch;
+  flex:1;
+}
+.learn-item .go{
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-size:11px;letter-spacing:0;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--paper);padding-bottom:2px;
+  width:fit-content;
+}
+.learn-item:hover .go .arr{transform:translateX(4px)}
+.learn-item .go .arr{transition:transform .25s}
+
+/* ============================================================
+   08 — NEWSLETTER
+   ============================================================ */
+.sub{
+  padding:var(--s7) var(--pad);
+  background:var(--paper);
+  border-bottom:1px solid var(--line-strong);
+}
+.sub-inner{
+  max-width:var(--max);margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:var(--s5);
+  align-items:end;
+}
+.sub-inner .kicker{
+  font-size:11px;letter-spacing:0;text-transform:uppercase;color:var(--mute);
+}
+.sub-inner .kicker::before{
+  content:"";display:inline-block;width:40px;height:1px;background:var(--ink);
+  vertical-align:middle;margin-right:16px;
+}
+.sub-inner h3{
+  font-size:clamp(28px,3vw,44px);
+  font-weight:400;letter-spacing:0;line-height:1.05;
+  margin-top:var(--s3);max-width:18ch;
+}
+.sub-form{display:flex;flex-direction:column;gap:12px;justify-self:end;width:100%;max-width:520px}
+.sub-field{
+  display:flex;
+  border:1px solid var(--ink);
+  background:var(--paper);
+}
+.sub-field input{
+  flex:1;border:none;outline:none;background:transparent;
+  padding:14px 16px;
+  font:inherit;font-size:14px;color:var(--ink);
+}
+.sub-field input::placeholder{color:var(--mute)}
+.sub-field button{
+  background:var(--ink);color:var(--paper);
+  padding:0 22px;
+  font-size:11px;letter-spacing:0;text-transform:uppercase;font-weight:400;
+  transition:background .2s;
+}
+.sub-field button:hover{background:var(--accent)}
+.sub-fine{
+  font-size:11px;color:var(--mute);line-height:1.5;max-width:50ch;
+}
+
+/* ============================================================
+   09 — FOOTER
+   ============================================================ */
+footer{
+  background:var(--paper);
+  padding:var(--s7) var(--pad) var(--s5);
+}
+.foot-top{
+  max-width:var(--max);margin:0 auto;
+  display:grid;grid-template-columns:1.2fr repeat(4,1fr);
+  gap:var(--s5);
+}
+.foot-brand{display:flex;flex-direction:column;gap:var(--s3)}
+.foot-brand .mark{font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;font-size:26px;font-weight:400;letter-spacing:0;line-height:1}
+.foot-brand .note{font-size:12px;color:var(--mute);line-height:1.55;max-width:30ch}
+.foot-seal{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid var(--ink);
+  padding:8px 12px;
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-size:10px;letter-spacing:0;text-transform:uppercase;
+  width:fit-content;
+  margin-top:var(--s2);
+}
+.foot-seal::before{
+  content:"";
+  width:20px;height:20px;
+  background:
+    conic-gradient(from 0deg,var(--ink) 25%,var(--paper) 25% 50%,var(--ink) 50% 75%,var(--paper) 75%);
+  border:1px solid var(--ink);border-radius:50%;
+}
+.foot-col h4{
+  font-size:11px;letter-spacing:0;text-transform:uppercase;
+  color:var(--mute);margin-bottom:var(--s2);font-weight:400;
+}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.foot-col a{font-size:13px;transition:color .2s}
+.foot-col a:hover{color:var(--accent)}
+
+.foot-bottom{
+  max-width:var(--max);margin:var(--s6) auto 0;
+  padding-top:var(--s3);
+  border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--s2);
+  font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue Condensed","Helvetica Neue",Arial,sans-serif;
+  font-size:11px;color:var(--mute);letter-spacing:0;
+}
+.foot-bottom nav{display:flex;gap:var(--s3);flex-wrap:wrap}
+.foot-bottom nav a:hover{color:var(--ink)}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width:1100px){
+  .hero-layout{grid-template-columns:1fr;height:auto;min-height:0}
+  .hero-copy{min-height:0;padding:var(--s6) 0 var(--s5)}
+  .hero-divider{height:1px;min-height:0}
+  .hero .quartet{min-height:0}
+  .hero-sub{padding-top:var(--s4)}
+  .session-head,.learn-head,.sub-inner{grid-template-columns:1fr;gap:var(--s3)}
+  .session-head p,.learn-head p,.sub-form{justify-self:start}
+  .session-body{grid-template-columns:1fr;gap:var(--s4)}
+  .artist-grid{grid-template-columns:repeat(2,1fr)}
+  .learn-grid{grid-template-columns:1fr;border-top:1px solid rgba(243,242,234,0.2)}
+  .learn-item{border-right:none}
+  .foot-top{grid-template-columns:1fr 1fr 1fr;gap:var(--s4)}
+  .foot-brand{grid-column:1/-1}
+}
+@media (max-width:720px){
+  :root{--pad:20px}
+  .nav-inner{grid-template-columns:1fr auto;gap:22px}
+  .nav-main{display:none}
+  .nav-end .login{display:none}
+  .hero{padding:0 var(--pad)}
+  .hero-copy{padding:var(--s5) 0 var(--s4)}
+  .quartet{grid-template-columns:1fr;grid-template-rows:auto}
+  .window:nth-child(1),.window:nth-child(2),.window:nth-child(3){
+    border-right:none;border-bottom:1px solid var(--line-strong);
+  }
+  .window{aspect-ratio:auto;min-height:420px;padding:var(--s3)}
+  .window-desc{opacity:1;transform:none}
+  .window-go{opacity:1;transform:none}
+  .window-image img{filter:grayscale(100%) contrast(1.04) brightness(0.98);opacity:.7}
+  .window::before{transform:scaleX(1)}
+  .artists-head{grid-template-columns:1fr}
+  .artists-head .all{justify-self:start}
+  .artist-grid{grid-template-columns:1fr;gap:var(--s4)}
+  .foot-top{grid-template-columns:1fr 1fr}
+  .foot-bottom{flex-direction:column;align-items:flex-start}
+}
+
+/* ============================================================
+   Motion — reveal on load
+   ============================================================ */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+
+/* Focus visibility — important for keyboard users */
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+a:focus-visible,.window:focus-visible{outline-offset:4px}
+</style>
+</head>
+<body>
+
+<!-- 01 / PROMO BAR — Rent-to-Own -->
+<div class="promo">
+  <div class="promo-inner">
+    <span class="promo-dot"></span>
+    <span>Rent-to-Own Live Suite &mdash; own it after 36 months from $25/month.</span>
+    <a href="#rto">Learn more <span class="arr">&rarr;</span></a>
+  </div>
+</div>
+
+<!-- 02 / NAVIGATION -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo" aria-label="Ableton home">
+      <svg class="logo-mark" width="96" height="39" viewBox="0 0 131 54" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="8" height="54"/>
+        <rect x="16" y="0" width="8" height="54"/>
+        <rect x="32" y="0" width="8" height="54"/>
+        <rect x="48" y="0" width="8" height="54"/>
+        <rect x="72" y="0" width="59" height="8"/>
+        <rect x="72" y="15" width="59" height="8"/>
+        <rect x="72" y="31" width="59" height="8"/>
+        <rect x="72" y="46" width="59" height="8"/>
+      </svg>
+    </a>
+    <nav class="nav-main" aria-label="Primary">
+      <a href="#live">Live</a>
+      <a href="#push">Push</a>
+      <a href="#move">Move</a>
+      <a href="#note">Note</a>
+      <a href="#packs">Packs</a>
+      <a href="#learn">Learn</a>
+      <a href="#shop">Shop</a>
+    </nav>
+    <div class="nav-end">
+      <a href="#login" class="login mono">Log&nbsp;in</a>
+      <a href="#trial" class="btn">Try Live Free <span class="arr">&rarr;</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- 03 / MICRO-HERO -->
+<section class="hero">
+  <div class="hero-layout">
+    <div class="hero-copy">
+      <div>
+      <div class="hero-label reveal">
+        <span>Programm / 2026</span>
+        <span>No. 12.4</span>
+      </div>
+      <h1 class="hero-title reveal" style="margin-top:32px">
+        <span class="stop">Four instruments.</span>
+        <span class="stop">One idea.</span>
+      </h1>
+      </div>
+      <p class="hero-sub reveal">
+        Music as <em>a grid, not a timeline</em> &mdash; the philosophy
+        that connects Live, Push, Move and Note. Designed in Berlin,
+        built to be used, not admired.
+      </p>
+    </div>
+    <div class="hero-divider" aria-hidden="true"></div>
+
+    <!-- 04 / FOUR WINDOWS -->
+    <section class="quartet" aria-label="Products">
+
+  <!-- LIVE -->
+  <article class="window live" id="live" tabindex="0">
+    <div class="window-label">
+      <span class="type-of">
+        <span class="mono cat">01</span>
+        <span>Digital Audio Workstation</span>
+      </span>
+      <span class="status mono">Available</span>
+    </div>
+    <div class="window-image">
+      <img src="./live.jpg" alt="Live 12 Session View" loading="eager">
+    </div>
+    <div class="window-foot">
+      <div class="window-name">
+        Live 12
+        <span class="ver">Ver. 12.4 &middot; Intro / Standard / Suite</span>
+      </div>
+      <div>
+        <p class="window-desc">
+          The core instrument. Non-linear Session view and traditional
+          Arrangement view &mdash; both in one document.
+        </p>
+        <a href="#live-page" class="window-go">View catalogue <span class="arr">&rarr;</span></a>
+      </div>
+    </div>
+  </article>
+
+  <!-- PUSH -->
+  <article class="window push" id="push" tabindex="0">
+    <div class="window-label">
+      <span class="type-of">
+        <span class="mono cat">02</span>
+        <span>Standalone Instrument</span>
+      </span>
+      <span class="status mono">Available</span>
+    </div>
+    <div class="window-image">
+      <img src="./push.jpg" alt="Push 3 standalone pad controller" loading="lazy">
+    </div>
+    <div class="window-foot">
+      <div class="window-name">
+        Push
+        <span class="ver">Gen. 3 &middot; Standalone or with Live</span>
+      </div>
+      <div>
+        <p class="window-desc">
+          Hands-on hardware for making music with or without a computer.
+          Velocity- and pressure-sensitive pads.
+        </p>
+        <a href="#push-page" class="window-go">View catalogue <span class="arr">&rarr;</span></a>
+      </div>
+    </div>
+  </article>
+
+  <!-- MOVE -->
+  <article class="window move" id="move" tabindex="0">
+    <div class="window-label">
+      <span class="type-of">
+        <span class="mono cat">03</span>
+        <span>Portable Groovebox</span>
+      </span>
+      <span class="status mono">Available</span>
+    </div>
+    <div class="window-image">
+      <img src="./move.jpg" alt="Move portable groovebox" loading="lazy">
+    </div>
+    <div class="window-foot">
+      <div class="window-name">
+        Move
+        <span class="ver">640g &middot; 32 pads &middot; built-in battery</span>
+      </div>
+      <div>
+        <p class="window-desc">
+          A pocket-sized sketchpad. Capture a loop anywhere; finish it
+          in Live when you&rsquo;re home.
+        </p>
+        <a href="#move-page" class="window-go">View catalogue <span class="arr">&rarr;</span></a>
+      </div>
+    </div>
+  </article>
+
+  <!-- NOTE -->
+  <article class="window note" id="note" tabindex="0">
+    <div class="window-label">
+      <span class="type-of">
+        <span class="mono cat">04</span>
+        <span>iOS Application</span>
+      </span>
+      <span class="status mono">Available</span>
+    </div>
+    <div class="window-image">
+      <img src="./note.jpg" alt="Note app on iPhone" loading="lazy">
+    </div>
+    <div class="window-foot">
+      <div class="window-name">
+        Note
+        <span class="ver">iOS 16+ &middot; free tier &middot; Plus $4.99/mo</span>
+      </div>
+      <div>
+        <p class="window-desc">
+          Drums, melodies and samples on iPhone and iPad. Sync to Live
+          via Ableton Cloud.
+        </p>
+        <a href="#note-page" class="window-go">View catalogue <span class="arr">&rarr;</span></a>
+      </div>
+    </div>
+  </article>
+
+    </section>
+  </div>
+</section>
+
+<!-- 05 / SESSION VIEW — philosophical centerpiece -->
+<section class="session" id="session-view">
+  <div class="session-head">
+    <div>
+      <div class="kicker">Section A &middot; The idea</div>
+      <h2>Why Session View changes how you work.</h2>
+    </div>
+    <p>
+      Every other DAW asks you to compose from left to right &mdash;
+      a timeline. Live lets you work in a grid, where each clip is an
+      idea you can trigger in any order, at any time. This is not a
+      feature. It is how Live thinks about music.
+    </p>
+  </div>
+
+  <div class="session-body">
+    <div class="session-visual">
+      <svg class="session-diagram" viewBox="0 0 620 380" xmlns="http://www.w3.org/2000/svg" aria-label="Timeline versus grid diagram">
+        <!-- TIMELINE -->
+        <text x="0" y="18">Other DAWs / Timeline</text>
+        <g class="timeline-track" transform="translate(0,40)">
+          <rect x="0" y="0" width="620" height="28" fill="#62675F" stroke="#F3F2EA" stroke-width="1"/>
+          <rect class="clip" x="14" y="4" width="60" height="20"/>
+          <rect class="clip" x="80" y="4" width="110" height="20"/>
+          <rect class="clip" x="200" y="4" width="78" height="20"/>
+          <rect class="clip" x="290" y="4" width="140" height="20"/>
+          <rect class="clip" x="440" y="4" width="86" height="20"/>
+          <rect class="clip" x="534" y="4" width="72" height="20"/>
+        </g>
+        <text x="0" y="94">Left &rarr; right. One path.</text>
+
+        <!-- DIVIDER -->
+        <line class="divider" x1="0" y1="118" x2="620" y2="118"/>
+
+        <!-- GRID -->
+        <text x="0" y="146">Live / Session view</text>
+        <g transform="translate(0,166)">
+          <!-- 6 columns x 4 rows -->
+          <g>
+            <rect class="grid-cell active" x="0"   y="0"  width="96" height="30"/>
+            <rect class="grid-cell"        x="100" y="0"  width="96" height="30"/>
+            <rect class="grid-cell active green" x="200" y="0"  width="96" height="30"/>
+            <rect class="grid-cell"        x="300" y="0"  width="96" height="30"/>
+            <rect class="grid-cell"        x="400" y="0"  width="96" height="30"/>
+            <rect class="grid-cell active magenta" x="500" y="0"  width="96" height="30"/>
+
+            <rect class="grid-cell"        x="0"   y="34" width="96" height="30"/>
+            <rect class="grid-cell active" x="100" y="34" width="96" height="30"/>
+            <rect class="grid-cell"        x="200" y="34" width="96" height="30"/>
+            <rect class="grid-cell active teal" x="300" y="34" width="96" height="30"/>
+            <rect class="grid-cell"        x="400" y="34" width="96" height="30"/>
+            <rect class="grid-cell"        x="500" y="34" width="96" height="30"/>
+
+            <rect class="grid-cell active green" x="0"   y="68" width="96" height="30"/>
+            <rect class="grid-cell"        x="100" y="68" width="96" height="30"/>
+            <rect class="grid-cell"        x="200" y="68" width="96" height="30"/>
+            <rect class="grid-cell"        x="300" y="68" width="96" height="30"/>
+            <rect class="grid-cell active" x="400" y="68" width="96" height="30"/>
+            <rect class="grid-cell"        x="500" y="68" width="96" height="30"/>
+
+            <rect class="grid-cell"        x="0"   y="102" width="96" height="30"/>
+            <rect class="grid-cell active magenta" x="100" y="102" width="96" height="30"/>
+            <rect class="grid-cell"        x="200" y="102" width="96" height="30"/>
+            <rect class="grid-cell"        x="300" y="102" width="96" height="30"/>
+            <rect class="grid-cell"        x="400" y="102" width="96" height="30"/>
+            <rect class="grid-cell active teal" x="500" y="102" width="96" height="30"/>
+          </g>
+        </g>
+        <text x="0" y="334">Any clip. Any order. Any moment.</text>
+      </svg>
+    </div>
+
+    <div class="session-text">
+      <div>
+        <p>
+          Rehearse inside a clip. Layer loops until <em>something clicks</em>.
+          Jump between sections live, on stage. Compose the structure last &mdash;
+          or leave it open forever.
+        </p>
+        <ul class="session-list">
+          <li><span class="n">A1</span><span>Trigger clips freely, in any order</span></li>
+          <li><span class="n">A2</span><span>Layer loops until a song emerges</span></li>
+          <li><span class="n">A3</span><span>Perform live without stopping the flow</span></li>
+          <li><span class="n">A4</span><span>Arrangement view captures the performance, automatically</span></li>
+        </ul>
+      </div>
+      <a href="#session" class="session-link">
+        Discover Session View <span class="arr">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 06 / ARTIST FOCUS -->
+<section class="artists" id="artists">
+  <div class="artists-head">
+    <div>
+      <div class="kicker">Section B &middot; In practice</div>
+      <h2>How musicians use Live.</h2>
+    </div>
+    <a href="#blog" class="all">All stories &rarr;</a>
+  </div>
+
+  <div class="artist-grid">
+    <article class="artist">
+      <div class="artist-frame" style="--tag-color:var(--live)">
+        <span class="tag">Interview / 12 min</span>
+        <span class="initials">FL</span>
+      </div>
+      <div class="artist-meta">
+        <span>Flying Lotus</span>
+        <span>Los Angeles</span>
+      </div>
+      <h3>From the sketchbook to the stage.</h3>
+      <p>Walking through his Live 12 workflow &mdash; and why an unfinished loop
+        is often more useful than a finished track.</p>
+      <a href="#" class="read">Read <span class="arr">&rarr;</span></a>
+    </article>
+
+    <article class="artist">
+      <div class="artist-frame" style="--tag-color:var(--push)">
+        <span class="tag">Studio tour / Video</span>
+        <span class="initials">MS</span>
+      </div>
+      <div class="artist-meta">
+        <span>Modeselektor</span>
+        <span>Berlin</span>
+      </div>
+      <h3>Break down a track, one channel at a time.</h3>
+      <p>The Berlin duo opens a finished project and rebuilds it from the kick up,
+        in Session view, on Push.</p>
+      <a href="#" class="read">Watch <span class="arr">&rarr;</span></a>
+    </article>
+
+    <article class="artist">
+      <div class="artist-frame" style="--tag-color:var(--note)">
+        <span class="tag">Input / Output</span>
+        <span class="initials">ST</span>
+      </div>
+      <div class="artist-meta">
+        <span>Sakura Tsuruta</span>
+        <span>Tokyo</span>
+      </div>
+      <h3>A studio chain, from field recording to finish.</h3>
+      <p>Field recordings on Note, arrangement in Live, mastering in-the-box.
+        A pack of her source material is included.</p>
+      <a href="#" class="read">Read + Download <span class="arr">&rarr;</span></a>
+    </article>
+  </div>
+</section>
+
+<!-- 07 / LEARN -->
+<section class="learn" id="learn-section">
+  <div class="learn-head">
+    <div>
+      <div class="kicker">Section C &middot; Start here</div>
+      <h2>Learn the fundamentals. In the browser.</h2>
+    </div>
+    <p>
+      Three free, web-based companions &mdash; no download, no account.
+      Use them in a lesson, a waiting room, a lunch break. They run on
+      anything.
+    </p>
+  </div>
+  <div class="learn-grid">
+    <a href="#" class="learn-item">
+      <span class="n">C01</span>
+      <h3>Learning Music</h3>
+      <p>The fundamentals of making music, explained in the browser. Rhythm,
+        melody, chords, song structure.</p>
+      <span class="go">Open lesson <span class="arr">&rarr;</span></span>
+    </a>
+    <a href="#" class="learn-item">
+      <span class="n">C02</span>
+      <h3>Learning Synths</h3>
+      <p>A web-based synthesiser with accompanying lessons. Oscillators,
+        envelopes, filters &mdash; no plug-in required.</p>
+      <span class="go">Open lesson <span class="arr">&rarr;</span></span>
+    </a>
+    <a href="#" class="learn-item">
+      <span class="n">C03</span>
+      <h3>Making Music</h3>
+      <p>74 creative strategies for electronic producers, drawn from the book
+        by Dennis DeSantis. Open one at random.</p>
+      <span class="go">Open book <span class="arr">&rarr;</span></span>
+    </a>
+  </div>
+</section>
+
+<!-- 08 / NEWSLETTER -->
+<section class="sub">
+  <div class="sub-inner">
+    <div>
+      <div class="kicker">Section D &middot; Stay in touch</div>
+      <h3>Offers, tutorials, downloads &mdash; once a month, no more.</h3>
+    </div>
+    <form class="sub-form" onsubmit="event.preventDefault(); this.querySelector('input').value=''; this.querySelector('button').textContent='Subscribed'; setTimeout(()=>this.querySelector('button').textContent='Subscribe', 1800);">
+      <div class="sub-field">
+        <input type="email" placeholder="your.email@example.com" aria-label="Email address" required>
+        <button type="submit">Subscribe</button>
+      </div>
+      <p class="sub-fine">Unsubscribe any time. One newsletter a month. We never share your address.</p>
+    </form>
+  </div>
+</section>
+
+<!-- 09 / FOOTER -->
+<footer>
+  <div class="foot-top">
+    <div class="foot-brand">
+      <span class="mark">Ableton</span>
+      <span class="note">Creative tools for music makers. Founded 1999, still independently owned.</span>
+      <span class="foot-seal">Made in Berlin</span>
+    </div>
+    <div class="foot-col">
+      <h4>Products</h4>
+      <ul>
+        <li><a href="#">Live</a></li>
+        <li><a href="#">Push</a></li>
+        <li><a href="#">Move</a></li>
+        <li><a href="#">Note</a></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Packs</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Community</h4>
+      <ul>
+        <li><a href="#">Loop Summit</a></li>
+        <li><a href="#">User Groups</a></li>
+        <li><a href="#">Certified Training</a></li>
+        <li><a href="#">Become a Trainer</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Education</h4>
+      <ul>
+        <li><a href="#">For Students</a></li>
+        <li><a href="#">For the Classroom</a></li>
+        <li><a href="#">For Colleges</a></li>
+        <li><a href="#">Apprenticeships</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Jobs</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>&copy; 2026 Ableton AG &middot; Sch&ouml;nhauser Allee 6&ndash;7, 10119 Berlin</span>
+    <nav>
+      <a href="#">Legal</a>
+      <a href="#">Privacy</a>
+      <a href="#">Cookies</a>
+      <a href="#">Imprint</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  // Gentle reveal on scroll — no scroll-jank, IntersectionObserver only
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){
+      els.forEach(function(el){ el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          // Stagger siblings for typographic rhythm
+          var delay = Array.prototype.indexOf.call(
+            entry.target.parentNode.children, entry.target
+          ) * 90;
+          setTimeout(function(){ entry.target.classList.add('in'); }, delay);
+          io.unobserve(entry.target);
+        }
+      });
+    },{ rootMargin:'0px 0px -10% 0px', threshold:0.1 });
+    els.forEach(function(el){ io.observe(el); });
+  })();
+</script>
+
+</body>
+</html>
