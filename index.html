@@ -17,9 +17,9 @@
 
 :root{
   /* Palette */
-  --paper:        #70756D;   /* Ableton Live graphite */
+  --paper:        #D9D9D9;
   --paper-deep:   #62675F;   /* darker graphite for strips */
-  --ink:          #F3F2EA;   /* warm off-white */
+  --ink:          #4F554E;
   --ink-2:        #E1DFD5;
   --mute:         #C7C9C0;   /* soft metadata grey */
   --mute-2:       #AEB1A8;
@@ -801,16 +801,21 @@ footer{
   .nav-inner{grid-template-columns:1fr auto;gap:22px}
   .nav-main{display:none}
   .nav-end .login{display:none}
-  .hero{padding:0 var(--pad)}
-  .hero-copy{padding:var(--s5) 0 var(--s4)}
+  .hero{padding:0}
+  .hero-copy{padding:var(--s5) var(--pad) var(--s4)}
   .quartet{grid-template-columns:1fr;grid-template-rows:auto}
   .window:nth-child(1),.window:nth-child(2),.window:nth-child(3){
     border-right:none;border-bottom:1px solid var(--line-strong);
   }
-  .window{aspect-ratio:auto;min-height:420px;padding:var(--s3)}
+  .window{min-height:0;padding:var(--s3)}
+  .window.live{aspect-ratio:3/2}
+  .window.push,
+  .window.move,
+  .window.note{aspect-ratio:1/1}
   .window-desc{opacity:1;transform:none}
   .window-go{opacity:1;transform:none}
-  .window-image img{filter:grayscale(100%) contrast(1.04) brightness(0.98);opacity:.5}
+  .window::after{background:transparent}
+  .window-image img{filter:none;opacity:1}
   .window::before{transform:scaleX(1)}
   .artists-head{grid-template-columns:1fr}
   .artists-head .all{justify-self:start}
