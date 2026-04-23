@@ -403,19 +403,25 @@ h1.hero-title .stop{display:block}
 
 .window:hover .window-label,
 .window:focus-within .window-label,
+.window.is-active .window-label,
 .window:hover .window-foot,
-.window:focus-within .window-foot{
+.window:focus-within .window-foot,
+.window.is-active .window-foot{
   color:#fff;
   mix-blend-mode:difference;
 }
 .window:hover .window-label .cat,
 .window:focus-within .window-label .cat,
+.window.is-active .window-label .cat,
 .window:hover .window-name .ver,
 .window:focus-within .window-name .ver,
+.window.is-active .window-name .ver,
 .window:hover .window-desc,
 .window:focus-within .window-desc,
+.window.is-active .window-desc,
 .window:hover .window-go,
-.window:focus-within .window-go{
+.window:focus-within .window-go,
+.window.is-active .window-go{
   color:inherit;
 }
 
@@ -885,8 +891,8 @@ footer{
   .window.note{aspect-ratio:1/1}
   .window-desc{opacity:1;transform:none}
   .window-go{opacity:1;transform:none}
-  .window::after{background:transparent}
-  .window-image img{filter:none;opacity:1}
+  .window.is-active::after{background:rgba(217,217,217,0.06)}
+  .window.is-active .window-image img{filter:none;opacity:1}
   .window::before{transform:scaleX(1)}
   .artists-head{grid-template-columns:1fr}
   .artists-head .all{justify-self:start}
@@ -1365,6 +1371,62 @@ a:focus-visible,.window:focus-visible{outline-offset:4px}
       });
     },{ rootMargin:'0px 0px -10% 0px', threshold:0.1 });
     els.forEach(function(el){ io.observe(el); });
+  })();
+
+  // Mobile product focus follows the viewport center, mirroring desktop hover.
+  (function(){
+    var media = window.matchMedia('(max-width: 720px)');
+    var windows = Array.prototype.slice.call(document.querySelectorAll('.quartet .window'));
+    var ticking = false;
+
+    function clearActive(){
+      windows.forEach(function(win){ win.classList.remove('is-active'); });
+    }
+
+    function updateActive(){
+      ticking = false;
+      if(!media.matches){
+        clearActive();
+        return;
+      }
+
+      var viewportCenter = window.innerHeight / 2;
+      var active = null;
+      var activeDistance = Infinity;
+
+      windows.forEach(function(win){
+        var rect = win.getBoundingClientRect();
+        if(rect.bottom <= 0 || rect.top >= window.innerHeight) return;
+
+        var center = rect.top + rect.height / 2;
+        var distance = Math.abs(center - viewportCenter);
+        if(distance < activeDistance){
+          activeDistance = distance;
+          active = win;
+        }
+      });
+
+      windows.forEach(function(win){
+        win.classList.toggle('is-active', win === active);
+      });
+    }
+
+    function requestUpdate(){
+      if(ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(updateActive);
+    }
+
+    if(windows.length){
+      updateActive();
+      window.addEventListener('scroll', requestUpdate, { passive:true });
+      window.addEventListener('resize', requestUpdate);
+      if(media.addEventListener){
+        media.addEventListener('change', updateActive);
+      }else if(media.addListener){
+        media.addListener(updateActive);
+      }
+    }
   })();
 </script>
 
