@@ -19,50 +19,11 @@ function Session() {
   </div>
   <div class="session-body">
     <div class="session-visual">
-      <svg class="session-diagram" viewBox="0 0 620 380" xmlns="http://www.w3.org/2000/svg" aria-label="Timeline versus grid diagram">
-        <text x="0" y="18">Other DAWs / Timeline</text>
-        <g class="timeline-track" transform="translate(0,40)">
-          <rect x="0" y="0" width="620" height="28" fill="#62675F" stroke="#F3F2EA" stroke-width="1"/>
-          <rect class="clip" x="14" y="4" width="60" height="20"/>
-          <rect class="clip" x="80" y="4" width="110" height="20"/>
-          <rect class="clip" x="200" y="4" width="78" height="20"/>
-          <rect class="clip" x="290" y="4" width="140" height="20"/>
-          <rect class="clip" x="440" y="4" width="86" height="20"/>
-          <rect class="clip" x="534" y="4" width="72" height="20"/>
-        </g>
-        <text x="0" y="94">Left &rarr; right. One path.</text>
-        <line class="divider" x1="0" y1="118" x2="620" y2="118"/>
-        <text x="0" y="146">Live / Session view</text>
-        <g transform="translate(0,166)">
-          <g>
-            <rect class="grid-cell active" x="0" y="0" width="96" height="30"/>
-            <rect class="grid-cell" x="100" y="0" width="96" height="30"/>
-            <rect class="grid-cell active green" x="200" y="0" width="96" height="30"/>
-            <rect class="grid-cell" x="300" y="0" width="96" height="30"/>
-            <rect class="grid-cell" x="400" y="0" width="96" height="30"/>
-            <rect class="grid-cell active magenta" x="500" y="0" width="96" height="30"/>
-            <rect class="grid-cell" x="0" y="34" width="96" height="30"/>
-            <rect class="grid-cell active" x="100" y="34" width="96" height="30"/>
-            <rect class="grid-cell" x="200" y="34" width="96" height="30"/>
-            <rect class="grid-cell active teal" x="300" y="34" width="96" height="30"/>
-            <rect class="grid-cell" x="400" y="34" width="96" height="30"/>
-            <rect class="grid-cell" x="500" y="34" width="96" height="30"/>
-            <rect class="grid-cell active green" x="0" y="68" width="96" height="30"/>
-            <rect class="grid-cell" x="100" y="68" width="96" height="30"/>
-            <rect class="grid-cell" x="200" y="68" width="96" height="30"/>
-            <rect class="grid-cell" x="300" y="68" width="96" height="30"/>
-            <rect class="grid-cell active" x="400" y="68" width="96" height="30"/>
-            <rect class="grid-cell" x="500" y="68" width="96" height="30"/>
-            <rect class="grid-cell" x="0" y="102" width="96" height="30"/>
-            <rect class="grid-cell active magenta" x="100" y="102" width="96" height="30"/>
-            <rect class="grid-cell" x="200" y="102" width="96" height="30"/>
-            <rect class="grid-cell" x="300" y="102" width="96" height="30"/>
-            <rect class="grid-cell" x="400" y="102" width="96" height="30"/>
-            <rect class="grid-cell active teal" x="500" y="102" width="96" height="30"/>
-          </g>
-        </g>
-        <text x="0" y="334">Any clip. Any order. Any moment.</text>
-      </svg>
+      <img
+        src="/session.jpg"
+        alt="Ableton Session View interface"
+        loading="lazy"
+      />
     </div>
     <div class="session-text">
       <div>

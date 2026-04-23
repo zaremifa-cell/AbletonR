@@ -466,10 +466,14 @@ h1.hero-title .stop{display:block}
 }
 .session-visual{
   background:var(--paper-deep);
-  aspect-ratio: 16/10;
   position:relative;overflow:hidden;
   display:flex;align-items:center;justify-content:center;
-  padding:var(--s5);
+  padding:0;
+}
+.session-visual img{
+  width:100%;
+  height:auto;
+  display:block;
 }
 /* Diagram — timeline vs grid, drawn in SVG for crisp lines */
 .session-diagram{width:100%;max-width:620px}
@@ -801,6 +805,17 @@ footer{
 .foot-bottom nav{display:flex;gap:var(--s3);flex-wrap:wrap}
 .foot-bottom nav a:hover{color:var(--ink)}
 
+@media (min-width:721px){
+  .session-visual{
+    max-height:560px;
+    overflow:hidden;
+  }
+  .session-visual img{
+    width:100%;
+    height:auto;
+  }
+}
+
 @media (min-width:1101px){
   .hero{
     padding:0;
@@ -869,6 +884,10 @@ footer{
   .nav-end .login{display:none}
   .hero{padding:0}
   .hero-copy{padding:var(--s5) var(--pad) var(--s4)}
+  .session-visual{
+    width:100vw;
+    margin-left:calc(50% - 50vw);
+  }
   .quartet{grid-template-columns:1fr;grid-template-rows:auto}
   .window:nth-child(1),.window:nth-child(2),.window:nth-child(3){
     border-right:none;border-bottom:1px solid var(--line-strong);
