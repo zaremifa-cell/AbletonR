@@ -110,6 +110,7 @@ img,svg{display:block;max-width:100%}
   position:sticky;top:0;z-index:60;
 }
 .nav-inner{
+  position:relative;
   display:grid;
   grid-template-columns:auto 1fr auto;
   align-items:center;
@@ -126,11 +127,17 @@ img,svg{display:block;max-width:100%}
 .logo-mark{
   display:block;
   flex-shrink:0;
+  width:70px;
+  height:auto;
 }
 .nav-main{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
   display:flex;
   gap:var(--s4);
   justify-content:center;
+  white-space:nowrap;
 }
 .nav-main a{
   font-size:13px;
@@ -148,6 +155,8 @@ img,svg{display:block;max-width:100%}
 .nav-main a:hover::after{transform:scaleX(1)}
 .nav-end{
   display:flex;align-items:center;gap:var(--s3);
+  grid-column:3;
+  justify-self:end;
 }
 .nav-end .login{
   font-size:10px;
@@ -251,6 +260,7 @@ h1.hero-title .stop{display:block}
   aspect-ratio:auto;
   min-height:0;
   overflow:hidden;
+  isolation:isolate;
   display:flex;flex-direction:column;
   justify-content:space-between;
   padding:18px;
@@ -276,13 +286,13 @@ h1.hero-title .stop{display:block}
   content:"";
   position:absolute;
   inset:0;
-  background:rgba(112,117,109,0.52);
+  background:rgba(217,217,217,0.58);
   z-index:1;
   pointer-events:none;
   transition:background .6s cubic-bezier(.2,.8,.2,1);
 }
 .window:hover::after,
-.window:focus-within::after{background:rgba(112,117,109,0.18)}
+.window:focus-within::after{background:rgba(217,217,217,0.06)}
 
 .window-label{
   display:flex;align-items:center;justify-content:space-between;
@@ -319,8 +329,8 @@ h1.hero-title .stop{display:block}
   max-width:none;
   object-fit:cover;
   object-position:center;
-  filter:grayscale(100%) contrast(1.04) brightness(0.98);
-  opacity:.5;
+  filter:grayscale(100%) contrast(.82) brightness(1.18);
+  opacity:.78;
   transition:filter .8s cubic-bezier(.2,.8,.2,1), opacity .8s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1);
   will-change:filter,opacity,transform;
 }
@@ -390,6 +400,24 @@ h1.hero-title .stop{display:block}
 .window:focus-within .window-go{opacity:1;transform:translateY(0)}
 .window-go .arr{display:inline-block;transition:transform .3s}
 .window:hover .window-go .arr{transform:translateX(4px)}
+
+.window:hover .window-label,
+.window:focus-within .window-label,
+.window:hover .window-foot,
+.window:focus-within .window-foot{
+  color:#fff;
+  mix-blend-mode:difference;
+}
+.window:hover .window-label .cat,
+.window:focus-within .window-label .cat,
+.window:hover .window-name .ver,
+.window:focus-within .window-name .ver,
+.window:hover .window-desc,
+.window:focus-within .window-desc,
+.window:hover .window-go,
+.window:focus-within .window-go{
+  color:inherit;
+}
 
 /* Per-product accent variables */
 .window.live{--window-color:var(--live)}
@@ -778,6 +806,47 @@ footer{
 .foot-bottom nav{display:flex;gap:var(--s3);flex-wrap:wrap}
 .foot-bottom nav a:hover{color:var(--ink)}
 
+@media (min-width:1101px){
+  .hero{
+    padding:0;
+  }
+  .hero-layout{
+    position:relative;
+    display:block;
+    width:100%;
+    max-width:none;
+    height:calc(100svh - 80px);
+  }
+  .hero-copy{
+    position:absolute;
+    left:var(--s3);
+    bottom:var(--s3);
+    z-index:8;
+    width:min(32vw, 430px);
+    padding:0;
+    pointer-events:none;
+    transition:opacity .25s ease;
+  }
+  .hero-layout:has(.window.move:hover) .hero-copy,
+  .hero-layout:has(.window.move:focus-within) .hero-copy{
+    opacity:0;
+  }
+  .hero-divider{display:none}
+  .hero-label{margin-bottom:var(--s3)}
+  h1.hero-title{
+    font-size:clamp(40px, 4.2vw, 68px);
+    max-width:12ch;
+  }
+  .hero-sub{
+    margin-top:var(--s3);
+    max-width:34ch;
+  }
+  .hero .quartet{
+    width:100%;
+    height:100%;
+  }
+}
+
 /* ============================================================
    Responsive
    ============================================================ */
@@ -854,16 +923,7 @@ a:focus-visible,.window:focus-visible{outline-offset:4px}
 <header class="nav">
   <div class="nav-inner">
     <a href="#" class="logo" aria-label="Ableton home">
-      <svg class="logo-mark" width="96" height="39" viewBox="0 0 131 54" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-        <rect x="0" y="0" width="8" height="54"/>
-        <rect x="16" y="0" width="8" height="54"/>
-        <rect x="32" y="0" width="8" height="54"/>
-        <rect x="48" y="0" width="8" height="54"/>
-        <rect x="72" y="0" width="59" height="8"/>
-        <rect x="72" y="15" width="59" height="8"/>
-        <rect x="72" y="31" width="59" height="8"/>
-        <rect x="72" y="46" width="59" height="8"/>
-      </svg>
+      <img class="logo-mark" src="./ableton-logo.svg" alt="" aria-hidden="true">
     </a>
     <nav class="nav-main" aria-label="Primary">
       <a href="#live">Live</a>
