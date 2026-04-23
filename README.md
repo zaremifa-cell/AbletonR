@@ -9,13 +9,32 @@
 ## Структура на проекта
 
 ```
-ableton/
+Ableton Redesign/
 ├── index.html
-└── images/
-    ├── live.jpg        # Live 12 Session View
-    ├── push.jpg        # Push
-    ├── move.jpg        # Move
-    └── note.jpg        # Note
+├── public/
+│   ├── ableton-logo.svg
+│   ├── live.jpg
+│   ├── push.jpg
+│   ├── move.jpg
+│   └── note.jpg
+├── src/
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── styles.css
+└── package.json
+```
+
+## Стартиране
+
+```bash
+npm install
+npm run dev
+```
+
+## Production build
+
+```bash
+npm run build
 ```
 
 
