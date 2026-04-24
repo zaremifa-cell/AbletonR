@@ -535,7 +535,35 @@ h1.hero-title .stop{display:block}
    06 — FEATURES (4 rectangles)
    ============================================================ */
 .features{
-  border-bottom:1px solid var(--line-strong);
+  border-bottom:1px solid var(--ink);
+  background:var(--ink);
+  color:var(--paper);
+}
+.features-label{
+  text-align:center;
+  font-size:clamp(36px,4.2vw,64px);
+  font-weight:400;
+  letter-spacing:0;
+  line-height:1;
+  padding:var(--s6) var(--pad);
+  border-bottom:1px solid rgba(243,242,234,0.2);
+  background:linear-gradient(
+    90deg,
+    rgba(243,242,234,0.25) 0%,
+    rgba(243,242,234,0.25) 40%,
+    rgba(243,242,234,1) 50%,
+    rgba(243,242,234,0.25) 60%,
+    rgba(243,242,234,0.25) 100%
+  );
+  background-size:200% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:shimmer 4s linear infinite;
+}
+@keyframes shimmer{
+  0%{background-position:100% 0}
+  100%{background-position:-100% 0}
 }
 .features-inner{
   max-width:var(--max);
@@ -548,14 +576,14 @@ h1.hero-title .stop{display:block}
   flex-direction:column;
   gap:var(--s2);
   padding:var(--s6) var(--s4);
-  border-right:1px solid var(--line-strong);
+  border-right:1px solid rgba(243,242,234,0.2);
   transition:background .2s;
   cursor:pointer;
 }
 .feature-card:last-child{border-right:none}
-.feature-card:hover{background:rgba(79,85,78,0.04)}
+.feature-card:hover{background:rgba(243,242,234,0.04)}
 .feature-icon{
-  color:var(--ink);
+  color:var(--paper);
   margin-bottom:var(--s2);
 }
 .feature-title{
@@ -563,11 +591,12 @@ h1.hero-title .stop{display:block}
   font-weight:400;
   letter-spacing:0;
   line-height:1.1;
+  color:var(--paper);
 }
 .feature-desc{
   font-size:13px;
   line-height:1.55;
-  color:var(--mute-2);
+  color:rgba(243,242,234,0.55);
   max-width:28ch;
 }
 
@@ -687,6 +716,16 @@ h1.hero-title .stop{display:block}
 }
 .artist-frame .tag::before{
   content:"";width:4px;height:4px;background:var(--tag-color,var(--accent));display:inline-block;
+}
+.artist-photo{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:58% top;
+  filter:grayscale(100%);
+  z-index:0;
 }
 .artist-frame .initials{
   position:absolute;inset:0;
@@ -998,6 +1037,11 @@ footer{
   .artists-head{grid-template-columns:1fr}
   .artists-head .all{justify-self:start}
   .artist-grid{grid-template-columns:1fr;gap:var(--s4)}
+  .artist-frame{
+    margin-left:calc(-1 * var(--pad));
+    margin-right:calc(-1 * var(--pad));
+    width:calc(100% + 2 * var(--pad));
+  }
   .foot-top{grid-template-columns:1fr 1fr}
   .foot-bottom{flex-direction:column;align-items:flex-start}
 }

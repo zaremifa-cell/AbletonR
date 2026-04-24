@@ -53,6 +53,7 @@ const items = [
 function Features() {
   return (
     <section className="features" id="features">
+      <div className="features-label">Discover More</div>
       <div className="features-inner">
         {items.map((item) => (
           <a key={item.title} href={item.href} className="feature-card">

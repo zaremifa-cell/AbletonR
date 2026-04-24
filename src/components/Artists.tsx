@@ -14,8 +14,8 @@ function Artists() {
       <div className="artist-grid">
         <article className="artist">
           <div className="artist-frame" style={{ ["--tag-color" as string]: "var(--live)" }}>
+            <img src="/artist-fl.png" alt="Flying Lotus" className="artist-photo" />
             <span className="tag">Interview / 12 min</span>
-            <span className="initials">FL</span>
           </div>
           <div className="artist-meta">
             <span>Flying Lotus</span>
