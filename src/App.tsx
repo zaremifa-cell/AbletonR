@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { Route, Routes } from "react-router-dom";
 import Artists from "./components/Artists";
 import Features from "./components/Features";
 import Footer from "./components/Footer";
@@ -7,19 +8,8 @@ import Learn from "./components/Learn";
 import Live12Page from "./components/Live12Page";
 import Nav from "./components/Nav";
 
-function App() {
+function useReveal(dep: unknown) {
   const contentRef = useRef<HTMLDivElement>(null);
-  const [page, setPage] = useState<"home" | "live12">("home");
-
-  const goToLive12 = () => {
-    setPage("live12");
-    window.scrollTo({ top: 0, behavior: "instant" });
-  };
-
-  const goHome = () => {
-    setPage("home");
-    window.scrollTo({ top: 0, behavior: "instant" });
-  };
 
   useEffect(() => {
     const root = contentRef.current;
@@ -45,7 +35,13 @@ function App() {
       els.forEach((el) => io.observe(el));
       return () => io.disconnect();
     }
-  }, [page]);
+  }, [dep]);
+
+  return contentRef;
+}
+
+function HomePage() {
+  const contentRef = useReveal("home");
 
   useEffect(() => {
     const root = contentRef.current;
@@ -59,10 +55,7 @@ function App() {
 
     const updateActive = () => {
       ticking = false;
-      if (!media.matches) {
-        clearActive();
-        return;
-      }
+      if (!media.matches) { clearActive(); return; }
 
       const viewportCenter = window.innerHeight / 2;
       const threshold = window.innerHeight * 0.18;
@@ -72,13 +65,9 @@ function App() {
       windows.forEach((win) => {
         const rect = win.getBoundingClientRect();
         if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
-
         const center = rect.top + rect.height / 2;
         const distance = Math.abs(center - viewportCenter);
-        if (distance < activeDistance) {
-          activeDistance = distance;
-          active = win;
-        }
+        if (distance < activeDistance) { activeDistance = distance; active = win; }
       });
 
       if (activeDistance > threshold) active = null;
@@ -94,70 +83,60 @@ function App() {
     if (windows.length) {
       window.addEventListener("scroll", requestUpdate, { passive: true });
       window.addEventListener("resize", requestUpdate);
-      if (media.addEventListener) {
-        media.addEventListener("change", updateActive);
-      } else {
-        media.addListener(updateActive);
-      }
+      if (media.addEventListener) media.addEventListener("change", updateActive);
+      else media.addListener(updateActive);
     }
 
     return () => {
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
-      if (media.removeEventListener) {
-        media.removeEventListener("change", updateActive);
-      } else {
-        media.removeListener(updateActive);
-      }
+      if (media.removeEventListener) media.removeEventListener("change", updateActive);
+      else media.removeListener(updateActive);
     };
-  }, [page]);
+  }, []);
 
   useEffect(() => {
     const root = contentRef.current;
     if (!root) return;
-
     const form = root.querySelector<HTMLFormElement>(".sub-form");
     const input = form?.querySelector<HTMLInputElement>("input");
     const button = form?.querySelector<HTMLButtonElement>("button");
     let timeoutId: number | null = null;
-
     if (!form || !input || !button) return;
-
-    const handleSubmit = (event: Event) => {
-      event.preventDefault();
+    const handleSubmit = (e: Event) => {
+      e.preventDefault();
       input.value = "";
       button.textContent = "Subscribed";
       if (timeoutId) window.clearTimeout(timeoutId);
-      timeoutId = window.setTimeout(() => {
-        button.textContent = "Subscribe";
-      }, 1800);
+      timeoutId = window.setTimeout(() => { button.textContent = "Subscribe"; }, 1800);
     };
-
     form.addEventListener("submit", handleSubmit);
     return () => {
       form.removeEventListener("submit", handleSubmit);
       if (timeoutId) window.clearTimeout(timeoutId);
     };
-  }, [page]);
-
-  if (page === "live12") {
-    return (
-      <div ref={contentRef}>
-        <Nav />
-        <Live12Page onBack={goHome} />
-      </div>
-    );
-  }
+  }, []);
 
   return (
     <div ref={contentRef}>
-      <Nav />
-      <Hero onLive12Click={goToLive12} />
+      <Hero />
       <Features />
       <Artists />
       <Learn />
       <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <>
+      <Nav />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/live" element={<Live12Page />} />
+      </Routes>
+    </>
   );
 }
 

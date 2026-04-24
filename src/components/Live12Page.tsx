@@ -1,11 +1,11 @@
-interface Props {
-  onBack: () => void;
-}
+import { useNavigate } from "react-router-dom";
 
-function Live12Page({ onBack }: Props) {
+function Live12Page() {
+  const navigate = useNavigate();
+
   return (
     <div className="live12-page">
-      <div className="live12-back" onClick={onBack}>
+      <div className="live12-back" onClick={() => navigate("/")}>
         <span className="arr">←</span> Back
       </div>
       <div className="live12-placeholder">

@@ -1,15 +1,15 @@
-interface Props {
-  onLive12Click: () => void;
-}
+import { useNavigate } from "react-router-dom";
 
-function Quartet({ onLive12Click }: Props) {
+function Quartet() {
+  const navigate = useNavigate();
+
   return (
     <section className="quartet" aria-label="Products">
       <article
         className="window live"
         id="live"
         tabIndex={0}
-        onClick={onLive12Click}
+        onClick={() => navigate("/live")}
         style={{ cursor: "pointer" }}
       >
         <div className="window-label">
