@@ -1,13 +1,25 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Artists from "./components/Artists";
+import Features from "./components/Features";
 import Footer from "./components/Footer";
 import Hero from "./components/Hero";
 import Learn from "./components/Learn";
+import Live12Page from "./components/Live12Page";
 import Nav from "./components/Nav";
-import Session from "./components/Session";
 
 function App() {
   const contentRef = useRef<HTMLDivElement>(null);
+  const [page, setPage] = useState<"home" | "live12">("home");
+
+  const goToLive12 = () => {
+    setPage("live12");
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+
+  const goHome = () => {
+    setPage("home");
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
 
   useEffect(() => {
     const root = contentRef.current;
@@ -31,10 +43,9 @@ function App() {
         { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
       );
       els.forEach((el) => io.observe(el));
-
       return () => io.disconnect();
     }
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     const root = contentRef.current;
@@ -54,6 +65,7 @@ function App() {
       }
 
       const viewportCenter = window.innerHeight / 2;
+      const threshold = window.innerHeight * 0.18;
       let active: HTMLElement | null = null;
       let activeDistance = Infinity;
 
@@ -69,6 +81,7 @@ function App() {
         }
       });
 
+      if (activeDistance > threshold) active = null;
       windows.forEach((win) => win.classList.toggle("is-active", win === active));
     };
 
@@ -79,7 +92,6 @@ function App() {
     };
 
     if (windows.length) {
-      updateActive();
       window.addEventListener("scroll", requestUpdate, { passive: true });
       window.addEventListener("resize", requestUpdate);
       if (media.addEventListener) {
@@ -98,7 +110,7 @@ function App() {
         media.removeListener(updateActive);
       }
     };
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     const root = contentRef.current;
@@ -115,31 +127,33 @@ function App() {
       event.preventDefault();
       input.value = "";
       button.textContent = "Subscribed";
-
-      if (timeoutId) {
-        window.clearTimeout(timeoutId);
-      }
-
+      if (timeoutId) window.clearTimeout(timeoutId);
       timeoutId = window.setTimeout(() => {
         button.textContent = "Subscribe";
       }, 1800);
     };
 
     form.addEventListener("submit", handleSubmit);
-
     return () => {
       form.removeEventListener("submit", handleSubmit);
-      if (timeoutId) {
-        window.clearTimeout(timeoutId);
-      }
+      if (timeoutId) window.clearTimeout(timeoutId);
     };
-  }, []);
+  }, [page]);
+
+  if (page === "live12") {
+    return (
+      <div ref={contentRef}>
+        <Nav />
+        <Live12Page onBack={goHome} />
+      </div>
+    );
+  }
 
   return (
     <div ref={contentRef}>
       <Nav />
-      <Hero />
-      <Session />
+      <Hero onLive12Click={goToLive12} />
+      <Features />
       <Artists />
       <Learn />
       <Footer />

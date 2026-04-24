@@ -1,7 +1,17 @@
-function Quartet() {
+interface Props {
+  onLive12Click: () => void;
+}
+
+function Quartet({ onLive12Click }: Props) {
   return (
     <section className="quartet" aria-label="Products">
-      <article className="window live" id="live" tabIndex={0}>
+      <article
+        className="window live"
+        id="live"
+        tabIndex={0}
+        onClick={onLive12Click}
+        style={{ cursor: "pointer" }}
+      >
         <div className="window-label">
           <span className="type-of">
             <span className="mono cat">01</span>
@@ -22,9 +32,9 @@ function Quartet() {
               The core instrument. Non-linear Session view and traditional Arrangement view &mdash; both
               in one document.
             </p>
-            <a href="#live-page" className="window-go">
+            <span className="window-go">
               View catalogue <span className="arr">&rarr;</span>
-            </a>
+            </span>
           </div>
         </div>
       </article>

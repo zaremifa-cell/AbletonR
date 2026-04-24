@@ -1,6 +1,10 @@
 import Quartet from "./Quartet";
 
-function Hero() {
+interface Props {
+  onLive12Click: () => void;
+}
+
+function Hero({ onLive12Click }: Props) {
   return (
     <section className="hero">
       <div className="hero-layout">
@@ -21,7 +25,7 @@ function Hero() {
           </p>
         </div>
         <div className="hero-divider" aria-hidden="true"></div>
-        <Quartet />
+        <Quartet onLive12Click={onLive12Click} />
       </div>
     </section>
   );
