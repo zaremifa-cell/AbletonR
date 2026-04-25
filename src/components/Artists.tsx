@@ -33,8 +33,8 @@ function Artists() {
 
         <article className="artist">
           <div className="artist-frame" style={{ ["--tag-color" as string]: "var(--push)" }}>
+            <img src="/studiotour.png" alt="Modeselektor studio tour" className="artist-photo" />
             <span className="tag">Studio tour / Video</span>
-            <span className="initials">MS</span>
           </div>
           <div className="artist-meta">
             <span>Modeselektor</span>

@@ -536,8 +536,7 @@ h1.hero-title .stop{display:block}
    ============================================================ */
 .features{
   border-bottom:1px solid var(--ink);
-  background:var(--ink);
-  color:var(--paper);
+  background:var(--paper);
 }
 .features-label{
   text-align:center;
@@ -546,24 +545,27 @@ h1.hero-title .stop{display:block}
   letter-spacing:0;
   line-height:1;
   padding:var(--s6) var(--pad);
-  border-bottom:1px solid rgba(243,242,234,0.2);
-  background:linear-gradient(
-    90deg,
-    rgba(243,242,234,0.25) 0%,
-    rgba(243,242,234,0.25) 40%,
-    rgba(243,242,234,1) 50%,
-    rgba(243,242,234,0.25) 60%,
-    rgba(243,242,234,0.25) 100%
-  );
-  background-size:200% 100%;
-  -webkit-background-clip:text;
-  background-clip:text;
+  border-bottom:1px solid var(--ink);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(79,85,78,0.25) 0%,
+      rgba(79,85,78,0.25) 40%,
+      rgba(79,85,78,1) 50%,
+      rgba(79,85,78,0.25) 60%,
+      rgba(79,85,78,0.25) 100%
+    ),
+    var(--paper);
+  background-size:200% 100%, auto;
+  background-position:100% 0, 0 0;
+  -webkit-background-clip:text, padding-box;
+  background-clip:text, padding-box;
   -webkit-text-fill-color:transparent;
   animation:shimmer 4s linear infinite;
 }
 @keyframes shimmer{
-  0%{background-position:100% 0}
-  100%{background-position:-100% 0}
+  0%{background-position:100% 0, 0 0}
+  100%{background-position:-100% 0, 0 0}
 }
 .features-inner{
   max-width:var(--max);
@@ -576,14 +578,14 @@ h1.hero-title .stop{display:block}
   flex-direction:column;
   gap:var(--s2);
   padding:var(--s6) var(--s4);
-  border-right:1px solid rgba(243,242,234,0.2);
+  border-right:1px solid var(--ink);
   transition:background .2s;
   cursor:pointer;
 }
 .feature-card:last-child{border-right:none}
-.feature-card:hover{background:rgba(243,242,234,0.04)}
+.feature-card:hover{background:rgba(79,85,78,0.04)}
 .feature-icon{
-  color:var(--paper);
+  color:var(--ink);
   margin-bottom:var(--s2);
 }
 .feature-title{
@@ -591,12 +593,12 @@ h1.hero-title .stop{display:block}
   font-weight:400;
   letter-spacing:0;
   line-height:1.1;
-  color:var(--paper);
+  color:var(--ink);
 }
 .feature-desc{
   font-size:13px;
   line-height:1.55;
-  color:rgba(243,242,234,0.55);
+  color:var(--mute-2);
   max-width:28ch;
 }
 
@@ -643,11 +645,11 @@ h1.hero-title .stop{display:block}
   .features-inner{grid-template-columns:repeat(2,1fr)}
   .feature-card:nth-child(2){border-right:none}
   .feature-card:nth-child(1),
-  .feature-card:nth-child(2){border-bottom:1px solid var(--line-strong)}
+  .feature-card:nth-child(2){border-bottom:1px solid var(--ink)}
 }
 @media (max-width:720px){
   .features-inner{grid-template-columns:1fr}
-  .feature-card{border-right:none;border-bottom:1px solid var(--line-strong)}
+  .feature-card{border-right:none;border-bottom:1px solid var(--ink)}
   .feature-card:last-child{border-bottom:none}
 }
 
