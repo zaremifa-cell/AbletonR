@@ -1,3 +1,5 @@
+import { Link, NavLink } from "react-router-dom";
+
 function Nav() {
   return (
     <>
@@ -13,11 +15,11 @@ function Nav() {
 
       <header className="nav">
         <div className="nav-inner">
-          <a href="#" className="logo" aria-label="Ableton home">
+          <Link to="/" className="logo" aria-label="Ableton home">
             <img className="logo-mark" src="/ableton-logo.svg" alt="" aria-hidden="true" />
-          </a>
+          </Link>
           <nav className="nav-main" aria-label="Primary">
-            <a href="#live">Live</a>
+            <NavLink to="/live">Live</NavLink>
             <a href="#push">Push</a>
             <a href="#move">Move</a>
             <a href="#note">Note</a>
