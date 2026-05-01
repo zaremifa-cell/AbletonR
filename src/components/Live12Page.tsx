@@ -210,6 +210,41 @@ function Live12Page() {
     };
   }, []);
 
+  useEffect(() => {
+    const root = pageRef.current;
+    const releaseSection = root?.querySelector<HTMLElement>(".lp-new");
+    if (!root || !releaseSection) return;
+
+    const media = window.matchMedia("(max-width: 600px)");
+
+    const updateSnapMode = () => {
+      if (!media.matches) {
+        root.classList.remove("is-free-scroll");
+        return;
+      }
+
+      const releaseStart = releaseSection.offsetTop;
+      const freeScrollStart = releaseStart - 2;
+      const snapResumePoint = releaseStart - (root.clientHeight * 0.35);
+      root.classList.toggle("is-free-scroll", root.scrollTop >= freeScrollStart);
+      if (root.scrollTop < snapResumePoint) root.classList.remove("is-free-scroll");
+    };
+
+    updateSnapMode();
+    root.addEventListener("scroll", updateSnapMode, { passive: true });
+    window.addEventListener("resize", updateSnapMode);
+    if (media.addEventListener) media.addEventListener("change", updateSnapMode);
+    else media.addListener(updateSnapMode);
+
+    return () => {
+      root.removeEventListener("scroll", updateSnapMode);
+      window.removeEventListener("resize", updateSnapMode);
+      if (media.removeEventListener) media.removeEventListener("change", updateSnapMode);
+      else media.removeListener(updateSnapMode);
+      root.classList.remove("is-free-scroll");
+    };
+  }, []);
+
   return (
     <div className="lp" ref={pageRef}>
 
@@ -328,6 +363,16 @@ function Live12Page() {
                 {[1, 3, 5, 7, 9].map(n => <span key={n}>{n}</span>)}
               </div>
               <div className="lp-mobile-timeline-frame" aria-hidden="true" />
+              <div className="lp-mobile-bars" aria-hidden="true">
+                <span className="lp-mobile-bar lp-mobile-bar--7-9" />
+                <span className="lp-mobile-bar lp-mobile-bar--1-3" />
+                <span className="lp-mobile-bar lp-mobile-bar--3-5" />
+                <span className="lp-mobile-bar lp-mobile-bar--5-7" />
+                <span className="lp-mobile-bar lp-mobile-bar--5-7-low" />
+                <span className="lp-mobile-bar lp-mobile-bar--3-7-low" />
+                <span className="lp-mobile-bar lp-mobile-bar--5-7-bottom" />
+                <span className="lp-mobile-bar lp-mobile-bar--3-5-bottom" />
+              </div>
               {TRACKS.map((bars, ti) => (
                 <div key={ti} className="lp-track">
                   {bars.map((bar, bi) => (
