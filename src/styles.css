@@ -1016,13 +1016,16 @@ h1.hero-title .stop{display:block}
   .lp-session .lp-view-caption,
   .lp-arrangement .lp-view-caption{
     font-size:clamp(15px,1.15vw,20px);
-    margin-top:auto;
+    position:absolute;
+    bottom:clamp(-42px,-2.1vw,-24px);
+    margin:0;
+    z-index:2;
+  }
+  .lp-session .lp-view-caption{
+    left:0;
   }
   .lp-arrangement .lp-view-caption{
-    position:absolute;
-    top:var(--arrangement-caption-top);
     left:0;
-    margin:0;
   }
   .lp-session .lp-clip-grid{
     --session-line-span:calc((100% * 1.20022) - clamp(64px,10.75vw,306px));
@@ -1063,6 +1066,9 @@ h1.hero-title .stop{display:block}
   }
   .lp-arrangement-menu{
     right:0;
+  }
+  .lp-view-switch{
+    transform:translateX(clamp(-34px,-1.85vw,-22px));
   }
   .lp-arrangement .lp-timeline-ruler span:nth-child(n+2){transform:none}
   .lp-arrangement .lp-timeline::before,
