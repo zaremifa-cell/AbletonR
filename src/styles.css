@@ -996,6 +996,7 @@ h1.hero-title .stop{display:block}
     font-size:clamp(30px,3.8vw,60px);
     font-weight:700;
     width:50%;
+    transform:translateY(clamp(10px,.8vw,16px));
   }
   .lp-session,
   .lp-arrangement{
@@ -1186,8 +1187,8 @@ h1.hero-title .stop{display:block}
 
 /* ── CTA STRIP ── */
 .lp-cta{
-  background:var(--live);color:var(--ink);
-  padding:var(--s7) var(--pad);
+  background:#FDC878;color:var(--ink);
+  padding:var(--s4) var(--pad);
   display:flex;align-items:center;justify-content:space-between;
   flex-wrap:wrap;gap:var(--s4);
 }
