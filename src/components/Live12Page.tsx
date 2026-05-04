@@ -81,10 +81,10 @@ const TRACKS: { l: number; w: number }[][] = [
 ];
 
 const NEW_FEATURES = [
-  { img: "/live.jpg",  n: "01", title: "Mixer in Arrangement", desc: "The full power of the mixer, now available in Arrangement View." },
-  { img: "/push.jpg",  n: "02", title: "Stem Separation",      desc: "Extract vocals, drums, bass and more with built-in tools." },
-  { img: "/move.jpg",  n: "03", title: "Smarter Browser",      desc: "Tags, filters and collections to find what you need faster." },
-  { img: "/note.jpg",  n: "04", title: "New Creative Tools",   desc: "Devices and effects that open new sonic possibilities." },
+  { img: "/live/Bounce Groups.jpg",      n: "01", title: "Bounce Groups",        desc: "Print an entire group to audio, including its processing and return-track signal path." },
+  { img: "/live/Stem Separation.jpg",    n: "02", title: "Stem Separation",      desc: "Split vocals, drums, bass and other sounds from any audio clip, ready to rework." },
+  { img: "/live/Auto-Pan Tremolo.jpg",   n: "03", title: "Auto-Pan Tremolo",     desc: "Shape rhythmic movement with updated pan and tremolo controls that react to your audio." },
+  { img: "/live/A:B Feature.jpg",        n: "04", title: "A/B Feature",          desc: "Compare two device states instantly while testing mix tweaks or sound design ideas." },
 ];
 
 const WHY = [
