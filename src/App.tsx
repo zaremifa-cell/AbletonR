@@ -7,6 +7,7 @@ import Hero from "./components/Hero";
 import Learn from "./components/Learn";
 import Live12Page from "./components/Live12Page";
 import Nav from "./components/Nav";
+import Push3Page from "./components/Push3Page";
 
 function useReveal(dep: unknown) {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -135,6 +136,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/live" element={<Live12Page />} />
+        <Route path="/push" element={<Push3Page />} />
       </Routes>
     </>
   );

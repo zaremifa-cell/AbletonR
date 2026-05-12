@@ -20,7 +20,7 @@ function Nav() {
           </Link>
           <nav className="nav-main" aria-label="Primary">
             <NavLink to="/live">Live</NavLink>
-            <a href="#push">Push</a>
+            <NavLink to="/push">Push</NavLink>
             <a href="#move">Move</a>
             <a href="#note">Note</a>
             <a href="#packs">Packs</a>

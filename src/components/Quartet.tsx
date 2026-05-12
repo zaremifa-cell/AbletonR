@@ -39,7 +39,13 @@ function Quartet() {
         </div>
       </article>
 
-      <article className="window push" id="push" tabIndex={0}>
+      <article
+        className="window push"
+        id="push"
+        tabIndex={0}
+        onClick={() => navigate("/push")}
+        style={{ cursor: "pointer" }}
+      >
         <div className="window-label">
           <span className="type-of">
             <span className="mono cat">02</span>
@@ -60,9 +66,9 @@ function Quartet() {
               Hands-on hardware for making music with or without a computer. Velocity- and
               pressure-sensitive pads.
             </p>
-            <a href="#push-page" className="window-go">
+            <span className="window-go">
               View catalogue <span className="arr">&rarr;</span>
-            </a>
+            </span>
           </div>
         </div>
       </article>
