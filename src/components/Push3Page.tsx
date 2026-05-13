@@ -70,7 +70,7 @@ function Push3Page() {
       <section className="push-split" aria-labelledby="push-title">
         <aside className="push-product" aria-label="Push 3 product image">
           <div className="push-product-frame">
-            <img src="/push/push3-product.jpg" alt="Ableton Push 3 hardware" />
+            <img src="/push/push3-product-balanced.jpg" alt="Ableton Push 3 hardware" />
           </div>
           <div className="push-product-note">
             <span className="mono">PUSH 3</span>
