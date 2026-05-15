@@ -1,8 +1,13 @@
+import { useEffect, useState } from "react";
+
+const DEFAULT_PUSH_IMAGE = "/push/Push3 product.png";
+
 const PUSH_ROLES = [
   {
     label: "01",
     title: "Expressive instrument",
     text: "Play melodies, beats and textures through 64 MPE pads that respond to pressure, position and movement.",
+    image: "/push/Expressive Instrument.png",
   },
   {
     label: "02",
@@ -65,12 +70,45 @@ const CONNECTIONS = [
 ];
 
 function Push3Page() {
+  const [productImage, setProductImage] = useState(DEFAULT_PUSH_IMAGE);
+  const [previousProductImage, setPreviousProductImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!previousProductImage) return;
+
+    const timeoutId = window.setTimeout(() => {
+      setPreviousProductImage(null);
+    }, 1100);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [previousProductImage]);
+
+  const changeProductImage = (nextImage: string) => {
+    if (nextImage === productImage) return;
+
+    setPreviousProductImage(productImage);
+    setProductImage(nextImage);
+  };
+
   return (
     <main className="push-page">
       <section className="push-split" aria-labelledby="push-title">
         <aside className="push-product" aria-label="Push 3 product image">
-          <div className="push-product-frame">
-            <img src="/push/push3-product-balanced.jpg" alt="Ableton Push 3 hardware" />
+          <div className={`push-product-frame${previousProductImage ? " is-transitioning" : ""}`}>
+            <img
+              key={productImage}
+              className="push-product-image push-product-image--current"
+              src={productImage}
+              alt="Ableton Push 3 hardware"
+            />
+            {previousProductImage && (
+              <img
+                className="push-product-image push-product-image--previous"
+                src={previousProductImage}
+                alt=""
+                aria-hidden="true"
+              />
+            )}
           </div>
           <div className="push-product-note">
             <span className="mono">PUSH 3</span>
@@ -92,13 +130,37 @@ function Push3Page() {
           <section className="push-section push-section--tight">
             <p className="push-kicker">What Push really is</p>
             <div className="push-role-grid">
-              {PUSH_ROLES.map((role) => (
-                <article key={role.title} className="push-role">
-                  <span className="push-role-n mono">{role.label}</span>
-                  <h2>{role.title}</h2>
-                  <p>{role.text}</p>
-                </article>
-              ))}
+              {PUSH_ROLES.map((role) => {
+                const roleImage = "image" in role ? role.image : undefined;
+                const isRoleImageActive = Boolean(roleImage && productImage === roleImage);
+
+                return (
+                  <article
+                    key={role.title}
+                    className={[
+                      "push-role",
+                      roleImage ? "push-role--has-control" : "",
+                      isRoleImageActive ? "is-active" : "",
+                    ].filter(Boolean).join(" ")}
+                  >
+                    {roleImage && (
+                      <button
+                        className={`push-role-toggle${isRoleImageActive ? " is-active" : ""}`}
+                        type="button"
+                        aria-label={isRoleImageActive ? "Reset Push image" : "Show expressive instrument image"}
+                        onClick={() => {
+                          changeProductImage(isRoleImageActive ? DEFAULT_PUSH_IMAGE : roleImage);
+                        }}
+                      >
+                        <span />
+                      </button>
+                    )}
+                    {!roleImage && <span className="push-role-n mono">{role.label}</span>}
+                    <h2>{role.title}</h2>
+                    <p>{role.text}</p>
+                  </article>
+                );
+              })}
             </div>
           </section>
 
