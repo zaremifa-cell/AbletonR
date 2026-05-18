@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const DEFAULT_PUSH_IMAGE = "/push/Push3 product.png";
 
@@ -13,45 +13,45 @@ const PUSH_ROLES = [
     label: "02",
     title: "Sampler",
     text: "Record, slice and reshape audio until a sound becomes playable material under your hands.",
+    image: "/push/Sampling_new.png",
   },
   {
     label: "03",
     title: "Live controller",
     text: "Use the screen, pads and encoders as a physical surface for clips, devices, mixer decisions and arrangement work.",
+    image: "/push/Live Controller_new.png",
   },
   {
     label: "04",
     title: "Recording studio",
     text: "Capture microphones, guitars and synthesizers through the built-in audio interface directly into clips.",
+    image: "/push/Recording Studio_new.png",
   },
   {
     label: "05",
     title: "Synthesizer",
     text: "Shape native Live instruments and effects without losing the tactile focus of a dedicated hardware instrument.",
+    image: "/push/Synthesizer_new.png",
   },
   {
     label: "06",
     title: "Live show",
     text: "Launch clips, sequence parts and perform ideas when the studio sketch needs to become a real-time set.",
+    image: "/push/Live Show_new.png",
   },
-];
-
-const PUSH_FLOW = [
-  "Play",
-  "Capture",
-  "Resample",
-  "Arrange",
 ];
 
 const PUSH_CONFIGS = [
   {
-    title: "Push Standalone",
+    title: "Push 3 Standalone",
     meta: "Processor / battery / SSD",
+    image: "/push/Push3 product.png",
     text: "The same Push, with internal components for making music away from the computer. Start a Set, record audio and keep ideas moving outside the studio.",
   },
   {
-    title: "Push Tethered",
+    title: "Push 3 Tethered",
     meta: "USB-C / Mac or PC / Live",
+    image: "/push/Push Tethered.png",
     text: "The same creative surface connected to Live. Use Push as the physical layer of your MacBook-based studio and upgrade later if standalone becomes useful.",
   },
 ];
@@ -72,13 +72,16 @@ const CONNECTIONS = [
 function Push3Page() {
   const [productImage, setProductImage] = useState(DEFAULT_PUSH_IMAGE);
   const [previousProductImage, setPreviousProductImage] = useState<string | null>(null);
+  const [isWorkSectionActive, setIsWorkSectionActive] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const workSectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!previousProductImage) return;
 
     const timeoutId = window.setTimeout(() => {
       setPreviousProductImage(null);
-    }, 1100);
+    }, 3000);
 
     return () => window.clearTimeout(timeoutId);
   }, [previousProductImage]);
@@ -90,9 +93,37 @@ function Push3Page() {
     setProductImage(nextImage);
   };
 
+  const isRoleImageLocked = productImage !== DEFAULT_PUSH_IMAGE;
+  const tetheredConfig = PUSH_CONFIGS[1];
+
+  const updateWorkSectionActive = () => {
+    const scrollEl = scrollRef.current;
+    const workSection = workSectionRef.current;
+    if (!scrollEl || !workSection) return;
+
+    const sectionTop = workSection.offsetTop - scrollEl.scrollTop;
+    const sectionBottom = sectionTop + workSection.offsetHeight;
+    const activationLine = scrollEl.clientHeight * 0.48;
+
+    setIsWorkSectionActive(sectionTop <= activationLine && sectionBottom >= activationLine);
+  };
+
+  useEffect(() => {
+    updateWorkSectionActive();
+    window.addEventListener("resize", updateWorkSectionActive);
+    return () => window.removeEventListener("resize", updateWorkSectionActive);
+  }, []);
+
   return (
     <main className="push-page">
-      <section className="push-split" aria-labelledby="push-title">
+      <section
+        className={`push-split${isWorkSectionActive ? " is-work-section-active" : ""}`}
+        aria-labelledby="push-title"
+      >
+        <h2 className="push-work-title push-work-title--split" aria-hidden={!isWorkSectionActive}>
+          <span>Two ways</span>
+          <span>to work.</span>
+        </h2>
         <aside className="push-product" aria-label="Push 3 product image">
           <div className={`push-product-frame${previousProductImage ? " is-transitioning" : ""}`}>
             <img
@@ -111,12 +142,13 @@ function Push3Page() {
             )}
           </div>
           <div className="push-product-note">
-            <span className="mono">PUSH 3</span>
+            <span className="mono">PUSH 3 STANDALONE</span>
             <span>Hardware surface for Ableton Live</span>
           </div>
+          <p className="push-product-config-copy">{PUSH_CONFIGS[0].text}</p>
         </aside>
 
-        <div className="push-scroll">
+        <div className="push-scroll" ref={scrollRef} onScroll={updateWorkSectionActive}>
           <header className="push-intro">
             <p className="push-kicker">Overview</p>
             <h1 id="push-title">Push 3</h1>
@@ -133,6 +165,7 @@ function Push3Page() {
               {PUSH_ROLES.map((role) => {
                 const roleImage = "image" in role ? role.image : undefined;
                 const isRoleImageActive = Boolean(roleImage && productImage === roleImage);
+                const isRoleImageDisabled = Boolean(roleImage && isRoleImageLocked && !isRoleImageActive);
 
                 return (
                   <article
@@ -141,13 +174,19 @@ function Push3Page() {
                       "push-role",
                       roleImage ? "push-role--has-control" : "",
                       isRoleImageActive ? "is-active" : "",
+                      isRoleImageDisabled ? "is-disabled" : "",
                     ].filter(Boolean).join(" ")}
                   >
                     {roleImage && (
                       <button
-                        className={`push-role-toggle${isRoleImageActive ? " is-active" : ""}`}
+                        className={[
+                          "push-role-toggle",
+                          isRoleImageActive ? "is-active" : "",
+                          isRoleImageDisabled ? "is-disabled" : "",
+                        ].filter(Boolean).join(" ")}
                         type="button"
-                        aria-label={isRoleImageActive ? "Reset Push image" : "Show expressive instrument image"}
+                        aria-label={isRoleImageActive ? "Reset Push image" : `Show ${role.title} image`}
+                        disabled={isRoleImageDisabled}
                         onClick={() => {
                           changeProductImage(isRoleImageActive ? DEFAULT_PUSH_IMAGE : roleImage);
                         }}
@@ -164,32 +203,18 @@ function Push3Page() {
             </div>
           </section>
 
-          <section className="push-section">
-            <p className="push-kicker">Continuity</p>
-            <h2 className="push-section-title">From hands to arrangement.</h2>
-            <p className="push-copy">
-              Sketch with the pads, record into clips, resample the result and continue the Set in
-              Live. Push does not replace the computer; it makes the computer feel like an
-              instrument.
-            </p>
-            <ol className="push-flow" aria-label="Push workflow">
-              {PUSH_FLOW.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ol>
-          </section>
-
-          <section className="push-section">
-            <p className="push-kicker">Configurations</p>
-            <h2 className="push-section-title">Two ways to work.</h2>
-            <div className="push-config-grid">
-              {PUSH_CONFIGS.map((config) => (
-                <article key={config.title} className="push-config">
-                  <h3>{config.title}</h3>
-                  <span>{config.meta}</span>
-                  <p>{config.text}</p>
-                </article>
-              ))}
+          <section className="push-section push-work-section" ref={workSectionRef}>
+            <div className="push-work-media-grid push-work-media-grid--single">
+              <article className="push-work-card">
+                <div className="push-work-image-wrap">
+                  <img src={tetheredConfig.image} alt={`${tetheredConfig.title} hardware`} />
+                </div>
+                <p className="push-work-config-copy">{tetheredConfig.text}</p>
+                <div className="push-work-note">
+                  <span className="mono">{tetheredConfig.title}</span>
+                  <span>Hardware surface for Ableton Live</span>
+                </div>
+              </article>
             </div>
           </section>
 
