@@ -71,6 +71,8 @@ Each variant should state:
 
 The user is the primary visual reviewer.
 
+Do not create or use agent-generated screenshots as visual proof unless the user explicitly asks for them. When visual verification is needed, ask the user for a screenshot and treat that screenshot as the review source.
+
 When browser inspection is unreliable or insufficient:
 
 1. Ask the user for a screenshot.
@@ -87,4 +89,3 @@ Useful visual briefs can be saved under:
 `project-governance/visual-briefs/`
 
 Only save them when they are likely to be reused or explain a meaningful design decision.
-

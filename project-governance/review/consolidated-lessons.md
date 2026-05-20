@@ -64,3 +64,10 @@ Permanent lessons distilled from project sessions. Add only specific, evidence-b
 - Evidence/source: `project-governance/sessions/2026-05-18-0950-session.md`, Push `Two ways to work` correction after the title crossed the central split line.
 - Why it matters: A single letter intersecting the divider made the layout look accidental even though the images were correct.
 - Rule to follow next time: If a title spans a split layout with a visible center divider, split the title into left/right spans or otherwise reserve a clear center gap before tuning image placement.
+
+## Lesson 10: User screenshots are the visual review source
+
+- Lesson: Do not use agent-generated screenshots as proof of visual correctness unless the user explicitly asks for them.
+- Evidence/source: 2026-05-19 user correction after an agent screenshot-based check missed that the previous Push `Two ways to work` footer was still visible above the Connections section.
+- Why it matters: The user's browser screenshot is the authoritative visual context; agent screenshots can capture a different scroll position, viewport, or state and lead to incorrect claims.
+- Rule to follow next time: For visual approval, ask for and use the user's screenshot. Use build/code checks for technical validation only, and do not claim visual correctness from agent-created screenshots.

@@ -125,6 +125,9 @@ function Push3Page() {
           <span>to work.</span>
         </h2>
         <aside className="push-product" aria-label="Push 3 product image">
+          <a className="push-buy-button" href="#buy" aria-label="Buy Push">
+            Buy
+          </a>
           <div className={`push-product-frame${previousProductImage ? " is-transitioning" : ""}`}>
             <img
               key={productImage}
@@ -204,8 +207,27 @@ function Push3Page() {
           </section>
 
           <section className="push-section push-work-section" ref={workSectionRef}>
+            <h2 className="push-work-mobile-title">Two ways to work.</h2>
             <div className="push-work-media-grid push-work-media-grid--single">
+              <article className="push-work-card push-work-card--mobile-standalone">
+                <div className="push-work-mobile-label push-work-mobile-label--standalone" aria-hidden="true">
+                  <span className="mono">{PUSH_CONFIGS[0].title}</span>
+                  <div className="push-work-mobile-cue">→</div>
+                </div>
+                <div className="push-work-image-wrap">
+                  <img src={PUSH_CONFIGS[0].image} alt={`${PUSH_CONFIGS[0].title} hardware`} />
+                </div>
+                <p className="push-work-config-copy">{PUSH_CONFIGS[0].text}</p>
+                <div className="push-work-note">
+                  <span className="mono">{PUSH_CONFIGS[0].title}</span>
+                  <span>Standalone music making</span>
+                </div>
+              </article>
               <article className="push-work-card">
+                <div className="push-work-mobile-label push-work-mobile-label--tethered" aria-hidden="true">
+                  <div className="push-work-mobile-cue push-work-mobile-cue--back">←</div>
+                  <span className="mono">{tetheredConfig.title}</span>
+                </div>
                 <div className="push-work-image-wrap">
                   <img src={tetheredConfig.image} alt={`${tetheredConfig.title} hardware`} />
                 </div>
@@ -218,7 +240,7 @@ function Push3Page() {
             </div>
           </section>
 
-          <section className="push-section">
+          <section className="push-section push-connections-section">
             <p className="push-kicker">Connections</p>
             <h2 className="push-section-title">A compact studio hub.</h2>
             <div className="push-ports" aria-hidden="true">
@@ -237,6 +259,10 @@ function Push3Page() {
                 </li>
               ))}
             </ol>
+            <div className="push-made-in" aria-label="Made in Berlin">
+              <span>Made in Berlin</span>
+              <img src="/ableton-logo.svg" alt="Ableton" />
+            </div>
           </section>
         </div>
       </section>
