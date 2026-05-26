@@ -72,16 +72,18 @@ const Icon = ({ name }: { name: string }) => {
       );
     case "usb":
       return (
-        <svg viewBox="0 0 32 32" aria-hidden="true">
-          <rect x="7" y="12" width="18" height="8" rx="4" />
-          <path d="M11 16h10" />
+        <svg className="move-icon-usb" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="4" y="13" width="24" height="6" rx="3" />
         </svg>
       );
     case "wave":
       return (
-        <svg viewBox="0 0 32 32" aria-hidden="true">
-          <path d="M2 16h3l2-8 4 17 3-13 3 8 3-5 2 1h8" />
-          <path d="M6 16h20" />
+        <svg className="move-icon-resample" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="4" y="15" width="3" height="2" />
+          <rect x="9" y="11" width="3" height="10" />
+          <rect x="14" y="7" width="3" height="18" />
+          <rect x="19" y="12" width="3" height="8" />
+          <rect x="24" y="14" width="3" height="4" />
         </svg>
       );
     default:
@@ -154,33 +156,14 @@ function MovePage() {
         </div>
       </section>
 
-      <section className="move-section move-section--capture">
+      <section className="move-section move-section--sample">
+        <div className="move-media move-media--ports">
+            <img src="/move/ableton_move_clean_removed_top_bottom.jpg" alt="Back panel of Move showing audio and USB connections" />
+        </div>
         <div className="move-copy">
           <span className="move-number">04</span>
-          <h2>Capture before you overthink.</h2>
-          <p>Hit Capture to turn the moment into something you can build on.</p>
-          <ol className="move-flow">
-            <li><span>Play</span></li>
-            <li><span>Capture</span></li>
-            <li><span>Clip appears</span></li>
-            <li><span>Tempo detected</span></li>
-          </ol>
-        </div>
-        <div className="move-media move-media--capture">
-          <img src="/move/capture.png" alt="Finger pressing a glowing pad on Move" />
-          <aside className="move-tempo-card" aria-label="Detected tempo">
-            <span>Tempo</span>
-            <strong>120.00</strong>
-            <em>Detected</em>
-          </aside>
-        </div>
-      </section>
-
-      <section className="move-section move-section--sample">
-        <div className="move-copy">
-          <span className="move-number">05</span>
           <h2>Sample the world.</h2>
-          <p>Built-in mic, line-in, and USB-C let you capture anything. Resample, chop, and make it yours.</p>
+          <p>Built-in mic, line-in, and USB-C let you capture anything before you overthink it. Resample, chop, and make it yours.</p>
           <ul className="move-icon-row move-icon-row--compact">
             {SAMPLE_INPUTS.map((input) => (
               <li key={input.label}>
@@ -190,24 +173,31 @@ function MovePage() {
             ))}
           </ul>
         </div>
-        <div className="move-media move-media--ports">
-          <img src="/move/sample-ports.png" alt="Close-up of Move connection panel" />
-        </div>
       </section>
 
       <section className="move-section move-section--cloud">
+        <div className="move-media move-media--cloud">
+          <img src="/move/Cloud.jpg" alt="Move sending a sketch to Ableton Cloud and Live" />
+        </div>
         <div className="move-copy">
-          <span className="move-number">06</span>
+          <span className="move-number">05</span>
           <h2>From sketch to full track.</h2>
           <p>Move grows with your ideas. Send to Ableton Cloud, open in Live, and keep going.</p>
         </div>
-        <div className="move-media move-media--cloud">
-          <img src="/move/sketch-cloud-live.png" alt="Move, cloud and laptop workflow" />
-          <div className="move-cloud-labels" aria-hidden="true">
-            <span>Move</span>
-            <span>Ableton Cloud</span>
-            <span>Ableton Live</span>
-          </div>
+      </section>
+
+      <section className="move-section move-section--box" aria-labelledby="move-box-title">
+        <img src="/move/Whats in the box.jpg" alt="Ableton Move box contents" />
+        <div className="move-box-copy">
+          <h2 id="move-box-title">What's in the box</h2>
+          <ul>
+            <li>Ableton Move</li>
+            <li>Power supply</li>
+            <li>Regional power cable</li>
+            <li>USB-C cable</li>
+            <li>Printed onboarding guide</li>
+            <li>Includes Live 12.1 Intro</li>
+          </ul>
         </div>
       </section>
     </main>
