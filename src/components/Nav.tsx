@@ -21,7 +21,7 @@ function Nav() {
           <nav className="nav-main" aria-label="Primary">
             <NavLink to="/live">Live</NavLink>
             <NavLink to="/push">Push</NavLink>
-            <a href="#move">Move</a>
+            <NavLink to="/move">Move</NavLink>
             <a href="#note">Note</a>
             <a href="#packs">Packs</a>
             <a href="#learn">Learn</a>

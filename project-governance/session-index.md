@@ -21,7 +21,7 @@ Required fields:
   - `src/styles.css`
   - `project-governance/session-index.md`
   - `project-governance/sessions/2026-05-20-0936-session.md`
-- Result: Footer sign-off now uses the Push-style text-plus-logo treatment; social links are monochrome in the brand block and ordered vertically; desktop footer columns now use equal horizontal spacing and fixed row tracks; final-screen vertical spacing is tighter. Build passed.
+- Result: Footer sign-off now uses the Push-style text-plus-logo treatment; social links are monochrome in the brand block and ordered vertically; desktop footer columns now use equal horizontal spacing and fixed row tracks; final-screen vertical spacing is tighter; `Subscribe` now matches the measured `TRY LIVE FREE` button dimensions without changing the nav CTA. Build passed.
 - Unresolved issues: Final visual approval requires a user-provided screenshot; social links still use placeholder `#` URLs.
 - Session log: `project-governance/sessions/2026-05-20-0936-session.md`
 

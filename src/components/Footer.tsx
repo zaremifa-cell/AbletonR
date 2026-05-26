@@ -73,7 +73,9 @@ function Footer() {
                 aria-label="Email address"
                 required
               />
-              <button type="submit">Subscribe</button>
+              <button type="submit">
+                Subscribe <span className="arr">&rarr;</span>
+              </button>
             </div>
             <p className="sub-fine">
               Unsubscribe any time. One newsletter a month. We never share your address.

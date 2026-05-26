@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import Hero from "./components/Hero";
 import Learn from "./components/Learn";
 import Live12Page from "./components/Live12Page";
+import MovePage from "./components/MovePage";
 import Nav from "./components/Nav";
 import Push3Page from "./components/Push3Page";
 
@@ -137,6 +138,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/live" element={<Live12Page />} />
         <Route path="/push" element={<Push3Page />} />
+        <Route path="/move" element={<MovePage />} />
       </Routes>
     </>
   );
