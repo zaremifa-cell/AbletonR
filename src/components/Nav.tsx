@@ -1,6 +1,14 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import type { PackSummary } from "./PacksPage";
 
-function Nav() {
+type NavProps = {
+  activePack: PackSummary | null;
+};
+
+function Nav({ activePack }: NavProps) {
+  const location = useLocation();
+  const isPacksGrid = location.pathname === "/packs";
+
   return (
     <>
       <div className="promo">
@@ -23,18 +31,29 @@ function Nav() {
             <NavLink to="/push">Push</NavLink>
             <NavLink to="/move">Move</NavLink>
             <a href="#note">Note</a>
-            <a href="#packs">Packs</a>
+            <NavLink to="/packs">Packs</NavLink>
             <a href="#learn">Learn</a>
             <a href="#shop">Shop</a>
           </nav>
-          <div className="nav-end">
-            <a href="#login" className="login mono">
-              Log&nbsp;in
-            </a>
-            <a href="#trial" className="btn">
-              Try Live Free <span className="arr">&rarr;</span>
-            </a>
-          </div>
+          {isPacksGrid ? (
+            <div className="nav-end nav-pack-end">
+              <span className="nav-pack-title">{activePack?.title ?? "Packs / Max for Live"}</span>
+              {activePack && (
+                <Link to={`/packs/${activePack.slug}#buy`} className="btn nav-pack-buy">
+                  Buy Now <span className="arr">&rarr;</span>
+                </Link>
+              )}
+            </div>
+          ) : (
+            <div className="nav-end">
+              <a href="#login" className="login mono">
+                Log&nbsp;in
+              </a>
+              <a href="#trial" className="btn">
+                Try Live Free <span className="arr">&rarr;</span>
+              </a>
+            </div>
+          )}
         </div>
       </header>
     </>

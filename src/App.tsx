@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Artists from "./components/Artists";
 import Features from "./components/Features";
@@ -8,6 +8,7 @@ import Learn from "./components/Learn";
 import Live12Page from "./components/Live12Page";
 import MovePage from "./components/MovePage";
 import Nav from "./components/Nav";
+import PacksPage, { type PackSummary } from "./components/PacksPage";
 import Push3Page from "./components/Push3Page";
 
 function useReveal(dep: unknown) {
@@ -131,14 +132,18 @@ function HomePage() {
 }
 
 function App() {
+  const [activePack, setActivePack] = useState<PackSummary | null>(null);
+
   return (
     <>
-      <Nav />
+      <Nav activePack={activePack} />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/live" element={<Live12Page />} />
         <Route path="/push" element={<Push3Page />} />
         <Route path="/move" element={<MovePage />} />
+        <Route path="/packs" element={<PacksPage onPackHover={setActivePack} />} />
+        <Route path="/packs/:packSlug" element={<PacksPage onPackHover={setActivePack} />} />
       </Routes>
     </>
   );
