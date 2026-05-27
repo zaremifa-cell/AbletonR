@@ -3,9 +3,10 @@ import type { PackSummary } from "./PacksPage";
 
 type NavProps = {
   activePack: PackSummary | null;
+  cartCount: number;
 };
 
-function Nav({ activePack }: NavProps) {
+function Nav({ activePack, cartCount }: NavProps) {
   const location = useLocation();
   const isPacksGrid = location.pathname === "/packs";
 
@@ -14,10 +15,10 @@ function Nav({ activePack }: NavProps) {
       <div className="promo">
         <div className="promo-inner">
           <span className="promo-dot"></span>
-          <span>Rent-to-Own Live Suite &mdash; own it after 36 months from $25/month.</span>
-          <a href="#rto">
+          <span>Rent-to-Own Live Suite &mdash; own it after monthly payments.</span>
+          <Link to="/rent-to-own">
             Learn more <span className="arr">&rarr;</span>
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -33,7 +34,7 @@ function Nav({ activePack }: NavProps) {
             <a href="#note">Note</a>
             <NavLink to="/packs">Packs</NavLink>
             <a href="#learn">Learn</a>
-            <a href="#shop">Shop</a>
+            <NavLink to="/shop">Shop</NavLink>
           </nav>
           {isPacksGrid ? (
             <div className="nav-end nav-pack-end">
@@ -46,9 +47,12 @@ function Nav({ activePack }: NavProps) {
             </div>
           ) : (
             <div className="nav-end">
-              <a href="#login" className="login mono">
+              <Link to="/shop/account" className="login mono">
                 Log&nbsp;in
-              </a>
+              </Link>
+              <Link to="/shop/cart" className="nav-cart">
+                Cart <span>{cartCount}</span>
+              </Link>
               <a href="#trial" className="btn">
                 Try Live Free <span className="arr">&rarr;</span>
               </a>

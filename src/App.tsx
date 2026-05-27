@@ -10,6 +10,8 @@ import MovePage from "./components/MovePage";
 import Nav from "./components/Nav";
 import PacksPage, { type PackSummary } from "./components/PacksPage";
 import Push3Page from "./components/Push3Page";
+import RentToOwnPage from "./components/RentToOwnPage";
+import ShopPage, { type AddToCartInput, type CartItem, getCartCount } from "./components/ShopPage";
 
 function useReveal(dep: unknown) {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -133,17 +135,75 @@ function HomePage() {
 
 function App() {
   const [activePack, setActivePack] = useState<PackSummary | null>(null);
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    try {
+      return JSON.parse(window.localStorage.getItem("ableton-shop-cart") ?? "[]") as CartItem[];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem("ableton-shop-cart", JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  const addToCart = ({ slug, quantity = 1, option }: AddToCartInput) => {
+    setCartItems((items) => {
+      const existing = items.find((item) => item.slug === slug && item.option === option);
+      if (existing) {
+        return items.map((item) =>
+          item.slug === slug && item.option === option
+            ? { ...item, quantity: Math.min(9, item.quantity + quantity) }
+            : item
+        );
+      }
+      return [...items, { slug, quantity: Math.min(9, quantity), option }];
+    });
+  };
+
+  const updateCart = (slug: string, quantity: number, option?: string) => {
+    setCartItems((items) =>
+      items.map((item) =>
+        item.slug === slug && item.option === option ? { ...item, quantity: Math.min(9, quantity) } : item
+      )
+    );
+  };
+
+  const removeFromCart = (slug: string, option?: string) => {
+    setCartItems((items) => items.filter((item) => !(item.slug === slug && item.option === option)));
+  };
 
   return (
     <>
-      <Nav activePack={activePack} />
+      <Nav activePack={activePack} cartCount={getCartCount(cartItems)} />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/live" element={<Live12Page />} />
         <Route path="/push" element={<Push3Page />} />
         <Route path="/move" element={<MovePage />} />
+        <Route path="/rent-to-own" element={<RentToOwnPage />} />
         <Route path="/packs" element={<PacksPage onPackHover={setActivePack} />} />
         <Route path="/packs/:packSlug" element={<PacksPage onPackHover={setActivePack} />} />
+        <Route
+          path="/shop"
+          element={<ShopPage cartItems={cartItems} onAddToCart={addToCart} onUpdateCart={updateCart} onRemoveFromCart={removeFromCart} onClearCart={() => setCartItems([])} />}
+        />
+        <Route
+          path="/shop/product/:productSlug"
+          element={<ShopPage cartItems={cartItems} onAddToCart={addToCart} onUpdateCart={updateCart} onRemoveFromCart={removeFromCart} onClearCart={() => setCartItems([])} />}
+        />
+        <Route
+          path="/shop/cart"
+          element={<ShopPage cartItems={cartItems} onAddToCart={addToCart} onUpdateCart={updateCart} onRemoveFromCart={removeFromCart} onClearCart={() => setCartItems([])} />}
+        />
+        <Route
+          path="/shop/checkout"
+          element={<ShopPage cartItems={cartItems} onAddToCart={addToCart} onUpdateCart={updateCart} onRemoveFromCart={removeFromCart} onClearCart={() => setCartItems([])} />}
+        />
+        <Route
+          path="/shop/account"
+          element={<ShopPage cartItems={cartItems} onAddToCart={addToCart} onUpdateCart={updateCart} onRemoveFromCart={removeFromCart} onClearCart={() => setCartItems([])} />}
+        />
       </Routes>
     </>
   );

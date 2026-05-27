@@ -13,6 +13,20 @@ Required fields:
 
 ## Sessions
 
+### 2026-05-27 10:17 EEST
+
+- Task summary: Built a high-end front-end Shop flow with product hierarchy, cart, checkout, and demo account experience.
+- Files touched:
+  - `src/App.tsx`
+  - `src/components/Nav.tsx`
+  - `src/components/ShopPage.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-05-27-1017-session.md`
+- Result: Added `/shop`, `/shop/product/:productSlug`, `/shop/cart`, `/shop/checkout`, and `/shop/account`. Cart state persists in localStorage, header shows cart count, product pages support options and quantity, cart supports quantity edits/removal, checkout is a clearly marked no-payment demo flow, and account is a fake front-end demo area. The landing page was simplified by removing the horizontal category rail, placing Products above Latest, removing prices from cards, and using functioning card-level `Add to cart` actions aligned to the right side of each card. Product cards now use `Live 12`, `Push`, `Move`, `Packs`, `Note`, and `Merchandise`, with Latest showing `Live 12`, `Note`, and `Merchandise`. Shop hero typography was reduced toward the Push scale, Products now uses a single horizontal product rail with overscroll containment, product imagery fills the card frame with muted/blurred default treatment and clear/color hover, the unwanted bottom rail line is removed, and `Add to cart` gives a size-stable white-text flash confirmation. Build passed.
+- Unresolved issues: Final visual approval requires a user-provided screenshot; product prices/copy are prototype content; no backend/auth/payment exists by design.
+- Session log: `project-governance/sessions/2026-05-27-1017-session.md`
+
 ### 2026-05-27 09:04 EEST
 
 - Task summary: Created the internal Packs archive page and pack detail flow using the 36 images in `public/packs/packs_footage/`.
