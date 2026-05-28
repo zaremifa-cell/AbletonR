@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import Footer from "./Footer";
 
 export type ShopProduct = {
   slug: string;
@@ -111,8 +112,6 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
   },
 ];
 
-const FEATURED = ["live-12", "note", "merchandise"];
-
 export const getShopProduct = (slug: string) => SHOP_PRODUCTS.find((product) => product.slug === slug);
 
 export const getCartCount = (items: CartItem[]) =>
@@ -131,12 +130,52 @@ const getSubtotal = (items: CartItem[]) =>
   getCartLines(items).reduce((total, item) => total + item.lineTotal, 0);
 
 function ShopLanding({ onAddToCart }: Pick<ShopPageProps, "onAddToCart">) {
+  const productRailRef = useRef<HTMLDivElement>(null);
+  const [railProgress, setRailProgress] = useState({ left: 0, width: 100 });
+
+  useEffect(() => {
+    const rail = productRailRef.current;
+    if (!rail) return;
+
+    let frameId = 0;
+    const updateProgress = () => {
+      frameId = 0;
+      const maxScroll = rail.scrollWidth - rail.clientWidth;
+      if (maxScroll <= 0) {
+        setRailProgress({ left: 0, width: 100 });
+        return;
+      }
+
+      const width = Math.max(14, (rail.clientWidth / rail.scrollWidth) * 100);
+      const left = (rail.scrollLeft / maxScroll) * (100 - width);
+      setRailProgress({ left, width });
+    };
+
+    const requestUpdate = () => {
+      if (frameId) return;
+      frameId = window.requestAnimationFrame(updateProgress);
+    };
+
+    updateProgress();
+    rail.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+
+    return () => {
+      if (frameId) window.cancelAnimationFrame(frameId);
+      rail.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+    };
+  }, []);
+
   return (
     <main className="shop-page">
       <section className="shop-hero">
         <div>
           <h1>Shop</h1>
-          <p>Explore Live, Push, Move, Packs, education offers, and selected merchandise in a front-end demo buying flow.</p>
+          <p className="shop-hero-copy">
+            <span>Explore Live, Push, Move, Packs, education offers, and</span>
+            <span className="shop-hero-copy-line">selected merchandise in a front-end demo buying flow.</span>
+          </p>
         </div>
         <div className="shop-hero-links">
           <Link to="/shop/cart" className="shop-text-link">View cart</Link>
@@ -149,25 +188,23 @@ function ShopLanding({ onAddToCart }: Pick<ShopPageProps, "onAddToCart">) {
           <h2>Products</h2>
           <p>Software, hardware, and sound content for music making.</p>
         </div>
-        <div className="shop-product-grid">
+        <div className="shop-product-grid" ref={productRailRef}>
           {SHOP_PRODUCTS.map((product) => (
             <ProductCard key={product.slug} product={product} onAddToCart={onAddToCart} />
           ))}
         </div>
+        <div className="shop-product-scrollbar" aria-hidden="true">
+          <span
+            className="shop-product-scrollbar-thumb"
+            style={{
+              left: `${railProgress.left}%`,
+              width: `${railProgress.width}%`,
+            }}
+          />
+        </div>
       </section>
 
-      <section className="shop-section shop-section--compact" id="shop-featured">
-        <div className="shop-section-head">
-          <h2>Latest</h2>
-          <p>Direct routes into the core Ableton product system.</p>
-        </div>
-        <div className="shop-featured-grid">
-          {FEATURED.map((slug) => {
-            const product = getShopProduct(slug)!;
-            return <ProductCard key={slug} product={product} compact onAddToCart={onAddToCart} />;
-          })}
-        </div>
-      </section>
+      <Footer newsletterKicker="Offers & Tutorials" />
     </main>
   );
 }

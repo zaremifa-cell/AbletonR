@@ -71,3 +71,24 @@ Permanent lessons distilled from project sessions. Add only specific, evidence-b
 - Evidence/source: 2026-05-19 user correction after an agent screenshot-based check missed that the previous Push `Two ways to work` footer was still visible above the Connections section.
 - Why it matters: The user's browser screenshot is the authoritative visual context; agent screenshots can capture a different scroll position, viewport, or state and lead to incorrect claims.
 - Rule to follow next time: For visual approval, ask for and use the user's screenshot. Use build/code checks for technical validation only, and do not claim visual correctness from agent-created screenshots.
+
+## Lesson 11: Measure alignment instead of estimating it
+
+- Lesson: When the user asks for two visual elements to share an exact line or equal distance from a divider, measure rendered DOM geometry and align to those measurements.
+- Evidence/source: `project-governance/sessions/2026-05-28-0926-session.md`, Shop hero correction where `Buying flow` and `View cart` needed equal distance from the lower white line.
+- Why it matters: Repeated eye-based adjustments created frustration and moved the wrong element. The successful correction measured the lower hero line to `Buying flow` and `View cart` and made both distances 35px.
+- Rule to follow next time: If exact alignment is requested, identify the relevant element rects, calculate the target distance or delta, apply the smallest scoped CSS change, and report the measured before/after values.
+
+## Lesson 12: Preserve vertical hierarchy during alignment refinements
+
+- Lesson: Do not convert vertically grouped content into separate horizontal grid columns when the user only asks for alignment and spacing refinement.
+- Evidence/source: `project-governance/sessions/2026-05-28-0926-session.md`, Shop hero correction where splitting `Shop` and its description into side-by-side grid items was rejected.
+- Why it matters: The requested result was the original hierarchy with better alignment, not a new composition.
+- Rule to follow next time: Before changing layout model, confirm whether the existing hierarchy should remain. Prefer margin, padding, line-height, and measured offsets over structural layout changes when the hierarchy is already accepted.
+
+## Lesson 13: Scroll affordances must not block scrolling
+
+- Lesson: Adding a cue for horizontal product scrolling must not interfere with natural rail scrolling.
+- Evidence/source: `project-governance/sessions/2026-05-28-0926-session.md`, Shop product rail correction where a JavaScript wheel guard prevented left/right scrolling and was rejected.
+- Why it matters: The indicator is secondary; the primary interaction must remain usable.
+- Rule to follow next time: For horizontal rail cues, prefer passive progress state and CSS overscroll containment. Do not intercept wheel/touch gestures unless there is a measured bug and the fix preserves native scrolling.

@@ -1,4 +1,52 @@
-function Footer() {
+import { type FormEvent, type ReactNode, useState } from "react";
+
+type NewsletterSignupProps = {
+  kicker?: ReactNode;
+};
+
+type FooterProps = {
+  newsletterKicker?: ReactNode;
+};
+
+export function NewsletterSignup({ kicker }: NewsletterSignupProps) {
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    event.currentTarget.reset();
+    setIsSubscribed(true);
+    window.setTimeout(() => setIsSubscribed(false), 1800);
+  };
+
+  return (
+    <section className="sub">
+      <div className="sub-inner">
+        <div>
+          <div className="kicker">{kicker ?? <>Section D &middot; Stay in touch</>}</div>
+          <h3>Offers, tutorials, downloads &mdash; once a month, no more.</h3>
+        </div>
+        <form className="sub-form" onSubmit={handleSubmit}>
+          <div className="sub-field">
+            <input
+              type="email"
+              placeholder="your.email@example.com"
+              aria-label="Email address"
+              required
+            />
+            <button type="submit">
+              {isSubscribed ? "Subscribed" : "Subscribe"} <span className="arr">&rarr;</span>
+            </button>
+          </div>
+          <p className="sub-fine">
+            Unsubscribe any time. One newsletter a month. We never share your address.
+          </p>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+function Footer({ newsletterKicker }: FooterProps = {}) {
   const socialLinks = [
     {
       label: "Instagram",
@@ -59,30 +107,7 @@ function Footer() {
 
   return (
     <>
-      <section className="sub">
-        <div className="sub-inner">
-          <div>
-            <div className="kicker">Section D &middot; Stay in touch</div>
-            <h3>Offers, tutorials, downloads &mdash; once a month, no more.</h3>
-          </div>
-          <form className="sub-form">
-            <div className="sub-field">
-              <input
-                type="email"
-                placeholder="your.email@example.com"
-                aria-label="Email address"
-                required
-              />
-              <button type="submit">
-                Subscribe <span className="arr">&rarr;</span>
-              </button>
-            </div>
-            <p className="sub-fine">
-              Unsubscribe any time. One newsletter a month. We never share your address.
-            </p>
-          </form>
-        </div>
-      </section>
+      <NewsletterSignup kicker={newsletterKicker} />
 
       <footer>
         <div className="foot-top">

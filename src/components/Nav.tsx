@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import type { PackSummary } from "./PacksPage";
 
@@ -6,9 +7,35 @@ type NavProps = {
   cartCount: number;
 };
 
+const mobileNavItems = [
+  { label: "Live", to: "/live" },
+  { label: "Push", to: "/push" },
+  { label: "Move", to: "/move" },
+  { label: "Note", to: "/#note" },
+  { label: "Packs", to: "/packs" },
+  { label: "Shop", to: "/shop" },
+  { label: "Learn", to: "/#learn-section" },
+];
+
 function Nav({ activePack, cartCount }: NavProps) {
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isPacksGrid = location.pathname === "/packs";
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsMobileMenuOpen(false);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isMobileMenuOpen]);
 
   return (
     <>
@@ -24,9 +51,19 @@ function Nav({ activePack, cartCount }: NavProps) {
 
       <header className="nav">
         <div className="nav-inner">
-          <Link to="/" className="logo" aria-label="Ableton home">
+          <Link to="/" className="logo logo-home" aria-label="Ableton home">
             <img className="logo-mark" src="/ableton-logo.svg" alt="" aria-hidden="true" />
           </Link>
+          <button
+            className="logo mobile-logo-toggle"
+            type="button"
+            aria-label={isMobileMenuOpen ? "Close Ableton menu" : "Open Ableton menu"}
+            aria-controls="mobile-product-menu"
+            aria-expanded={isMobileMenuOpen}
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
+          >
+            <img className="logo-mark" src="/ableton-logo.svg" alt="" aria-hidden="true" />
+          </button>
           <nav className="nav-main" aria-label="Primary">
             <NavLink to="/live">Live</NavLink>
             <NavLink to="/push">Push</NavLink>
@@ -58,6 +95,20 @@ function Nav({ activePack, cartCount }: NavProps) {
               </a>
             </div>
           )}
+        </div>
+        <div
+          className={`mobile-product-menu${isMobileMenuOpen ? " is-open" : ""}`}
+          id="mobile-product-menu"
+          aria-hidden={!isMobileMenuOpen}
+        >
+          <nav className="mobile-product-menu-panel" aria-label="Mobile product navigation">
+            {mobileNavItems.map((item, index) => (
+              <Link key={item.label} to={item.to} className="mobile-product-link">
+                <span className="mobile-product-index">{String(index + 1).padStart(2, "0")}</span>
+                <span>{item.label}</span>
+              </Link>
+            ))}
+          </nav>
         </div>
       </header>
     </>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Artists from "./components/Artists";
 import Features from "./components/Features";
 import Footer from "./components/Footer";
@@ -100,28 +100,6 @@ function HomePage() {
     };
   }, []);
 
-  useEffect(() => {
-    const root = contentRef.current;
-    if (!root) return;
-    const form = root.querySelector<HTMLFormElement>(".sub-form");
-    const input = form?.querySelector<HTMLInputElement>("input");
-    const button = form?.querySelector<HTMLButtonElement>("button");
-    let timeoutId: number | null = null;
-    if (!form || !input || !button) return;
-    const handleSubmit = (e: Event) => {
-      e.preventDefault();
-      input.value = "";
-      button.textContent = "Subscribed";
-      if (timeoutId) window.clearTimeout(timeoutId);
-      timeoutId = window.setTimeout(() => { button.textContent = "Subscribe"; }, 1800);
-    };
-    form.addEventListener("submit", handleSubmit);
-    return () => {
-      form.removeEventListener("submit", handleSubmit);
-      if (timeoutId) window.clearTimeout(timeoutId);
-    };
-  }, []);
-
   return (
     <div ref={contentRef}>
       <Hero />
@@ -131,6 +109,21 @@ function HomePage() {
       <Footer />
     </div>
   );
+}
+
+function ScrollToHash() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!location.hash) return;
+
+    const targetId = decodeURIComponent(location.hash.slice(1));
+    window.requestAnimationFrame(() => {
+      document.getElementById(targetId)?.scrollIntoView({ block: "start" });
+    });
+  }, [location.pathname, location.hash]);
+
+  return null;
 }
 
 function App() {
@@ -175,6 +168,7 @@ function App() {
 
   return (
     <>
+      <ScrollToHash />
       <Nav activePack={activePack} cartCount={getCartCount(cartItems)} />
       <Routes>
         <Route path="/" element={<HomePage />} />

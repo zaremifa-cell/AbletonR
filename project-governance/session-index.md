@@ -13,6 +13,23 @@ Required fields:
 
 ## Sessions
 
+### 2026-05-28 09:26 EEST
+
+- Task summary: Added mobile Ableton-logo navigation and refined the Shop landing page lower section, product rail, header alignment, and scroll affordance.
+- Files touched:
+  - `src/App.tsx`
+  - `src/components/Footer.tsx`
+  - `src/components/Nav.tsx`
+  - `src/components/ShopPage.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-05-28-0926-session.md`
+  - `project-governance/visual-taste-profile.md`
+  - `project-governance/review/consolidated-lessons.md`
+- Result: Mobile users can open a logo-triggered vertical navigation menu for Live, Push, Move, Note, Packs, Shop, and Learn. Shop no longer shows `Latest`; it now includes the full homepage lower section with newsletter, Ableton footer columns, social links, `Made in Berlin`, logo, copyright, and legal links. Shop product cards now have complete even 1px rectangular borders, horizontal scrolling remains usable with browser overscroll containment, and a thin orange progress rail indicates scroll position without dots. Shop hero copy and `View cart` alignment were corrected using rendered DOM measurements so the lower white line to `Buying flow` distance equals the lower white line to `View cart` distance.
+- Unresolved issues: Final visual approval remains dependent on the user's screenshots; `Note` and `Learn` still link to homepage sections rather than dedicated route pages; Shop remains a front-end prototype.
+- Session log: `project-governance/sessions/2026-05-28-0926-session.md`
+
 ### 2026-05-27 10:17 EEST
 
 - Task summary: Built a high-end front-end Shop flow with product hierarchy, cart, checkout, and demo account experience.
