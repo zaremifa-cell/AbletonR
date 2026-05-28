@@ -3,6 +3,11 @@
 .cursor/
 .claude/
 .agents/
+.lighthouseci/
 node_modules/
 dist/
+coverage/
+playwright-report/
+storybook-static/
+test-results/
 *.tsbuildinfo

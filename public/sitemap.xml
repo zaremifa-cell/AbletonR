@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://ableton-r.vercel.app/</loc>
+  </url>
+  <url>
+    <loc>https://ableton-r.vercel.app/live</loc>
+  </url>
+  <url>
+    <loc>https://ableton-r.vercel.app/push</loc>
+  </url>
+  <url>
+    <loc>https://ableton-r.vercel.app/move</loc>
+  </url>
+  <url>
+    <loc>https://ableton-r.vercel.app/packs</loc>
+  </url>
+  <url>
+    <loc>https://ableton-r.vercel.app/rent-to-own</loc>
+  </url>
+  <url>
+    <loc>https://ableton-r.vercel.app/shop</loc>
+  </url>
+</urlset>

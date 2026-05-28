@@ -1,94 +1,48 @@
-# Ableton Redesign
+# Ableton Programme
 
-Редизайн на [ableton.com](https://www.ableton.com/en/).
+A portfolio redesign concept for Ableton, built as a precise product archive for music-making tools. The visual direction combines Ableton's software and hardware language with the disciplined catalogue logic of Braun and Dieter Rams references.
 
-Визуална референция: [dasprogramm.co.uk](https://www.dasprogramm.co.uk/shop/braun/) — стилистиката на Braun / Dieter Rams.
+> Personal portfolio project. Not affiliated with, endorsed by, or connected to Ableton AG.
 
----
+## Stack
 
-## Структура на проекта
+- React 18
+- TypeScript
+- Vite
+- React Router
+- Custom CSS design system
+- ESLint, Prettier, Husky, lint-staged
 
-```
-Ableton Redesign/
-├── index.html
-├── public/
-│   ├── ableton-logo.svg
-│   ├── live.jpg
-│   ├── push.jpg
-│   ├── move.jpg
-│   └── note.jpg
-├── src/
-│   ├── App.tsx
-│   ├── main.tsx
-│   └── styles.css
-└── package.json
-```
+## Project Focus
 
-## Стартиране
+- Premium product-led visual system
+- Responsive desktop and mobile layouts
+- Multi-page catalogue flow for Live, Push, Move, Packs, Rent-to-Own, and Shop
+- Interactive product panels, cart flow, newsletter form, and account-style surfaces
+- Clear semantic structure, strong typography, and restrained motion
+
+## Getting Started
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Production build
+## Quality Checks
 
 ```bash
+npm run typecheck
+npm run lint
 npm run build
 ```
 
+## Production Preview
 
+```bash
+npm run build
+npm run preview
+```
 
----
+## Repository Notes
 
-## Концепция
-
-Авторът е музикант и художник. **Естетиката е приоритет номер едно.**
-
-Най-важното за Ableton е Live софтуера. Session View е уникалното на Live — grid от clips, което няма нито един друг DAW.
-
-### Съдържание на началната страница
-
-1. **Промо лента отгоре** — Rent-to-Own (това е много важно за Ableton)
-2. **Nav с името Ableton** и останалите важни линкове
-3. **4 големи прозореца на цялата страница** — Live 12, Push, Move, Note
-   - Черно-бели по подразбиране (както dasprogramm)
-   - При hover стават цветни
-   - Показват допълнителна информация и анимация
-   - Малко описание
-   - Тънка черна разделителна линия между тях
-4. **Акцент върху Session View**
-5. **Секция за артисти** — как музиканти използват Live (това е много важно за Ableton)
-6. **Линкове към Learning Music / Blog**
-7. **Минимален footer**
-
-### Стилистика
-
-Стилистиката на сайта на Braun / dasprogramm.co.uk.
-
----
-
-## Снимки
-
-Снимките са предоставени от автора:
-- Live 12 — screenshot на Session View
-- Push — top-down shot на устройството
-- Move — top-down shot
-- Note — iPhone screenshot на iOS app
-
----
-
-## Какво не е наред в текущата версия
-
-Според автора:
-
-1. **Фонът е прекалено бежов** — не е естетски
-2. **Не е използван точният шрифт на Ableton**
-3. **Не е използвано тяхното лого**
-4. **Не е използвана стилистиката на Live** в достатъчна степен
-
----
-
-## За следваща итерация
-
-Проектът ще бъде продължен с друг модел.
+Internal design decisions and session notes live under `project-governance/`. They are working documentation for the design process, not part of the public product surface.
