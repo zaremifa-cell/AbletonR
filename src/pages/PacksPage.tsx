@@ -36,6 +36,7 @@ function PacksGrid({ onPackHover }: PacksPageProps) {
               <span className="mono">{String(index + 1).padStart(2, "0")}</span>
               <span>{pack.title}</span>
             </span>
+            <span className="pack-tile-cue" aria-hidden="true">[ View Pack ]</span>
           </Link>
         ))}
       </section>

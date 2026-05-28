@@ -67,12 +67,12 @@ function Nav({ activePack }: NavProps) {
           </nav>
           {isPacksGrid ? (
             <div className="nav-end nav-pack-end">
-              <span className="nav-pack-title">{activePack?.title ?? "Packs / Max for Live"}</span>
-              {activePack && (
-                <Link to={`/packs/${activePack.slug}#buy`} className="btn nav-pack-buy">
-                  Buy Now <span className="arr">&rarr;</span>
-                </Link>
-              )}
+              <span className={`nav-pack-title${activePack ? " is-active" : ""}`}>
+                {activePack?.title ?? "Packs / Max for Live"}
+              </span>
+              <a href="#trial" className="btn">
+                Try Live Free <span className="arr">&rarr;</span>
+              </a>
             </div>
           ) : (
             <div className="nav-end">
