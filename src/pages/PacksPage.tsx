@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { PACKS, packImage, type PackSummary } from "@/data/packs";
+import { useCart } from "@/contexts/CartContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 type PacksPageProps = {
@@ -46,7 +48,15 @@ function PacksGrid({ onPackHover }: PacksPageProps) {
 
 function PackDetail() {
   const { packSlug } = useParams();
+  const { addToCart } = useCart();
+  const [added, setAdded] = useState(false);
   const pack = PACKS.find((item) => item.slug === packSlug) ?? PACKS[0];
+
+  const handleBuyPack = () => {
+    addToCart({ slug: pack.slug, option: pack.title });
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 1200);
+  };
 
   usePageMeta({
     title: `${pack.title} — Ableton Packs`,
@@ -88,9 +98,16 @@ function PackDetail() {
           </div>
           <div className="pack-detail-footer">
             <span>Requires Live 12 Standard and Max for Live or above.</span>
-            <a href="#buy" className="pack-buy-button">
-              Buy Now
-            </a>
+            <div className="pack-detail-purchase">
+              <strong>{pack.priceLabel}</strong>
+              <button
+                type="button"
+                className={`pack-buy-button${added ? " is-added" : ""}`}
+                onClick={handleBuyPack}
+              >
+                {added ? "Added" : "Buy Now"}
+              </button>
+            </div>
           </div>
         </article>
       </section>

@@ -188,17 +188,37 @@ function Live12Page() {
           dual.style.setProperty("--timeline-ruler-right", `${arrangementRect.right - horizontalRect.right}px`);
 
           const sessionCaption = root.querySelector<HTMLElement>(".lp-session .lp-view-caption");
+          const arrangementCaption = root.querySelector<HTMLElement>(".lp-arrangement .lp-view-caption");
           const sessionGrid = root.querySelector<HTMLElement>(".lp-session .lp-clip-grid");
           const arrangementTimeline = arrangement.querySelector<HTMLElement>(".lp-timeline");
-          if (sessionCaption) {
-            const sessionCaptionRect = sessionCaption.getBoundingClientRect();
-            dual.style.setProperty("--arrangement-caption-top", `${sessionCaptionRect.top - arrangementRect.top}px`);
-          }
           if (sessionGrid && arrangementTimeline) {
+            const dualRect = dual.getBoundingClientRect();
+            const sessionRect = sessionGrid.closest<HTMLElement>(".lp-session")?.getBoundingClientRect();
             const sessionGridRect = sessionGrid.getBoundingClientRect();
             const arrangementTimelineRect = arrangementTimeline.getBoundingClientRect();
+            const arrangementFrame =
+              arrangement.querySelector<HTMLElement>(".lp-mobile-timeline-frame")?.getBoundingClientRect();
+            const arrangementGraphicBottom = arrangementFrame?.bottom ?? arrangementTimelineRect.bottom;
             dual.style.setProperty("--timeline-line-top", `${sessionGridRect.top - arrangementTimelineRect.top}px`);
             dual.style.setProperty("--timeline-line-height", `${sessionGridRect.bottom - sessionGridRect.top}px`);
+
+            if (sessionCaption && sessionRect) {
+              const sessionCaptionRect = sessionCaption.getBoundingClientRect();
+              const sessionCaptionTop =
+                sessionGridRect.bottom +
+                ((dualRect.bottom - sessionGridRect.bottom - sessionCaptionRect.height) / 2) -
+                sessionRect.top;
+              dual.style.setProperty("--session-caption-top", `${Math.max(0, sessionCaptionTop)}px`);
+            }
+
+            if (arrangementCaption) {
+              const arrangementCaptionRect = arrangementCaption.getBoundingClientRect();
+              const arrangementCaptionTop =
+                arrangementGraphicBottom +
+                ((dualRect.bottom - arrangementGraphicBottom - arrangementCaptionRect.height) / 2) -
+                arrangementRect.top;
+              dual.style.setProperty("--arrangement-caption-top", `${Math.max(0, arrangementCaptionTop)}px`);
+            }
           }
         }
       }
@@ -224,41 +244,6 @@ function Live12Page() {
       verticalMark?.removeEventListener("load", measure);
       horizontalMark?.removeEventListener("load", measure);
       resizeObserver?.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    const root = pageRef.current;
-    const releaseSection = root?.querySelector<HTMLElement>(".lp-new");
-    if (!root || !releaseSection) return;
-
-    const media = window.matchMedia("(max-width: 600px)");
-
-    const updateSnapMode = () => {
-      if (!media.matches) {
-        root.classList.remove("is-free-scroll");
-        return;
-      }
-
-      const releaseStart = releaseSection.offsetTop;
-      const freeScrollStart = releaseStart - 2;
-      const snapResumePoint = releaseStart - (root.clientHeight * 0.35);
-      root.classList.toggle("is-free-scroll", root.scrollTop >= freeScrollStart);
-      if (root.scrollTop < snapResumePoint) root.classList.remove("is-free-scroll");
-    };
-
-    updateSnapMode();
-    root.addEventListener("scroll", updateSnapMode, { passive: true });
-    window.addEventListener("resize", updateSnapMode);
-    if (media.addEventListener) media.addEventListener("change", updateSnapMode);
-    else media.addListener(updateSnapMode);
-
-    return () => {
-      root.removeEventListener("scroll", updateSnapMode);
-      window.removeEventListener("resize", updateSnapMode);
-      if (media.removeEventListener) media.removeEventListener("change", updateSnapMode);
-      else media.removeListener(updateSnapMode);
-      root.classList.remove("is-free-scroll");
     };
   }, []);
 

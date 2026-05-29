@@ -432,6 +432,43 @@ img,svg{display:block;max-width:100%}
 /* ============================================================
    03 — MICRO-HERO
    ============================================================ */
+body:has(.home-page){
+  height:100svh;
+  overflow:hidden;
+}
+.home-page{
+  width:100%;
+  height:calc(100svh - var(--site-chrome-h));
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior-y:contain;
+  scroll-behavior:smooth;
+  scroll-snap-type:y mandatory;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.home-page::-webkit-scrollbar{display:none}
+.home-page > .hero,
+.home-page > .features,
+.home-page > .artists,
+.home-page > .learn,
+.home-page > footer{
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+}
+.home-page > .hero,
+.home-page > .features,
+.home-page > .artists,
+.home-page > .learn,
+.home-page > footer{
+  min-height:100%;
+}
+.home-page > .hero{
+  height:100%;
+}
+.home-page .hero-layout{
+  height:100%;
+}
 .hero{
   padding:0 var(--pad);
   border-bottom:1px solid var(--line-strong);
@@ -2224,14 +2261,14 @@ h1.hero-title .stop{display:block}
 .pack-detail-copy h1{
   max-width:14ch;
   color:var(--ink);
-  font-size:clamp(36px, 5.2vw, 82px);
+  font-size:clamp(30px, 3.8vw, 62px);
   font-weight:400;
   letter-spacing:0;
-  line-height:.94;
+  line-height:1;
 }
 .pack-detail-format{
   margin-top:var(--s2);
-  color:var(--mute);
+  color:var(--ink);
   font-size:13px;
   line-height:1.45;
 }
@@ -2239,7 +2276,7 @@ h1.hero-title .stop{display:block}
   max-width:46ch;
   margin-top:var(--s4);
   margin-right:min(4vw, 64px);
-  color:var(--mute-2);
+  color:var(--ink);
   font-size:15px;
   line-height:1.55;
 }
@@ -2259,6 +2296,18 @@ h1.hero-title .stop{display:block}
 .pack-detail-footer span{
   max-width:22ch;
 }
+.pack-detail-purchase{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:10px;
+}
+.pack-detail-purchase strong{
+  color:var(--ink);
+  font-size:18px;
+  font-weight:400;
+  line-height:1;
+}
 .pack-buy-button{
   display:inline-flex;
   align-items:center;
@@ -2268,11 +2317,16 @@ h1.hero-title .stop{display:block}
   padding:0 22px;
   background:#1d2bff;
   color:#f2f1ec;
+  border:0;
   font-size:11px;
   font-weight:400;
   line-height:1;
   text-transform:uppercase;
+  cursor:pointer;
   transition:background .2s ease;
+}
+.pack-buy-button.is-added{
+  background:#111;
 }
 .pack-buy-button:hover{
   background:#0000c8;
@@ -2357,6 +2411,22 @@ h1.hero-title .stop{display:block}
   color:var(--ink);
   font-size:13px;
   line-height:1.2;
+}
+.shop-text-button{
+  display:inline-flex;
+  width:max-content;
+  align-items:center;
+  border-bottom:1px solid currentColor;
+  color:var(--ink);
+  font-size:13px;
+  line-height:1.2;
+}
+.shop-cart-head-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:var(--s3);
+  flex-wrap:wrap;
 }
 .shop-section{
   padding:14px var(--pad) var(--s4);
@@ -2798,7 +2868,38 @@ h1.hero-title .stop{display:block}
    ============================================================ */
 
 /* ── shared utilities ── */
-.lp{width:100%;overflow-x:hidden}
+body:has(.lp){
+  height:100svh;
+  overflow:hidden;
+}
+.lp{
+  width:100%;
+  height:calc(100svh - var(--site-chrome-h));
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior-y:contain;
+  scroll-behavior:smooth;
+  scroll-snap-type:y mandatory;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.lp::-webkit-scrollbar{display:none}
+.lp-hero,
+.lp-perform,
+.lp-dual,
+.lp-new,
+.lp-why,
+.lp-cta{
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+}
+.lp-hero,
+.lp-perform,
+.lp-dual,
+.lp-new,
+.lp-why{
+  min-height:100%;
+}
 
 .lp-kicker{
   font-size:11px;letter-spacing:0;text-transform:uppercase;
@@ -2848,7 +2949,7 @@ h1.hero-title .stop{display:block}
 }
 .lp-hero-inner{
   display:grid;grid-template-columns:1fr 1fr;
-  height:calc(100svh - 72px);
+  height:100%;
 }
 .lp-hero-copy{
   padding:clamp(32px,5svh,64px) var(--s4) clamp(24px,4svh,48px) var(--pad);
@@ -2890,7 +2991,7 @@ h1.hero-title .stop{display:block}
 /* ── SECTION 2: PERFORM ── */
 .lp-perform{
   display:grid;grid-template-columns:1fr 1fr;
-  min-height:70vh;border-bottom:1px solid var(--line-strong);
+  min-height:100%;border-bottom:1px solid var(--line-strong);
   position:relative;
 }
 .lp-perform::after{
@@ -2959,13 +3060,14 @@ h1.hero-title .stop{display:block}
   --timeline-ruler-right:0px;
   --timeline-line-top:clamp(78px,6.4vw,108px);
   --timeline-line-height:240px;
+  --session-caption-top:auto;
   --arrangement-caption-top:auto;
   background:var(--dual-bg);
   color:var(--dual-ink);
   padding:clamp(22px,2.25vw,36px) clamp(18px,1.85vw,52px) 0;
   border-bottom:1px solid rgba(255,255,255,0.08);
   position:relative;
-  height:calc(100svh - 56px);
+  height:100%;
   overflow:hidden;
 }
 .lp-dual-headline{
@@ -3196,26 +3298,30 @@ h1.hero-title .stop{display:block}
   .lp-view-head{
     font-size:clamp(16px,1.25vw,22px);
     line-height:1.16;
-    font-weight:700;
+    font-weight:400;
   }
   .lp-view-sub{
     font-size:clamp(15px,1.15vw,20px);
     line-height:1.16;
-    font-weight:700;
+    font-weight:400;
   }
   .lp-session .lp-view-caption,
   .lp-arrangement .lp-view-caption{
-    font-size:clamp(15px,1.15vw,20px);
+    font-size:clamp(13px,.92vw,16px);
+    line-height:1.24;
+    font-weight:400;
     position:absolute;
-    bottom:clamp(-42px,-2.1vw,-24px);
+    bottom:auto;
     margin:0;
     z-index:2;
   }
   .lp-session .lp-view-caption{
     left:0;
+    top:var(--session-caption-top);
   }
   .lp-arrangement .lp-view-caption{
     left:0;
+    top:var(--arrangement-caption-top);
   }
   .lp-session .lp-clip-grid{
     --session-line-span:calc((100% * 1.20022) - clamp(64px,10.75vw,306px));
@@ -3400,7 +3506,7 @@ h1.hero-title .stop{display:block}
   .lp-hero-inner{
     display:flex;
     grid-template-columns:none;
-    height:calc(100svh - 72px);
+    height:100%;
     min-height:0;
     overflow-x:auto;
     overflow-y:hidden;
@@ -3548,27 +3654,12 @@ h1.hero-title .stop{display:block}
   .lp-cta{flex-direction:column;align-items:flex-start}
 }
 @media(max-width:600px){
-  body:has(.lp){
-    height:100svh;
-    overflow:hidden;
-  }
-  body:has(.lp) .lp{
-    height:calc(100svh - 87px);
-    overflow-x:hidden;
-    overflow-y:auto;
-    overscroll-behavior-y:contain;
-    scroll-behavior:smooth;
-    scroll-snap-type:y mandatory;
-    -webkit-overflow-scrolling:touch;
-  }
-  body:has(.lp) .lp.is-free-scroll{
-    scroll-snap-type:none;
-    overscroll-behavior-y:auto;
-  }
   .lp-hero,
   .lp-perform,
   .lp-dual,
-  .lp-new{
+  .lp-new,
+  .lp-why,
+  .lp-cta{
     scroll-snap-align:start;
     scroll-snap-stop:always;
   }
@@ -3882,6 +3973,80 @@ h1.hero-title .stop{display:block}
 }
 .artist .read .arr{transition:transform .25s}
 .artist:hover .read .arr{transform:translateX(4px)}
+
+@media (min-width:721px){
+  .home-page > .artists{
+    height:100%;
+    min-height:100%;
+    padding:clamp(30px,4.2vh,52px) var(--pad) clamp(18px,2.2vh,30px);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .home-page .artists-head{
+    flex:0 0 auto;
+    width:100%;
+    padding-bottom:0;
+    gap:var(--s3);
+  }
+  .home-page .artists-head h2{
+    max-width:none;
+    font-size:clamp(38px,4.1vw,64px);
+    margin-top:var(--s2);
+    white-space:nowrap;
+  }
+  .home-page .artist-grid{
+    flex:0 0 auto;
+    width:100%;
+    max-width:none;
+    min-height:0;
+    margin-top:clamp(30px,4.6vh,58px);
+    column-gap:var(--s6);
+    row-gap:0;
+    align-items:stretch;
+    justify-content:space-between;
+    grid-template-columns:repeat(3, minmax(0, clamp(300px, 19vw, 390px)));
+  }
+  .home-page .artist{
+    display:grid;
+    grid-template-columns:minmax(0, .95fr) minmax(0, 1fr);
+    grid-template-rows:auto 16px minmax(92px, 92px) 20px;
+    column-gap:var(--s3);
+    row-gap:10px;
+    min-height:0;
+  }
+  .home-page .artist-frame{
+    grid-column:1 / -1;
+    aspect-ratio:4 / 5;
+  }
+  .home-page .artist-meta{
+    grid-column:1 / -1;
+    grid-row:2;
+    align-self:start;
+  }
+  .home-page .artist h3{
+    grid-column:1;
+    grid-row:3;
+    font-size:clamp(18px,1.45vw,22px);
+    align-self:start;
+  }
+  .home-page .artist p{
+    grid-column:2;
+    grid-row:3;
+    line-height:1.42;
+    align-self:start;
+    padding-bottom:0;
+  }
+  .home-page .artist .read{
+    grid-column:2;
+    grid-row:4;
+    align-self:start;
+    justify-self:end;
+    text-align:right;
+    margin-top:0;
+  }
+}
 
 /* ============================================================
    07 — LEARN
@@ -4234,6 +4399,9 @@ footer{
     width:100%;
     max-width:none;
     height:calc(100svh - 80px);
+  }
+  .home-page .hero-layout{
+    height:100%;
   }
   .hero-copy{
     position:absolute;

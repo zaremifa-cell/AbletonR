@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { type AddToCartInput, type CartItem, getCartCount } from "@/lib/cart";
+import { type AddToCartInput, type CartItem, getCartLines } from "@/lib/cart";
 
 const STORAGE_KEY = "ableton-shop-cart";
 
@@ -74,6 +74,13 @@ export function CartProvider({ children, initialItems }: CartProviderProps) {
 
   const updateCart = useCallback(
     (slug: string, quantity: number, option?: string) => {
+      if (quantity <= 0) {
+        setItems((current) =>
+          current.filter((item) => !(item.slug === slug && item.option === option))
+        );
+        return;
+      }
+
       setItems((current) =>
         current.map((item) =>
           item.slug === slug && item.option === option
@@ -96,7 +103,7 @@ export function CartProvider({ children, initialItems }: CartProviderProps) {
   const value = useMemo<CartContextValue>(
     () => ({
       items,
-      count: getCartCount(items),
+      count: getCartLines(items).reduce((total, item) => total + item.quantity, 0),
       addToCart,
       updateCart,
       removeFromCart,

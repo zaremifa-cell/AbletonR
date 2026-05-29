@@ -59,8 +59,21 @@ describe("CartContext", () => {
     act(() => result.current.updateCart("live-12", 7));
     expect(result.current.items[0].quantity).toBe(7);
 
+    act(() => result.current.updateCart("live-12", 0));
+    expect(result.current.items).toEqual([]);
+
+    act(() => result.current.addToCart({ slug: "live-12" }));
     act(() => result.current.removeFromCart("live-12"));
     expect(result.current.items).toEqual([]);
+  });
+
+  it("does not count stale cart items that are no longer visible in the cart", () => {
+    const { result } = renderHook(() => useCart(), {
+      wrapper: wrap([{ slug: "missing", quantity: 3 }]),
+    });
+
+    expect(result.current.items).toEqual([{ slug: "missing", quantity: 3 }]);
+    expect(result.current.count).toBe(0);
   });
 
   it("caps quantity at 9 on add and update", () => {

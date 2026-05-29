@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 const DEFAULT_PUSH_IMAGE = "/push/Push3 product.webp";
@@ -142,9 +143,9 @@ function Push3Page() {
           <span>to work.</span>
         </h2>
         <aside className="push-product" aria-label="Push 3 product image">
-          <a className="push-buy-button" href="#buy" aria-label="Buy Push">
+          <Link className="push-buy-button" to="/shop/product/push" aria-label="Buy Push">
             Buy
-          </a>
+          </Link>
           <div className={`push-product-frame${previousProductImage ? " is-transitioning" : ""}`}>
             <img
               key={productImage}

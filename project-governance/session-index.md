@@ -13,6 +13,109 @@ Required fields:
 
 ## Sessions
 
+### 2026-05-29 09:45 EEST
+
+- Task summary: Compressed the homepage `How musicians use Live` section so it fits inside one snap screen without cutting through the artist images.
+- Files touched:
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-05-29-0945-session.md`
+- Result: The homepage Artists section now has reduced desktop/tablet padding, a compact one-line heading, original portrait-proportion artist image frames aligned to the same section edges as the heading, wider gaps between the three frames, a lower and more centered image/text group below the heading, and fixed grid rows that put `Read`, `Watch`, and `Read + Download` on the same structural row. Typecheck, tests, build, and local Playwright/Chrome coordinate measurement passed.
+- Unresolved issues: Final approval needs user review in the running browser.
+- Session log: `project-governance/sessions/2026-05-29-0945-session.md`
+
+### 2026-05-29 09:41 EEST
+
+- Task summary: Changed the homepage to use the same vertical section snapping behavior as the product pages.
+- Files touched:
+  - `src/App.tsx`
+  - `src/pages/HomePage.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-05-29-0941-session.md`
+- Result: The homepage now has its own `.home-page` viewport-height vertical scroll container with mandatory section snapping. Hero, Features, Artists, Learn, and Footer are snap targets, and the mobile product-window active-state listener now follows the home scroll container. Typecheck, tests, and build passed.
+- Unresolved issues: Browser scroll validation was not run because local Browser navigation was previously blocked by environment policy; final scroll-feel approval needs user review.
+- Session log: `project-governance/sessions/2026-05-29-0941-session.md`
+
+### 2026-05-29 09:38 EEST
+
+- Task summary: Refined the desktop Live `Turn ideas into complete tracks` section typography and measured caption placement.
+- Files touched:
+  - `src/pages/Live12Page.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-05-29-0938-session.md`
+- Result: Desktop dual-view labels are now regular weight, the bottom captions are smaller and regular weight, and caption vertical placement is measured between the graph bottom and section bottom instead of using the previous fixed/negative offset. Typecheck, tests, and build passed.
+- Unresolved issues: Browser visual validation was not run because local Browser navigation was previously blocked by environment policy; final approval depends on user screenshot review.
+- Session log: `project-governance/sessions/2026-05-29-0938-session.md`
+
+### 2026-05-29 09:34 EEST
+
+- Task summary: Changed the Live page to use vertical section snapping like the Push and Move pages.
+- Files touched:
+  - `src/pages/Live12Page.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-05-29-0934-session.md`
+- Result: `.lp` is now the Live page's own viewport-height vertical scroll container with mandatory section snapping. The main Live sections snap from screen to screen, and the prior mobile-only free-scroll exception after `What's new` was removed. Typecheck, tests, and build passed.
+- Unresolved issues: Browser scroll validation was not run because local Browser navigation was previously blocked by environment policy; final scroll-feel approval needs user review.
+- Session log: `project-governance/sessions/2026-05-29-0934-session.md`
+
+### 2026-05-29 09:29 EEST
+
+- Task summary: Connected the Push page left-side `Buy` control to the existing Push shop product detail page.
+- Files touched:
+  - `src/pages/Push3Page.tsx`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-05-29-0929-session.md`
+- Result: The `Buy` button above the Push controller now routes to `/shop/product/push`, where the user can select the Push option, quantity, add it to cart, or view cart. Existing visual styling was preserved. Typecheck, tests, and build passed.
+- Unresolved issues: Browser click validation was not run because local Browser navigation was previously blocked by environment policy.
+- Session log: `project-governance/sessions/2026-05-29-0929-session.md`
+
+### 2026-05-29 09:26 EEST
+
+- Task summary: Updated cart shipping logic so downloadable Packs do not receive estimated shipping.
+- Files touched:
+  - `src/data/products.ts`
+  - `src/lib/cart.ts`
+  - `src/lib/cart.test.ts`
+  - `src/pages/ShopPage.tsx`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-05-29-0926-session.md`
+- Result: Product data now marks physical products as requiring shipping. Cart and checkout use `getEstimatedShipping`, which returns `€0` for Packs-only carts and `€24` when a physical item is present. Typecheck, tests, and build passed.
+- Unresolved issues: Browser validation was not run because local Browser navigation was previously blocked by environment policy.
+- Session log: `project-governance/sessions/2026-05-29-0926-session.md`
+
+### 2026-05-29 09:24 EEST
+
+- Task summary: Fixed the cart count/reset bug where the navigation badge could remain non-zero and the cart could not be zeroed from the UI.
+- Files touched:
+  - `src/contexts/CartContext.tsx`
+  - `src/contexts/CartContext.test.tsx`
+  - `src/pages/ShopPage.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-05-29-0924-session.md`
+- Result: Cart badge count now ignores stale items that do not resolve to visible cart lines. Quantity `0` removes the line, and Cart now has a `Clear cart` action for clearing all persisted items. Typecheck, tests, and build passed.
+- Unresolved issues: Browser validation was not run because the environment previously blocked `http://127.0.0.1:5173` via Browser policy.
+- Session log: `project-governance/sessions/2026-05-29-0924-session.md`
+
+### 2026-05-29 09:19 EEST
+
+- Task summary: Refined the Packs detail purchase flow with smaller title typography, black supporting text, per-pack euro prices, and add-to-cart behavior that keeps the user on the pack detail page.
+- Files touched:
+  - `src/data/packs.ts`
+  - `src/data/products.ts`
+  - `src/lib/cart.ts`
+  - `src/lib/cart.test.ts`
+  - `src/pages/PacksPage.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-05-29-0919-session.md`
+- Result: All 36 packs now have deterministic `€20`-`€60` prices. Individual pack slugs resolve as shop products for the existing cart, pack detail shows price above `Buy Now`, and clicking `Buy Now` adds the pack in place with a short `Added` state instead of redirecting to `/shop/cart`. The pack title now uses the Push statement scale and the detail format/body text is black. Typecheck, tests, and build passed.
+- Unresolved issues: Final visual approval still depends on the user's screenshot; browser click verification could not be completed because the environment blocked `http://127.0.0.1:5173`.
+- Session log: `project-governance/sessions/2026-05-29-0919-session.md`
+
 ### 2026-05-28 09:26 EEST
 
 - Task summary: Added mobile Ableton-logo navigation and refined the Shop landing page lower section, product rail, header alignment, and scroll affordance.

@@ -10,7 +10,7 @@ import Push3Page from "@/pages/Push3Page";
 import RentToOwnPage from "@/pages/RentToOwnPage";
 import ShopPage from "@/pages/ShopPage";
 
-const scrollContainerSelectors = [".lp", ".push-scroll", ".move-page", ".packs-grid", ".shop-product-grid"];
+const scrollContainerSelectors = [".home-page", ".lp", ".push-scroll", ".move-page", ".packs-grid", ".shop-product-grid"];
 
 function ScrollManager() {
   const location = useLocation();

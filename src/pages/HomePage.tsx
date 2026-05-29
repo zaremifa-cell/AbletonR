@@ -44,8 +44,9 @@ function HomePage() {
       ticking = false;
       if (!media.matches) { clearActive(); return; }
 
-      const viewportCenter = window.innerHeight / 2;
-      const threshold = window.innerHeight * 0.18;
+      const rootRect = root.getBoundingClientRect();
+      const viewportCenter = rootRect.top + root.clientHeight / 2;
+      const threshold = root.clientHeight * 0.18;
       let active: HTMLElement | null = null;
       let activeDistance = Infinity;
 
@@ -68,14 +69,14 @@ function HomePage() {
     };
 
     if (windows.length) {
-      window.addEventListener("scroll", requestUpdate, { passive: true });
+      root.addEventListener("scroll", requestUpdate, { passive: true });
       window.addEventListener("resize", requestUpdate);
       if (media.addEventListener) media.addEventListener("change", updateActive);
       else media.addListener(updateActive);
     }
 
     return () => {
-      window.removeEventListener("scroll", requestUpdate);
+      root.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
       if (media.removeEventListener) media.removeEventListener("change", updateActive);
       else media.removeListener(updateActive);
@@ -83,7 +84,7 @@ function HomePage() {
   }, [contentRef]);
 
   return (
-    <div ref={contentRef}>
+    <div className="home-page" ref={contentRef}>
       <Hero />
       <Features />
       <Artists />

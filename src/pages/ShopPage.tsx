@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { SHOP_PRODUCTS, getShopProduct, type ShopProduct } from "@/data/products";
-import { currency, getCartLines, getSubtotal } from "@/lib/cart";
+import { currency, getCartLines, getEstimatedShipping, getSubtotal } from "@/lib/cart";
 import { useCart } from "@/contexts/CartContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import Footer from "@/components/layout/Footer";
@@ -235,10 +235,10 @@ function CartPage() {
     canonicalPath: "/shop/cart",
   });
 
-  const { items, updateCart, removeFromCart } = useCart();
+  const { items, updateCart, removeFromCart, clearCart } = useCart();
   const lines = getCartLines(items);
   const subtotal = getSubtotal(items);
-  const estimated = subtotal > 0 ? 24 : 0;
+  const estimated = getEstimatedShipping(items);
   const taxEstimate = Math.round(subtotal * 0.08);
   const total = subtotal + estimated + taxEstimate;
 
@@ -249,7 +249,14 @@ function CartPage() {
           <h1>Cart</h1>
           <p>Review your selected products before checkout.</p>
         </div>
-        <Link to="/shop" className="shop-text-link">Continue shopping</Link>
+        <div className="shop-cart-head-actions">
+          {items.length > 0 && (
+            <button type="button" className="shop-text-button" onClick={clearCart}>
+              Clear cart
+            </button>
+          )}
+          <Link to="/shop" className="shop-text-link">Continue shopping</Link>
+        </div>
       </header>
 
       <section className="shop-cart-layout">
@@ -266,10 +273,10 @@ function CartPage() {
               <input
                 aria-label={`Quantity for ${line.product.title}`}
                 type="number"
-                min="1"
+                min="0"
                 max="9"
                 value={line.quantity}
-                onChange={(event) => updateCart(line.slug, Math.max(1, Number(event.target.value) || 1), line.option)}
+                onChange={(event) => updateCart(line.slug, Number(event.target.value) || 0, line.option)}
               />
               <strong>{currency.format(line.lineTotal)}</strong>
               <button type="button" onClick={() => removeFromCart(line.slug, line.option)}>Remove</button>
@@ -321,7 +328,7 @@ function CheckoutPage() {
   const [step, setStep] = useState(1);
   const [confirmed, setConfirmed] = useState(false);
   const subtotal = getSubtotal(items);
-  const estimated = subtotal > 0 ? 24 : 0;
+  const estimated = getEstimatedShipping(items);
   const taxEstimate = Math.round(subtotal * 0.08);
   const total = subtotal + estimated + taxEstimate;
 

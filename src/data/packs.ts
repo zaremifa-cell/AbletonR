@@ -7,6 +7,8 @@ export type Pack = PackSummary & {
   file: string;
   maker: string;
   format: string;
+  price: number;
+  priceLabel: string;
 };
 
 const PACK_FILES = [
@@ -48,6 +50,12 @@ const PACK_FILES = [
   "wavetable oscilator.webp",
 ];
 
+const PACK_PRICES = [
+  49, 29, 39, 35, 32, 59, 24, 20, 54, 42, 45, 28,
+  31, 38, 57, 26, 44, 36, 22, 33, 41, 25, 52, 48,
+  30, 55, 46, 21, 34, 27, 23, 37, 40, 43, 50, 60,
+];
+
 const toTitle = (file: string) => file.replace(/\.[^/.]+$/, "").replace(/\s+/g, " ").trim();
 
 const toSlug = (title: string) =>
@@ -56,14 +64,17 @@ const toSlug = (title: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-export const PACKS: Pack[] = PACK_FILES.map((file) => {
+export const PACKS: Pack[] = PACK_FILES.map((file, index) => {
   const title = toTitle(file);
+  const price = PACK_PRICES[index] ?? 49;
   return {
     file,
     title,
     slug: toSlug(title),
     maker: "Max for Live",
     format: "Software pack for Ableton Live",
+    price,
+    priceLabel: `€${price}`,
   };
 });
 

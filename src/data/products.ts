@@ -1,3 +1,5 @@
+import { PACKS, packImage } from "@/data/packs";
+
 export type ShopProduct = {
   slug: string;
   title: string;
@@ -9,6 +11,7 @@ export type ShopProduct = {
   detail: string;
   meta: string[];
   options?: string[];
+  requiresShipping?: boolean;
 };
 
 export const SHOP_PRODUCTS: ShopProduct[] = [
@@ -37,6 +40,7 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
       "Push turns Live into an instrument you can touch, with expressive pads, screen-led control, and standalone options.",
     meta: ["Ships from the catalogue flow", "Standalone option available", "USB-C connection"],
     options: ["Tethered", "Standalone"],
+    requiresShipping: true,
   },
   {
     slug: "move",
@@ -50,6 +54,7 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
       "Move is a compact instrument for starting ideas anywhere, then sending sketches into Ableton Cloud and Live.",
     meta: ["Hardware shipping item", "Includes Live Intro", "Battery powered"],
     options: ["Move", "Move with protective case"],
+    requiresShipping: true,
   },
   {
     slug: "packs",
@@ -86,8 +91,25 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
     detail: "A restrained merchandise capsule for the Ableton product system.",
     meta: ["Selected studio objects", "Size selection", "Portfolio checkout flow"],
     options: ["T-shirt", "Tote", "Poster"],
+    requiresShipping: true,
   },
 ];
 
+export const PACK_SHOP_PRODUCTS: ShopProduct[] = PACKS.map((pack) => ({
+  slug: pack.slug,
+  title: pack.title,
+  category: "Packs",
+  description: "A focused software sound and device pack for Ableton Live.",
+  price: pack.price,
+  priceLabel: pack.priceLabel,
+  image: packImage(pack.file),
+  detail:
+    "A focused sound and device collection for building sketches quickly, then shaping them into finished Live sets with a clear studio workflow.",
+  meta: [pack.format, "Download content", "Requires Live 12 Standard and Max for Live or above"],
+  options: [pack.title],
+  requiresShipping: false,
+}));
+
 export const getShopProduct = (slug: string) =>
-  SHOP_PRODUCTS.find((product) => product.slug === slug);
+  SHOP_PRODUCTS.find((product) => product.slug === slug) ??
+  PACK_SHOP_PRODUCTS.find((product) => product.slug === slug);

@@ -19,7 +19,7 @@ export type CartLine = CartItem & {
 
 export const currency = new Intl.NumberFormat("en-US", {
   style: "currency",
-  currency: "USD",
+  currency: "EUR",
   maximumFractionDigits: 0,
 });
 
@@ -36,3 +36,6 @@ export const getCartLines = (items: CartItem[]) =>
 
 export const getSubtotal = (items: CartItem[]) =>
   getCartLines(items).reduce((total, item) => total + item.lineTotal, 0);
+
+export const getEstimatedShipping = (items: CartItem[]) =>
+  getCartLines(items).some((line) => line.product.requiresShipping) ? 24 : 0;
