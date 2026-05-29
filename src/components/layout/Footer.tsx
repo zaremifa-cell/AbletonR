@@ -49,7 +49,7 @@ export function NewsletterSignup({ kicker }: NewsletterSignupProps) {
 
 function Footer({ newsletterKicker }: FooterProps = {}) {
   return (
-    <>
+    <div className="home-end">
       <NewsletterSignup kicker={newsletterKicker} />
 
       <footer>
@@ -157,7 +157,7 @@ function Footer({ newsletterKicker }: FooterProps = {}) {
           </nav>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
 

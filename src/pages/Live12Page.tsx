@@ -81,6 +81,27 @@ const TRACKS: { l: number; w: number }[][] = [
   [{ l: 25, w: 25 }, { l: 50, w: 25 }],
 ];
 
+function arrangementBarSlot(l: number, w: number): string {
+  if (l === 0 && w === 25) return "lp-bar-slot--1-3";
+  if (l === 25 && w === 25) return "lp-bar-slot--3-5";
+  if (l === 50 && w === 25) return "lp-bar-slot--5-7";
+  if (l === 75 && w === 25) return "lp-bar-slot--7-9";
+  if (l === 50 && w === 50) return "lp-bar-slot--5-9";
+  if (l === 25 && w === 50) return "lp-bar-slot--3-7";
+  return "lp-bar-slot--alt";
+}
+
+const MOBILE_BAR_SLOTS: Record<string, string> = {
+  "lp-mobile-bar--1-3": "lp-bar-slot--1-3",
+  "lp-mobile-bar--3-5": "lp-bar-slot--3-5",
+  "lp-mobile-bar--5-7": "lp-bar-slot--5-7",
+  "lp-mobile-bar--7-9": "lp-bar-slot--7-9",
+  "lp-mobile-bar--5-7-low": "lp-bar-slot--5-7",
+  "lp-mobile-bar--3-7-low": "lp-bar-slot--3-7",
+  "lp-mobile-bar--5-7-bottom": "lp-bar-slot--5-7",
+  "lp-mobile-bar--3-5-bottom": "lp-bar-slot--3-5",
+};
+
 const NEW_FEATURES = [
   { img: "/live/Bounce Groups.webp",      n: "01", title: "Bounce Groups",        desc: "Print an entire group to audio, including its processing and return-track signal path." },
   { img: "/live/Stem Separation.webp",    n: "02", title: "Stem Separation",      desc: "Split vocals, drums, bass and other sounds from any audio clip, ready to rework." },
@@ -338,7 +359,15 @@ function Live12Page() {
             <div className="lp-clip-grid">
               {CLIPS.map((row, ri) =>
                 row.map((type, ci) => (
-                  <div key={`${ri}-${ci}`} className={`lp-clip lp-clip--${type}`} />
+                  <div
+                    key={`${ri}-${ci}`}
+                    className={`lp-clip lp-clip--${type}`}
+                    style={
+                      type === "d"
+                        ? undefined
+                        : { animationDelay: `${(ri * 4 + ci) * 0.16}s` }
+                    }
+                  />
                 ))
               )}
             </div>
@@ -366,19 +395,32 @@ function Live12Page() {
               </div>
               <div className="lp-mobile-timeline-frame" aria-hidden="true" />
               <div className="lp-mobile-bars" aria-hidden="true">
-                <span className="lp-mobile-bar lp-mobile-bar--7-9" />
-                <span className="lp-mobile-bar lp-mobile-bar--1-3" />
-                <span className="lp-mobile-bar lp-mobile-bar--3-5" />
-                <span className="lp-mobile-bar lp-mobile-bar--5-7" />
-                <span className="lp-mobile-bar lp-mobile-bar--5-7-low" />
-                <span className="lp-mobile-bar lp-mobile-bar--3-7-low" />
-                <span className="lp-mobile-bar lp-mobile-bar--5-7-bottom" />
-                <span className="lp-mobile-bar lp-mobile-bar--3-5-bottom" />
+                {(
+                  [
+                    "lp-mobile-bar--7-9",
+                    "lp-mobile-bar--1-3",
+                    "lp-mobile-bar--3-5",
+                    "lp-mobile-bar--5-7",
+                    "lp-mobile-bar--5-7-low",
+                    "lp-mobile-bar--3-7-low",
+                    "lp-mobile-bar--5-7-bottom",
+                    "lp-mobile-bar--3-5-bottom",
+                  ] as const
+                ).map((barClass) => (
+                  <span
+                    key={barClass}
+                    className={`lp-mobile-bar ${barClass} ${MOBILE_BAR_SLOTS[barClass] ?? "lp-bar-slot--alt"}`}
+                  />
+                ))}
               </div>
               {TRACKS.map((bars, ti) => (
                 <div key={ti} className="lp-track">
                   {bars.map((bar, bi) => (
-                    <div key={bi} className="lp-bar" style={{ left: `${bar.l}%`, width: `${bar.w}%` }} />
+                    <div
+                      key={bi}
+                      className={`lp-bar ${arrangementBarSlot(bar.l, bar.w)}`}
+                      style={{ left: `${bar.l}%`, width: `${bar.w}%` }}
+                    />
                   ))}
                 </div>
               ))}
@@ -411,10 +453,12 @@ function Live12Page() {
         </div>
       </section>
 
-      {/* ══ WHY LIVE ══ */}
-      <section className="lp-why">
-        <div className="lp-section-inner">
-          <p className="lp-kicker">Why Live</p>
+      <div className="lp-tail">
+        {/* ══ WHY LIVE ══ */}
+        <section className="lp-why">
+          <div className="lp-why-intro">
+            <p className="lp-kicker">Why Live</p>
+          </div>
           <div className="lp-why-grid">
             {WHY.map(w => (
               <div key={w.title} className="lp-why-item">
@@ -424,24 +468,24 @@ function Live12Page() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ══ CTA STRIP ══ */}
-      <section className="lp-cta">
-        <h2 className="lp-cta-text">Start in Session View.</h2>
-        <div className="lp-cta-actions">
-          <button className="btn lp-cta-btn">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-              <polygon points="1,0.5 11.5,6 1,11.5" />
-            </svg>
-            Watch in action
-          </button>
-          <Link to="/" className="lp-text-link lp-text-link--dark">
-            See all editions <span className="arr">→</span>
-          </Link>
-        </div>
-      </section>
+        {/* ══ CTA STRIP ══ */}
+        <section className="lp-cta">
+          <h2 className="lp-cta-text">Start in Session View.</h2>
+          <div className="lp-cta-actions">
+            <button className="btn lp-cta-btn">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                <polygon points="1,0.5 11.5,6 1,11.5" />
+              </svg>
+              Watch in action
+            </button>
+            <Link to="/" className="lp-text-link lp-text-link--dark">
+              See all editions <span className="arr">→</span>
+            </Link>
+          </div>
+        </section>
+      </div>
 
     </div>
   );

@@ -3,7 +3,6 @@ import Artists from "@/components/sections/Artists";
 import Features from "@/components/sections/Features";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
-import Learn from "@/components/sections/Learn";
 import { useReveal } from "@/hooks/useReveal";
 import { SITE_BASE_URL, usePageMeta } from "@/hooks/usePageMeta";
 
@@ -88,7 +87,6 @@ function HomePage() {
       <Hero />
       <Features />
       <Artists />
-      <Learn />
       <Footer />
     </div>
   );

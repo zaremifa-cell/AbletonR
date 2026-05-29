@@ -13,6 +13,31 @@ Required fields:
 
 ## Sessions
 
+### 2026-05-29 11:40 EEST
+
+- Task summary: Moved the homepage Learn content into the Discover More section and removed Learn as a separate snap screen after Artists.
+- Files touched:
+  - `src/components/sections/Features.tsx`
+  - `src/pages/HomePage.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-05-29-1140-session.md`
+- Result: `Learn the fundamentals. In the browser.` now appears under Discover More, and `HomePage` no longer renders a standalone Learn snap screen between Artists and the newsletter/footer. The embedded Learn block uses scoped light-surface styling and compact desktop spacing. Build passed.
+- Unresolved issues: Final visual approval needs user review in the running browser.
+- Session log: `project-governance/sessions/2026-05-29-1140-session.md`
+
+### 2026-05-29 10:44 EEST
+
+- Task summary: Added animated hover underlines to the homepage Artists CTA links and pointed all Artists CTAs to the official Ableton Artists category URL.
+- Files touched:
+  - `src/components/sections/Artists.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-05-29-1044-session.md`
+- Result: `All stories`, `Read`, `Watch`, and `Read + Download` now use `https://www.ableton.com/en/blog/categories/artists/`. The three Artists CTAs now have distinct solid-color animated hover indicators: red, green, and yellow respectively, with no gradient or glow. Each indicator draws from left to right on hover/focus and retracts from right to left on mouse leave. Typecheck, tests, and build passed.
+- Unresolved issues: In-app Browser validation was blocked by local browser security policy for `http://127.0.0.1:5173`, so rendered hover approval needs user review.
+- Session log: `project-governance/sessions/2026-05-29-1044-session.md`
+
 ### 2026-05-29 09:45 EEST
 
 - Task summary: Compressed the homepage `How musicians use Live` section so it fits inside one snap screen without cutting through the artist images.
