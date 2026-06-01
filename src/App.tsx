@@ -5,12 +5,21 @@ import Nav from "@/components/layout/Nav";
 import HomePage from "@/pages/HomePage";
 import Live12Page from "@/pages/Live12Page";
 import MovePage from "@/pages/MovePage";
+import NotePage from "@/pages/NotePage";
 import PacksPage from "@/pages/PacksPage";
 import Push3Page from "@/pages/Push3Page";
 import RentToOwnPage from "@/pages/RentToOwnPage";
 import ShopPage from "@/pages/ShopPage";
 
-const scrollContainerSelectors = [".home-page", ".lp", ".push-scroll", ".move-page", ".packs-grid", ".shop-product-grid"];
+const scrollContainerSelectors = [
+  ".home-page",
+  ".lp",
+  ".push-scroll",
+  ".move-page",
+  ".note-page",
+  ".packs-grid",
+  ".shop-product-grid",
+];
 
 function ScrollManager() {
   const location = useLocation();
@@ -46,6 +55,7 @@ function App() {
         <Route path="/live" element={<Live12Page />} />
         <Route path="/push" element={<Push3Page />} />
         <Route path="/move" element={<MovePage />} />
+        <Route path="/note" element={<NotePage />} />
         <Route path="/rent-to-own" element={<RentToOwnPage />} />
         <Route path="/packs" element={<PacksPage onPackHover={setActivePack} />} />
         <Route path="/packs/:packSlug" element={<PacksPage onPackHover={setActivePack} />} />

@@ -60,7 +60,7 @@ function Nav({ activePack }: NavProps) {
             <NavLink to="/live">Live</NavLink>
             <NavLink to="/push">Push</NavLink>
             <NavLink to="/move">Move</NavLink>
-            <a href="#note">Note</a>
+            <NavLink to="/note">Note</NavLink>
             <NavLink to="/packs">Packs</NavLink>
             <a href="#learn">Learn</a>
             <NavLink to="/shop">Shop</NavLink>

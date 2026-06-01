@@ -139,7 +139,7 @@ function Quartet() {
             <p className="window-desc">
               Drums, melodies and samples on iPhone and iPad. Sync to Live via Ableton Cloud.
             </p>
-            <a href="#note" className="window-go">
+            <a href="/note" className="window-go">
               View catalogue <span className="arr">&rarr;</span>
             </a>
           </div>

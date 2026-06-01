@@ -79,7 +79,7 @@ function Footer({ newsletterKicker }: FooterProps = {}) {
                 <a href="/move">Move</a>
               </li>
               <li>
-                <a href="/#note">Note</a>
+                <a href="/note">Note</a>
               </li>
               <li>
                 <a href="https://www.ableton.com/en/link/">Link</a>
