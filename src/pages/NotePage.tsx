@@ -1,12 +1,173 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 /** iPhone 16e: 1170×2532 px display, 390×844 pt */
 const IPHONE_16E_SCREEN_RATIO = "1170 / 2532";
 
+const NOTE_BOOK_PIXEL_ROWS = [
+  "1001  01110",
+  "1101  10001",
+  "1011  10001",
+  "1001  10001",
+  "1001  10001",
+  "1001  10001",
+  "1001  01110",
+  "0000  00000",
+  "111  111",
+  "010  100",
+  "010  100",
+  "010  111",
+  "010  100",
+  "010  100",
+  "010  111",
+];
+
+const noteBookPixels = NOTE_BOOK_PIXEL_ROWS.flatMap((row, rowIndex) =>
+  [...row].flatMap((cell, columnIndex) =>
+    cell === "1" ? [{ row: rowIndex + 1, column: columnIndex + 1 }] : [],
+  ),
+);
+
+const NOTE_BOOK_COPY = `Ableton
+
+Download Note
+
+---
+
+Note
+
+Start before the studio.
+
+Capture beats, melodies and sounds wherever they appear - then continue them in Ableton Live.
+
+Download on the App Store
+
+Learn more ->
+
+iPhone and iPod * iOS / iPadOS 15+
+
+---
+
+Ideas don't wait for your setup.
+
+A rhythm, a texture, a chord shape, a voice memo, a street sound - Note turns these first impulses into playable material.
+
+1. Capture anywhere
+
+Sample the world around you with your microphone.
+
+2. Create anytime
+
+Build beats, melodies and harmonies on the go.
+
+3. Never lose an idea
+
+Save it as a loop and come back to it later.
+
+---
+
+Three ways to begin.
+
+Start from rhythm, melody or the world around you. Everything is built for speed and creativity.
+
+Tap a rhythm
+
+Build beats with 16-pad drums, quantize, swing and velocity.
+
+Shape a melody
+
+Create melodies and chords with scales, instruments and easy editing.
+
+Sample the world
+
+Record, slice and shape sounds with powerful built-in tools and effects.
+
+---
+
+Play first. Decide later.
+
+Use Capture MIDI to keep what you just played. Note detects the tempo and loop length, then lets you quantize, overdub, edit or reshape the idea.
+
+Make versions, not decisions.
+
+Duplicate loops, change small details, build scenes, test combinations. Note gives you a mini Session View for developing fragments without committing too early.
+
+Sound design you expect from Ableton.
+
+Drum kits, instruments and effects from Live - including Drum Sampler, Melodic Sampler, Synths, Reverb, Delay, Saturator and more.
+
+Sketch fast. Edit precisely.
+
+The new MIDI Editor lets you refine every detail - pitch, length, timing, velocity and variation.
+
+---
+
+Bring it into Live.
+
+Send your Note Set through Ableton Cloud and continue in Live with the same sounds, samples and effects in place.
+
+Works with Live 11.2.5+
+
+(Trail, Lite, Intro, Standard, Suite & Education)
+
+Live Sets cannot be sent back to Note.
+
+Everything stays in sync:
+
+sounds, samples, tempo, key and effects.
+
+---
+
+iPhone and iPad
+
+Native app for iOS and iPadOS.
+
+Ableton Link
+
+Jams in time with your favorite apps and gear.
+
+Ableton Cloud
+
+Seamless transfer between Note and Live.
+
+Live 12 Lite Included
+
+Start making more in Live, on us.
+
+iOS / iPadOS 15+ Optimized
+
+Built for performance and low latency.
+
+---
+
+Your ideas.
+
+Anytime, anywhere.
+
+Download Ableton Note and start today.
+
+Download on the App Store.`;
+
 function NotePage() {
   const phoneMediaRef = useRef<HTMLDivElement>(null);
   const phoneScreenRef = useRef<HTMLDivElement>(null);
+  const [bookPixelCount, setBookPixelCount] = useState(0);
+
+  const handleBookCopyPointerMove = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    const target = event.currentTarget;
+    const rect = target.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const scale = 3.2;
+    const radius = 92;
+
+    target.style.setProperty("--note-lens-x", `${x}px`);
+    target.style.setProperty("--note-lens-y", `${y}px`);
+    target.style.setProperty("--note-lens-left", `${x}px`);
+    target.style.setProperty("--note-lens-top", `${y}px`);
+    target.style.setProperty("--note-lens-copy-x", `${radius - x * scale}px`);
+    target.style.setProperty("--note-lens-copy-y", `${radius - y * scale}px`);
+  }, []);
 
   const syncPhoneScreen = useCallback((video: HTMLVideoElement) => {
     const screen = phoneScreenRef.current;
@@ -57,6 +218,32 @@ function NotePage() {
     observer.observe(media);
     return () => observer.disconnect();
   }, [syncPhoneScreen]);
+
+  useEffect(() => {
+    let timeoutId: number;
+    const totalPixels = noteBookPixels.length;
+
+    const writePixel = (count: number) => {
+      if (count < totalPixels) {
+        timeoutId = window.setTimeout(() => {
+          const nextCount = count + 1;
+          setBookPixelCount(nextCount);
+          writePixel(nextCount);
+        }, 70);
+        return;
+      }
+
+      timeoutId = window.setTimeout(() => {
+        setBookPixelCount(0);
+        writePixel(0);
+      }, 1200);
+    };
+
+    setBookPixelCount(0);
+    writePixel(0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   usePageMeta({
     title: "Note — Ableton Programme",
@@ -170,71 +357,131 @@ function NotePage() {
       </section>
 
       <section className="note-section note-section--live" aria-labelledby="note-live-title">
-        <div className="note-live-bg" aria-hidden="true">
-          <img src="/note/ableton live note.jpeg" alt="" />
-        </div>
-
-        <div className="note-live-pixel-field" aria-hidden="true">
-          <svg className="note-live-reveal-mask" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <mask id="note-live-blackout-mask">
-                <rect width="100" height="100" fill="white" />
-                <rect className="note-mask-hole note-mask-hole--1" x="47" y="8" width="11" height="13" fill="black" />
-                <rect className="note-mask-hole note-mask-hole--2" x="61" y="8" width="11" height="13" fill="black" />
-                <rect className="note-mask-hole note-mask-hole--3" x="75" y="12" width="12" height="14" fill="black" />
-                <rect className="note-mask-hole note-mask-hole--4" x="55" y="26" width="10" height="12" fill="black" />
-                <rect className="note-mask-hole note-mask-hole--5" x="68" y="30" width="15" height="16" fill="black" />
-                <rect className="note-mask-hole note-mask-hole--6" x="87" y="32" width="9" height="11" fill="black" />
-                <rect className="note-mask-hole note-mask-hole--7" x="42" y="43" width="15" height="16" fill="black" />
-                <rect className="note-mask-hole note-mask-hole--8" x="61" y="50" width="12" height="13" fill="black" />
-                <rect className="note-mask-hole note-mask-hole--9" x="78" y="51" width="16" height="17" fill="black" />
-                <rect className="note-mask-hole note-mask-hole--10" x="51" y="70" width="14" height="16" fill="black" />
-                <rect className="note-mask-hole note-mask-hole--11" x="70" y="73" width="11" height="13" fill="black" />
-                <rect className="note-mask-hole note-mask-hole--12" x="84" y="76" width="12" height="14" fill="black" />
-              </mask>
-            </defs>
-            <rect width="100" height="100" fill="black" mask="url(#note-live-blackout-mask)" />
-          </svg>
-          <div className="note-live-pixel-map">
-            <span className="note-pixel-note-mark note-pixel-note-mark--n">n</span>
-            <span className="note-pixel-note-mark note-pixel-note-mark--o">o</span>
-            <span className="note-pixel-note-mark note-pixel-note-mark--t">t</span>
-            <span className="note-pixel-note-mark note-pixel-note-mark--e">e</span>
-            <span className="note-pixel-block note-pixel-block--one" />
-            <span className="note-pixel-block note-pixel-block--two" />
-            <span className="note-pixel-block note-pixel-block--three" />
-            <span className="note-pixel-block note-pixel-block--four" />
-            <span className="note-pixel-block note-pixel-block--five" />
-            <span className="note-pixel-scan" />
-            {Array.from({ length: 24 }, (_, index) => (
-              <span
-                key={`note-pixel-cell-${index}`}
-                className={`note-pixel-spark note-pixel-spark--${index + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="note-live-stage" aria-hidden="true">
-          <div className="note-live-blur" />
-          <img src="/note/bring it into live.jpeg" alt="" className="note-live-sheet" />
-        </div>
-
-        <div className="note-copy note-live-copy">
-          <span className="note-number">03</span>
-          <div className="note-copy-block">
+        <div className="note-live-panel">
+          <div className="note-live-copy">
             <h2 id="note-live-title">Bring it into Live.</h2>
             <p>
               Send your Note Set through Ableton Cloud and continue in Live with the same sounds,
               samples and effects in place.
             </p>
+
+            <div className="note-live-flow" aria-label="Note to Ableton Cloud to Live">
+              <span className="note-flow-tile note-flow-tile--note">
+                <img src="/note/note-app-icon.png" alt="" aria-hidden="true" />
+              </span>
+              <span className="note-flow-arrow" aria-hidden="true" />
+              <span className="note-flow-tile note-flow-tile--cloud" aria-hidden="true">
+                <svg viewBox="0 0 58 36" role="img">
+                  <path
+                    d="M18.5 31.5h23.2c6 0 10.8-4.5 10.8-10.2 0-5.4-4.3-9.8-9.8-10.2C40.6 6 35.4 2.5 29.5 2.5c-7 0-12.8 4.9-14.2 11.3C9.5 14.1 5 18.7 5 24.5c0 4.2 3.1 7 7.2 7h6.3Z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+              <span className="note-flow-arrow" aria-hidden="true" />
+              <span className="note-flow-tile note-flow-tile--live">Live</span>
+            </div>
           </div>
-          <ul className="note-live-checklist">
-            <li>Works with Live 11.2.5+ (Intro, Lite, Standard, Suite &amp; Education)</li>
+
+          <ul className="note-live-checklist" aria-label="Live transfer details">
+            <li>Works with Live 11.2.5+ (Trial, Lite, Intro, Standard, Suite &amp; Education)</li>
             <li>Live Sets cannot be sent back to Note.</li>
             <li>Everything stays in sync: sounds, samples, tempo, key and effects.</li>
           </ul>
         </div>
+
+        <ul className="note-live-feature-strip" aria-label="Note compatibility and transfer features">
+          <li>
+            <span className="note-feature-icon note-feature-icon--device" aria-hidden="true" />
+            <h3>iPhone and iPad</h3>
+            <p>Native app for iOS and iPadOS.</p>
+          </li>
+          <li>
+            <span className="note-feature-icon note-feature-icon--link" aria-hidden="true" />
+            <h3>Ableton Link</h3>
+            <p>Jams in time with your favorite apps and gear.</p>
+          </li>
+          <li>
+            <span className="note-feature-icon note-feature-icon--cloud" aria-hidden="true" />
+            <h3>Ableton Cloud</h3>
+            <p>Seamless transfer between Note and Live.</p>
+          </li>
+          <li>
+            <span className="note-feature-icon note-feature-icon--live" aria-hidden="true">Live</span>
+            <h3>Live 12 Lite Included</h3>
+            <p>Start making more in Live, on us.</p>
+          </li>
+          <li>
+            <span className="note-feature-icon note-feature-icon--optimized" aria-hidden="true" />
+            <h3>iOS / iPadOS 15+ Optimized</h3>
+            <p>Built for performance and low latency.</p>
+          </li>
+        </ul>
+
+        <div className="note-live-download">
+          <div>
+            <h2>Your ideas. Anytime, anywhere.</h2>
+            <p>Download Ableton Note and start today.</p>
+          </div>
+
+          <div className="note-live-download-actions">
+            <a
+              href="https://apps.apple.com/app/ableton-note/id1633243177"
+              className="note-store-button"
+              aria-label="Download Ableton Note on the App Store"
+            >
+              <img src="/note/app-store-badge.png" alt="Download on the App Store" />
+            </a>
+
+            <a
+              href="https://apps.apple.com/app/ableton-note/id1633243177"
+              className="note-qr"
+              aria-label="Open Ableton Note App Store page"
+            >
+              {Array.from({ length: 49 }, (_, index) => (
+                <span key={`note-qr-${index}`} />
+              ))}
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section className="note-book-section" aria-label="Ableton Note as a book">
+        <img
+          className="note-book-image"
+          src="/note/Note as Book.png"
+          alt="Ableton Note presented as a book"
+        />
+        <div className="note-book-pixel-title" aria-hidden="true">
+          {noteBookPixels.map((pixel, index) => (
+            <span
+              key={`note-book-pixel-${pixel.row}-${pixel.column}`}
+              className={index < bookPixelCount ? "is-visible" : undefined}
+              style={{
+                gridColumn: pixel.column,
+                gridRow: pixel.row,
+              }}
+            />
+          ))}
+        </div>
+        <div
+          className="note-book-copy"
+          aria-label="Ableton Note page copy"
+          onPointerMove={handleBookCopyPointerMove}
+        >
+          <pre>{NOTE_BOOK_COPY}</pre>
+          <div className="note-book-magnifier" aria-hidden="true">
+            <pre>{NOTE_BOOK_COPY}</pre>
+          </div>
+        </div>
+        <img
+          className="note-book-app-store"
+          src="/note/app-store-badge.png"
+          alt="Download on the App Store"
+        />
       </section>
     </main>
   );
