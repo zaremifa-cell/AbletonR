@@ -13,6 +13,30 @@ Required fields:
 
 ## Sessions
 
+### 2026-06-04 10:50 EEST
+
+- Task summary: Replaced the fifth Note screen left-side rotating mockup screenshots with the supplied Ableton Note MIDI Editor video and reduced the right-side phone video crop.
+- Files touched:
+  - `src/pages/NotePage.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-04-1050-session.md`
+- Result: The left panel of `.note-lab-section` now renders `/note/New in Ableton Note MIDI Editor - Ableton (1080p, h264).mp4` as an autoplaying muted loop with cover-fit styling. The right phone video is smaller and uses contain-fit inside the phone frame to avoid cropping. Build passed.
+- Unresolved issues: No browser or screenshot verification was performed because the user forbids agent screen checks; final video crop approval depends on user review.
+- Session log: `project-governance/sessions/2026-06-04-1050-session.md`
+
+### 2026-06-04 09:16 EEST
+
+- Task summary: Fixed the checkout bottom `Back` action, added required front-end checkout sequencing, and rebuilt the Shop account dashboard into clickable realistic account sections.
+- Files touched:
+  - `src/pages/ShopPage.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-04-0916-session.md`
+- Result: The first checkout step now renders bottom `Back` as a `/shop/cart` link, later steps keep step-back behavior, and checkout action controls share a minimum width. Contact, billing, and payment forms now use controlled values and disable progression until required fields are valid; final order placement requires complete checkout data and cart items. Account cards now include realistic order history, license, download, billing, and profile details inspired by the supplied Ableton references, and each card opens a detailed internal account section with records, statuses, actions, and a back-to-overview control. Build passed.
+- Unresolved issues: No browser or screenshot verification was performed because the user explicitly forbade agent screen checks; final visual confirmation depends on user review.
+- Session log: `project-governance/sessions/2026-06-04-0916-session.md`
+
 ### 2026-06-02 11:08 EEST
 
 - Task summary: Expanded the Note page lower experience with a redesigned third `Bring it into Live` screen and a new full-bleed fourth `Note as Book` screen.

@@ -151,7 +151,11 @@ Download on the App Store.`;
 function NotePage() {
   const phoneMediaRef = useRef<HTMLDivElement>(null);
   const phoneScreenRef = useRef<HTMLDivElement>(null);
+  const labFeatureVideoRef = useRef<HTMLVideoElement>(null);
+  const labPhoneVideoRef = useRef<HTMLVideoElement>(null);
   const [bookPixelCount, setBookPixelCount] = useState(0);
+  const [isLabVideoPlaying, setIsLabVideoPlaying] = useState(false);
+  const [hasLabVideoStarted, setHasLabVideoStarted] = useState(false);
 
   const handleBookCopyPointerMove = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     const target = event.currentTarget;
@@ -205,6 +209,32 @@ function NotePage() {
     },
     [syncPhoneScreen],
   );
+
+  const handleLabVideoToggle = useCallback(() => {
+    const videos = [labFeatureVideoRef.current, labPhoneVideoRef.current].filter(
+      (video): video is HTMLVideoElement => Boolean(video),
+    );
+
+    if (isLabVideoPlaying) {
+      videos.forEach((video) => video.pause());
+      setIsLabVideoPlaying(false);
+      return;
+    }
+
+    videos.forEach((video) => {
+      video.currentTime = 0;
+      void video.play();
+    });
+    setHasLabVideoStarted(true);
+    setIsLabVideoPlaying(true);
+  }, [isLabVideoPlaying]);
+
+  const handleLabVideoReady = useCallback((event: React.SyntheticEvent<HTMLVideoElement>) => {
+    const video = event.currentTarget;
+    if (isLabVideoPlaying) return;
+    video.currentTime = 0;
+    video.pause();
+  }, [isLabVideoPlaying]);
 
   useEffect(() => {
     const media = phoneMediaRef.current;
@@ -482,6 +512,66 @@ function NotePage() {
           src="/note/app-store-badge.png"
           alt="Download on the App Store"
         />
+      </section>
+
+      <section className="note-lab-section" aria-label="Ableton Note video study">
+        <div
+          className={`note-lab-grid${hasLabVideoStarted ? " has-started" : ""}`}
+          onClick={() => {
+            if (isLabVideoPlaying) handleLabVideoToggle();
+          }}
+        >
+          <div className="note-lab-panel note-lab-panel--mockups">
+            <video
+              ref={labFeatureVideoRef}
+              className="note-lab-feature-video"
+              src="/note/New in Ableton Note MIDI Editor - Ableton (1080p, h264).mp4"
+              poster="/note/video-posters/note-midi-editor-poster.png"
+              muted
+              loop
+              playsInline
+              preload="auto"
+              onLoadedMetadata={handleLabVideoReady}
+              onLoadedData={handleLabVideoReady}
+              aria-label="Ableton Note MIDI Editor video"
+            />
+          </div>
+
+          <div className="note-lab-panel note-lab-panel--video">
+            <div className="note-lab-phone" aria-hidden="true">
+              <div
+                className="note-motion-screen"
+                style={{ ["--note-video-ratio" as string]: IPHONE_16E_SCREEN_RATIO }}
+              >
+                <video
+                  ref={labPhoneVideoRef}
+                  src="/note/ScreenRecording_06-01-2026 09-02-21_1.MP4"
+                  poster="/note/video-posters/note-screen-recording-poster.png"
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  onLoadedMetadata={handleLabVideoReady}
+                  onLoadedData={handleLabVideoReady}
+                />
+                <div className="note-status-cover" aria-hidden="true" />
+                <div className="note-dynamic-island" aria-hidden="true" />
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            className={`note-lab-play${isLabVideoPlaying ? " is-playing" : ""}`}
+            onClick={(event) => {
+              event.stopPropagation();
+              handleLabVideoToggle();
+            }}
+            aria-pressed={isLabVideoPlaying}
+          >
+            <span aria-hidden="true" />
+            {isLabVideoPlaying ? "Pause video" : "Play video"}
+          </button>
+        </div>
       </section>
     </main>
   );
