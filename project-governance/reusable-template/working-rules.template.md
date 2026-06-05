@@ -8,7 +8,12 @@ Before work begins, read the project governance files and determine:
 - relevant standards
 - likely affected files
 - files and sections that must not be changed
-- required verification
+- required build/test verification
+- visual approval method: user screenshot by default, agent browser verification only when explicitly requested
+
+## Daily Context Requirements
+
+At the start of each working day or new thread, extract a short working-memory summary from the project brief, taste profile, design decisions, consolidated lessons, session index, and latest relevant session logs. Preserve durable user criteria, accepted/rejected patterns, unresolved issues, and recent implementation context. Keep it high-level and actionable.
 
 ## Scope Rules
 

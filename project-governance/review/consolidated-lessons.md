@@ -16,12 +16,12 @@ Permanent lessons distilled from project sessions. Add only specific, evidence-b
 - Why it matters: The user rejected a CSS patch as amateur because it did not actually solve the asset fidelity problem.
 - Rule to follow next time: For image asset problems, first use the correct provided asset or a deterministic asset workflow; do not fake the result with a CSS overlay unless explicitly requested.
 
-## Lesson 3: Rendered output must be checked for visual claims
+## Lesson 3: Visual claims need user screenshot review
 
 - Lesson: For visual work, build success is not enough.
 - Evidence/source: Imported from prior user/project context before formal session logging existed.
 - Why it matters: Some CSS changes appeared correct in code but did not affect the actual rendered section as intended.
-- Rule to follow next time: Inspect the rendered page or ask for a fresh screenshot before claiming visual correctness.
+- Rule to follow next time: Ask for and use a fresh user screenshot before claiming visual correctness. Do not run agent browser checks or agent-generated screenshots unless the user explicitly asks for browser verification.
 
 ## Lesson 4: Preserve accepted interaction patterns
 
@@ -70,14 +70,14 @@ Permanent lessons distilled from project sessions. Add only specific, evidence-b
 - Lesson: Do not use agent-generated screenshots as proof of visual correctness unless the user explicitly asks for them.
 - Evidence/source: 2026-05-19 user correction after an agent screenshot-based check missed that the previous Push `Two ways to work` footer was still visible above the Connections section.
 - Why it matters: The user's browser screenshot is the authoritative visual context; agent screenshots can capture a different scroll position, viewport, or state and lead to incorrect claims.
-- Rule to follow next time: For visual approval, ask for and use the user's screenshot. Use build/code checks for technical validation only, and do not claim visual correctness from agent-created screenshots.
+- Rule to follow next time: For visual approval, ask for and use the user's screenshot. Use build/code checks for technical validation only, and do not run or claim visual correctness from agent-created screenshots unless the user explicitly asks for browser verification.
 
-## Lesson 11: Measure alignment instead of estimating it
+## Lesson 11: Use evidence for alignment instead of estimating it
 
-- Lesson: When the user asks for two visual elements to share an exact line or equal distance from a divider, measure rendered DOM geometry and align to those measurements.
+- Lesson: When the user asks for two visual elements to share an exact line or equal distance from a divider, use concrete evidence instead of estimating by eye.
 - Evidence/source: `project-governance/sessions/2026-05-28-0926-session.md`, Shop hero correction where `Buying flow` and `View cart` needed equal distance from the lower white line.
 - Why it matters: Repeated eye-based adjustments created frustration and moved the wrong element. The successful correction measured the lower hero line to `Buying flow` and `View cart` and made both distances 35px.
-- Rule to follow next time: If exact alignment is requested, identify the relevant element rects, calculate the target distance or delta, apply the smallest scoped CSS change, and report the measured before/after values.
+- Rule to follow next time: If exact alignment is requested, use code-level geometry and user screenshots by default. Measure rendered element rects and report before/after distances only when the user explicitly asks for browser verification.
 
 ## Lesson 12: Preserve vertical hierarchy during alignment refinements
 

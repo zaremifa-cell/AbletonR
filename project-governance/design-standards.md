@@ -37,13 +37,15 @@ Preserve:
 
 Do not add new gradients, shadows, glow effects, decorative icons, colors, animations, or layout concepts unless they are visible in the reference or explicitly requested.
 
-## Rendered Verification
+## Visual Verification
 
 - Rendered output is the final judge.
-- After meaningful visual changes, inspect the browser result when possible.
-- Compare against the reference or user instruction.
-- If exact pixel comparison is not possible, state that exact verification was not performed.
-- Do not claim visual fidelity without visual inspection.
+- Do not run agent browser checks, Playwright screenshots, headless screenshots, or other agent-generated screen inspections by default.
+- Run agent browser or agent-generated screenshot verification only when the user explicitly asks for it.
+- When visual confirmation is needed and the user has not explicitly requested agent browser verification, ask for a user-provided screenshot and treat that screenshot as the review source.
+- Compare user-provided screenshots against the reference or user instruction.
+- If visual verification was not performed from a user screenshot or explicit user-requested browser check, state that clearly.
+- Do not claim visual fidelity without user screenshot review or explicit user-requested rendered inspection.
 
 ## Ambiguity
 

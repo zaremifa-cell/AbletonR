@@ -37,7 +37,7 @@ After visual feedback:
 - When the user asks to copy a full lower page section, include the complete section stack and footer details, not only the most obvious first block.
 - Product containers should read as complete rectangular frames when requested; avoid double-thick inner lines caused by overlapping borders or grid gaps.
 - For alignment corrections, preserve the existing content hierarchy unless the user explicitly asks to restructure it. In the Shop hero, `Shop` and its description should remain vertically grouped.
-- For precise vertical alignment feedback, measure rendered geometry and report the exact distances rather than estimating by eye.
+- For precise vertical alignment feedback, use code-level geometry and user screenshots by default. Measure rendered geometry only when the user explicitly asks for browser verification, then report the exact distances rather than estimating by eye.
 
 ### Color
 
@@ -71,7 +71,7 @@ After visual feedback:
 - CSS blocks or overlays used to fake an image/background fix.
 - Restyling unrelated sections while changing a specific area.
 - Changing shared elements such as promo/nav while addressing page-specific visual requests.
-- Claiming visual success without verifying the actual rendered result or asking for a screenshot.
+- Claiming visual success without user screenshot review or explicit user-requested browser verification.
 - Splitting vertically grouped header content into separate horizontal columns when the request is only alignment refinement.
 - Blocking horizontal product-rail scroll while trying to prevent browser-level navigation.
 - Classic dot indicators for the Shop product rail in this design direction.
@@ -86,7 +86,7 @@ After visual feedback:
 - Crossfades when they help hide imperfect alignment between related product images.
 - Session history and consolidated lessons as sources for future behavior.
 - Thin orange product-rail progress indicator for Shop horizontal scroll.
-- Measured DOM alignment for Shop hero text and utility links.
+- Measured DOM alignment for Shop hero text and utility links when browser verification is explicitly requested.
 
 ## Provisional Notes
 

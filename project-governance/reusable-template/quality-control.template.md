@@ -5,7 +5,8 @@
 - Confirm scope.
 - Identify target files.
 - Identify unrelated files that must remain unchanged.
-- Identify required verification.
+- Identify required build/test verification.
+- Identify whether visual approval needs a user screenshot or an explicit user request for agent browser verification.
 
 ## During Work
 

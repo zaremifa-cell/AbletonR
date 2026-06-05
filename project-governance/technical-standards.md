@@ -35,8 +35,9 @@
 ## Build And Verification
 
 - Run `npm run build` after meaningful TypeScript, React, or CSS changes when feasible.
-- For visual work, inspect rendered output when possible.
-- If build or visual inspection cannot be run, state that clearly.
+- Do not run agent browser checks, Playwright screenshots, headless screenshots, or other agent-generated screen inspections unless the user explicitly asks for browser verification.
+- For visual work, rely on user-provided screenshots for visual approval unless the user explicitly asks the agent to verify in the browser.
+- If build or visual verification cannot be run, state that clearly.
 
 ## Dependencies
 

@@ -29,10 +29,12 @@ The goal is to keep every work session consistent with project direction, previo
 3. Determine likely affected files.
 4. State what must not be changed.
 5. Keep changes narrow and auditable.
-6. Verify the result with build, visual inspection, or a clear explanation when verification is not possible.
+6. Verify the result with relevant build/test checks and, for visual approval, user-provided screenshot review unless the user explicitly asks for browser verification.
 7. Create a session log for meaningful work.
 8. Update `session-index.md`.
 9. Propose or apply review-cycle updates only when evidence supports them.
+
+Do not run agent browser checks or agent-generated screenshots unless the user explicitly asks for browser verification.
 
 ## Conflict Rule
 

@@ -6,7 +6,8 @@
 - Identify target files.
 - Identify unrelated files and sections that must remain unchanged.
 - Check whether visual references apply.
-- Check whether build or rendered verification will be required.
+- Check whether build verification is required.
+- Check whether visual confirmation requires a user-provided screenshot or an explicit user request for agent browser verification.
 
 ## During Work
 
@@ -28,6 +29,7 @@ For visual changes, verify:
 - colors and contrast are correct
 - no unrelated section changed
 - no screenshot pixels were copied or embedded
+- no agent browser/screenshot verification was used unless the user explicitly requested it
 
 ## Technical Quality Check
 

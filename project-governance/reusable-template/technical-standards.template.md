@@ -26,7 +26,8 @@
 
 - `[Build command]`
 - `[Test command]`
-- `[Manual verification expectations]`
+- Do not run agent browser or screenshot verification unless the user explicitly asks for it.
+- Use user-provided screenshots for visual approval when needed.
 
 ## Dependencies
 

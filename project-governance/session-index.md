@@ -13,6 +13,79 @@ Required fields:
 
 ## Sessions
 
+### 2026-06-05 Day Brief
+
+- Task summary: Captured the full June 5 chat context as a durable working guide covering accepted changes, rejected directions, user criteria, and implementation notes for Note, Live, Push, footer, and shared button behavior.
+- Files touched:
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-05-day-brief.md`
+- Result: Future work now has a concise source of truth for what the user wanted, what was corrected, what not to repeat, and how to preserve the current visual/system direction.
+- Unresolved issues: Visual approval remains screenshot-based; no agent browser verification was performed.
+- Session log: `project-governance/sessions/2026-06-05-day-brief.md`
+
+### 2026-06-05 11:02 EEST
+
+- Task summary: Reworked the lower Live page flow so `What's new in Live 12` also contains the `Why Live` feature row, and replaced the lower CTA with a free-trial download screen.
+- Files touched:
+  - `src/pages/Live12Page.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-05-1102-session.md`
+- Result: The `Non-linear first`, `Performance native`, and `Idea to track` cards now sit below the `What's new` feature cards in the same Live screen. The lower screen now keeps the `Start in Session View` context and adds a `Start your free trial of Ableton Live` download area with existing Live imagery, macOS/Windows selection, Download action, and trial notes. Build passed.
+- Unresolved issues: No browser or screenshot visual verification was performed; final visual approval depends on user review.
+- Session log: `project-governance/sessions/2026-06-05-1102-session.md`
+
+### 2026-06-05 09:40 EEST
+
+- Task summary: Simplified the Note page to the accepted book and video-study screens, kept Note assets in the project, and added a dark/reverse Note footer treatment.
+- Files touched:
+  - `src/pages/NotePage.tsx`
+  - `src/components/layout/Footer.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-05-0940-session.md`
+- Result: The first three Note sections are no longer rendered, while `public/note/` assets remain untouched. The Note page now continues from the book section to the annotated video-study section and then to a Note-only closing footer plate with the Note app icon centered above a reverse Ableton footer. Build passed.
+- Unresolved issues: No browser or screenshot visual verification was performed per user instruction; final visual approval depends on user review.
+- Session log: `project-governance/sessions/2026-06-05-0940-session.md`
+
+### 2026-06-05 09:06 EEST
+
+- Task summary: Removed documentation contradictions that told the agent to run browser/rendered visual checks by default, and added a daily-start context rule for preserving the user's high-level criteria and recent project memory.
+- Files touched:
+  - `project-governance/README.md`
+  - `project-governance/working-rules.md`
+  - `project-governance/design-standards.md`
+  - `project-governance/technical-standards.md`
+  - `project-governance/quality-control.md`
+  - `project-governance/visual-output-workflow.md`
+  - `project-governance/agent-speed-mode.md`
+  - `project-governance/visual-taste-profile.md`
+  - `project-governance/review/consolidated-lessons.md`
+  - `project-governance/reusable-template/design-standards.template.md`
+  - `project-governance/reusable-template/technical-standards.template.md`
+  - `project-governance/reusable-template/quality-control.template.md`
+  - `project-governance/reusable-template/working-rules.template.md`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-05-17-1315-session.md`
+  - `project-governance/sessions/2026-05-18-0950-session.md`
+  - `project-governance/sessions/2026-05-27-0904-session.md`
+  - `project-governance/sessions/2026-05-28-0926-session.md`
+  - `project-governance/sessions/2026-06-05-0906-session.md`
+- Result: Active governance now says agent browser checks, Playwright screenshots, headless screenshots, and agent-generated screen inspections must not run unless the user explicitly asks for browser verification. User-provided screenshots are the default visual approval source. Startup rules now require a short daily working-memory summary from project brief, taste profile, decisions, consolidated lessons, session index, and latest relevant session logs. Older future-facing session-log notes were aligned with the same rule. No product code was changed.
+- Unresolved issues: Historical session logs still mention earlier browser/headless checks as past events; they were left unchanged as records. No build was run because this was documentation-only work.
+- Session log: `project-governance/sessions/2026-06-05-0906-session.md`
+
+### 2026-06-04 14:31 EEST
+
+- Task summary: Added a reversible Note-only reverse color treatment for the top navigation and hero section.
+- Files touched:
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-04-1431-session.md`
+- Result: The Note page nav is now dark with light text/logo, the Note hero copy is light on a near-black background, and the hero/video dark surfaces are unified to `#050505`. The Rent-to-Own promo bar remains unchanged. A full-day retrospective was added on 2026-06-05 to capture user satisfaction, dissatisfaction, mistakes, corrections, and criteria for future sessions. Build passed before the documentation-only retrospective.
+- Unresolved issues: No browser or screenshot verification was performed because the user forbids agent screen checks; final visual approval depends on user review.
+- Session log: `project-governance/sessions/2026-06-04-1431-session.md`
+
 ### 2026-06-04 10:50 EEST
 
 - Task summary: Replaced the fifth Note screen left-side rotating mockup screenshots with the supplied Ableton Note MIDI Editor video and reduced the right-side phone video crop.

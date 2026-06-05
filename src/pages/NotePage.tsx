@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import Footer from "@/components/layout/Footer";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 /** iPhone 16e: 1170×2532 px display, 390×844 pt */
@@ -149,8 +150,6 @@ Download Ableton Note and start today.
 Download on the App Store.`;
 
 function NotePage() {
-  const phoneMediaRef = useRef<HTMLDivElement>(null);
-  const phoneScreenRef = useRef<HTMLDivElement>(null);
   const labFeatureVideoRef = useRef<HTMLVideoElement>(null);
   const labPhoneVideoRef = useRef<HTMLVideoElement>(null);
   const [bookPixelCount, setBookPixelCount] = useState(0);
@@ -163,52 +162,16 @@ function NotePage() {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     const scale = 3.2;
-    const radius = 92;
+    const lensWidth = 340;
+    const lensHeight = 132;
 
     target.style.setProperty("--note-lens-x", `${x}px`);
     target.style.setProperty("--note-lens-y", `${y}px`);
     target.style.setProperty("--note-lens-left", `${x}px`);
     target.style.setProperty("--note-lens-top", `${y}px`);
-    target.style.setProperty("--note-lens-copy-x", `${radius - x * scale}px`);
-    target.style.setProperty("--note-lens-copy-y", `${radius - y * scale}px`);
+    target.style.setProperty("--note-lens-copy-x", `${lensWidth / 2 - x * scale}px`);
+    target.style.setProperty("--note-lens-copy-y", `${lensHeight / 2 - y * scale}px`);
   }, []);
-
-  const syncPhoneScreen = useCallback((video: HTMLVideoElement) => {
-    const screen = phoneScreenRef.current;
-    const media = phoneMediaRef.current;
-    if (!screen || !video.videoWidth || !video.videoHeight) return;
-
-    let videoWidth = video.videoWidth;
-    let videoHeight = video.videoHeight;
-    if (videoWidth > videoHeight) {
-      [videoWidth, videoHeight] = [videoHeight, videoWidth];
-    }
-
-    const aspect = videoWidth / videoHeight;
-    screen.style.setProperty("--note-video-ratio", `${videoWidth} / ${videoHeight}`);
-
-    if (!media) return;
-
-    const bezel = 20;
-    const verticalMargin = 40;
-    const maxWidthCap = Math.min(288, window.innerWidth * 0.264);
-    const maxHeight = media.clientHeight - verticalMargin;
-    const maxWidthFromHeight = Math.max(0, (maxHeight - bezel) * aspect);
-    const screenWidth = Math.min(maxWidthCap, maxWidthFromHeight);
-
-    screen.style.setProperty("--note-screen-width", `${screenWidth}px`);
-    const phone = screen.closest(".note-phone");
-    if (phone instanceof HTMLElement) {
-      phone.style.setProperty("--note-screen-width", `${screenWidth}px`);
-    }
-  }, []);
-
-  const handleVideoMetadata = useCallback(
-    (event: React.SyntheticEvent<HTMLVideoElement>) => {
-      syncPhoneScreen(event.currentTarget);
-    },
-    [syncPhoneScreen],
-  );
 
   const handleLabVideoToggle = useCallback(() => {
     const videos = [labFeatureVideoRef.current, labPhoneVideoRef.current].filter(
@@ -235,19 +198,6 @@ function NotePage() {
     video.currentTime = 0;
     video.pause();
   }, [isLabVideoPlaying]);
-
-  useEffect(() => {
-    const media = phoneMediaRef.current;
-    if (!media) return;
-
-    const observer = new ResizeObserver(() => {
-      const video = media.querySelector("video");
-      if (video) syncPhoneScreen(video);
-    });
-
-    observer.observe(media);
-    return () => observer.disconnect();
-  }, [syncPhoneScreen]);
 
   useEffect(() => {
     let timeoutId: number;
@@ -294,191 +244,6 @@ function NotePage() {
 
   return (
     <main className="note-page">
-      <section className="note-hero" aria-labelledby="note-title">
-        <div className="note-hero-copy">
-          <div className="note-brand">
-            <img src="/note/note-app-icon.png" alt="" aria-hidden="true" />
-            <span>Note</span>
-          </div>
-
-          <h1 id="note-title">
-            Start before
-            <span>the studio.</span>
-          </h1>
-
-          <p>
-            Capture beats, melodies and sounds wherever they appear &mdash; then continue them in
-            Ableton Live.
-          </p>
-
-          <div className="note-actions">
-            <a
-              href="https://apps.apple.com/app/ableton-note/id1633243177"
-              className="note-app-store"
-              aria-label="Download Ableton Note on the App Store"
-            >
-              <img src="/note/app-store-badge.png" alt="Download on the App Store" />
-            </a>
-            <a href="#note-details" className="note-learn-more">
-              Learn more <span aria-hidden="true">&rarr;</span>
-            </a>
-          </div>
-
-          <div className="note-availability">
-            <span>iPhone and iPad</span>
-            <span aria-hidden="true">&bull;</span>
-            <span>iOS / iPadOS 15+</span>
-          </div>
-        </div>
-
-        <div className="note-hero-visual">
-          <img src="/note/Note in iPhone with hand.png" alt="Ableton Note running on an iPhone held in hand" />
-        </div>
-      </section>
-
-      <section
-        className="note-section note-section--details"
-        id="note-details"
-        aria-labelledby="note-details-title"
-      >
-        <div className="note-copy">
-          <div className="note-copy-block">
-            <h2 id="note-details-title">Ideas don&rsquo;t wait for your setup.</h2>
-            <p>
-              A rhythm, a texture, a chord shape, a voice memo, a street sound &mdash; Note turns
-              these first impulses into playable material.
-            </p>
-          </div>
-
-          <div className="note-copy-block">
-            <h2>Three ways to begin.</h2>
-            <p>
-              Start from rhythm, melody or the world around you. Everything is built for speed and
-              creativity.
-            </p>
-          </div>
-        </div>
-
-        <div
-          ref={phoneMediaRef}
-          className="note-media note-media--phone"
-          aria-label="Ableton Note screen recording in iPhone frame"
-        >
-          <div className="note-phone" aria-hidden="true">
-            <div
-              ref={phoneScreenRef}
-              className="note-motion-screen"
-              style={{ ["--note-video-ratio" as string]: IPHONE_16E_SCREEN_RATIO }}
-            >
-              <video
-                src="/note/ScreenRecording_06-01-2026 09-02-21_1.MP4"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                onLoadedMetadata={handleVideoMetadata}
-              />
-              <div className="note-status-cover" aria-hidden="true" />
-              <div className="note-dynamic-island" aria-hidden="true" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="note-section note-section--live" aria-labelledby="note-live-title">
-        <div className="note-live-panel">
-          <div className="note-live-copy">
-            <h2 id="note-live-title">Bring it into Live.</h2>
-            <p>
-              Send your Note Set through Ableton Cloud and continue in Live with the same sounds,
-              samples and effects in place.
-            </p>
-
-            <div className="note-live-flow" aria-label="Note to Ableton Cloud to Live">
-              <span className="note-flow-tile note-flow-tile--note">
-                <img src="/note/note-app-icon.png" alt="" aria-hidden="true" />
-              </span>
-              <span className="note-flow-arrow" aria-hidden="true" />
-              <span className="note-flow-tile note-flow-tile--cloud" aria-hidden="true">
-                <svg viewBox="0 0 58 36" role="img">
-                  <path
-                    d="M18.5 31.5h23.2c6 0 10.8-4.5 10.8-10.2 0-5.4-4.3-9.8-9.8-10.2C40.6 6 35.4 2.5 29.5 2.5c-7 0-12.8 4.9-14.2 11.3C9.5 14.1 5 18.7 5 24.5c0 4.2 3.1 7 7.2 7h6.3Z"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-              <span className="note-flow-arrow" aria-hidden="true" />
-              <span className="note-flow-tile note-flow-tile--live">Live</span>
-            </div>
-          </div>
-
-          <ul className="note-live-checklist" aria-label="Live transfer details">
-            <li>Works with Live 11.2.5+ (Trial, Lite, Intro, Standard, Suite &amp; Education)</li>
-            <li>Live Sets cannot be sent back to Note.</li>
-            <li>Everything stays in sync: sounds, samples, tempo, key and effects.</li>
-          </ul>
-        </div>
-
-        <ul className="note-live-feature-strip" aria-label="Note compatibility and transfer features">
-          <li>
-            <span className="note-feature-icon note-feature-icon--device" aria-hidden="true" />
-            <h3>iPhone and iPad</h3>
-            <p>Native app for iOS and iPadOS.</p>
-          </li>
-          <li>
-            <span className="note-feature-icon note-feature-icon--link" aria-hidden="true" />
-            <h3>Ableton Link</h3>
-            <p>Jams in time with your favorite apps and gear.</p>
-          </li>
-          <li>
-            <span className="note-feature-icon note-feature-icon--cloud" aria-hidden="true" />
-            <h3>Ableton Cloud</h3>
-            <p>Seamless transfer between Note and Live.</p>
-          </li>
-          <li>
-            <span className="note-feature-icon note-feature-icon--live" aria-hidden="true">Live</span>
-            <h3>Live 12 Lite Included</h3>
-            <p>Start making more in Live, on us.</p>
-          </li>
-          <li>
-            <span className="note-feature-icon note-feature-icon--optimized" aria-hidden="true" />
-            <h3>iOS / iPadOS 15+ Optimized</h3>
-            <p>Built for performance and low latency.</p>
-          </li>
-        </ul>
-
-        <div className="note-live-download">
-          <div>
-            <h2>Your ideas. Anytime, anywhere.</h2>
-            <p>Download Ableton Note and start today.</p>
-          </div>
-
-          <div className="note-live-download-actions">
-            <a
-              href="https://apps.apple.com/app/ableton-note/id1633243177"
-              className="note-store-button"
-              aria-label="Download Ableton Note on the App Store"
-            >
-              <img src="/note/app-store-badge.png" alt="Download on the App Store" />
-            </a>
-
-            <a
-              href="https://apps.apple.com/app/ableton-note/id1633243177"
-              className="note-qr"
-              aria-label="Open Ableton Note App Store page"
-            >
-              {Array.from({ length: 49 }, (_, index) => (
-                <span key={`note-qr-${index}`} />
-              ))}
-            </a>
-          </div>
-        </div>
-      </section>
-
       <section className="note-book-section" aria-label="Ableton Note as a book">
         <img
           className="note-book-image"
@@ -515,6 +280,46 @@ function NotePage() {
       </section>
 
       <section className="note-lab-section" aria-label="Ableton Note video study">
+        {/* Reversible sketch layer: remove this block and the note-lab-annotation CSS to restore the clean video study. */}
+        <div className="note-lab-annotations" aria-hidden="true">
+          <div className="note-lab-draft note-lab-draft--top-left">
+            <span>NOTE STUDY 02</span>
+            <div className="note-lab-draft-box">
+              <strong>TOUCH FIRST</strong>
+              <strong>CAPTURE MIDI</strong>
+              <strong>PLAY IDEAS</strong>
+            </div>
+          </div>
+
+          <div className="note-lab-draft note-lab-draft--top-right">
+            <span>INTERFACE DETAILS</span>
+            <div className="note-lab-draft-box">
+              <strong>DELAY / EFFECTS</strong>
+              <strong>MIDI EDITOR</strong>
+              <strong>SESSION VIEW</strong>
+            </div>
+          </div>
+
+          <div className="note-lab-axis note-lab-axis--left">
+            <span>INPUT</span>
+            <span>TOUCH</span>
+            <span>LOOP</span>
+          </div>
+
+          <div className="note-lab-axis note-lab-axis--right">
+            <span>EFFECT</span>
+            <span>EDIT</span>
+            <span>SEND</span>
+          </div>
+
+          <div className="note-lab-sequence">
+            <span>01 / tap in MIDI notes</span>
+            <span>02 / shape sound with devices</span>
+            <span>03 / save loops and versions</span>
+            <span>04 / continue through Cloud</span>
+          </div>
+        </div>
+
         <div
           className={`note-lab-grid${hasLabVideoStarted ? " has-started" : ""}`}
           onClick={() => {
@@ -573,6 +378,8 @@ function NotePage() {
           </button>
         </div>
       </section>
+
+      <Footer variant="note" />
     </main>
   );
 }

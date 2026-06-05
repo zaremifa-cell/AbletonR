@@ -144,7 +144,7 @@ function Push3Page() {
         </h2>
         <aside className="push-product" aria-label="Push 3 product image">
           <Link className="push-buy-button" to="/shop/product/push" aria-label="Buy Push">
-            Buy
+            Buy now
           </Link>
           <div className={`push-product-frame${previousProductImage ? " is-transitioning" : ""}`}>
             <img

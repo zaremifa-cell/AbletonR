@@ -71,9 +71,9 @@ Each variant should state:
 
 The user is the primary visual reviewer.
 
-Do not create or use agent-generated screenshots as visual proof unless the user explicitly asks for them. When visual verification is needed, ask the user for a screenshot and treat that screenshot as the review source.
+Do not create or use agent-generated screenshots, browser checks, Playwright screenshots, or headless screenshots as visual proof unless the user explicitly asks for browser verification. When visual verification is needed, ask the user for a screenshot and treat that screenshot as the review source.
 
-When browser inspection is unreliable or insufficient:
+When visual approval is needed and the user has not explicitly requested agent browser verification:
 
 1. Ask the user for a screenshot.
 2. Wait for the screenshot.

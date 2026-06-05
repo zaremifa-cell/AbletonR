@@ -7,6 +7,7 @@ type NewsletterSignupProps = {
 
 type FooterProps = {
   newsletterKicker?: ReactNode;
+  variant?: "default" | "note";
 };
 
 export function NewsletterSignup({ kicker }: NewsletterSignupProps) {
@@ -47,10 +48,16 @@ export function NewsletterSignup({ kicker }: NewsletterSignupProps) {
   );
 }
 
-function Footer({ newsletterKicker }: FooterProps = {}) {
+function Footer({ newsletterKicker, variant = "default" }: FooterProps = {}) {
   return (
-    <div className="home-end">
-      <NewsletterSignup kicker={newsletterKicker} />
+    <div className={`home-end${variant === "note" ? " home-end--note" : ""}`}>
+      {variant === "note" ? (
+        <section className="note-footer-plate" aria-label="Ableton Note closing mark">
+          <img src="/note/note-app-icon.png" alt="Ableton Note" />
+        </section>
+      ) : (
+        <NewsletterSignup kicker={newsletterKicker} />
+      )}
 
       <footer>
         <div className="foot-top">

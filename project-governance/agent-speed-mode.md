@@ -25,7 +25,7 @@ Process:
 3. State what will not change.
 4. Make the narrow edit.
 5. Build if relevant.
-6. Ask for screenshot if visual verification is needed and local browser inspection is not reliable.
+6. Ask for a user screenshot if visual verification is needed, unless the user explicitly asks for browser verification.
 7. Log meaningful work.
 
 Avoid:
@@ -92,7 +92,7 @@ Process:
 2. Inspect only relevant source files.
 3. Make narrow implementation changes.
 4. Build.
-5. Request screenshot or inspect rendered output.
+5. Request a user screenshot for visual approval unless the user explicitly asks for browser verification.
 6. Fix only issues in scope.
 7. Log session.
 
@@ -108,4 +108,3 @@ If the user gives a precise instruction, use Direct Edit Mode.
 If the user gives references or taste feedback, use Visual Direction Mode or Review And Learn Mode.
 
 If the user asks "what should we do", use Visual Direction Mode and produce a concrete recommendation.
-

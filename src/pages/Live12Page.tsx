@@ -1,5 +1,4 @@
-import { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 /* ── icons ── */
@@ -117,6 +116,8 @@ const WHY = [
 
 /* ── component ── */
 function Live12Page() {
+  const [trialOs, setTrialOs] = useState("mac");
+
   usePageMeta({
     title: "Live 12 — Ableton Programme",
     description:
@@ -293,11 +294,11 @@ function Live12Page() {
             </div>
             <ul className="lp-feat-list">
               {[
-                { icon: <IconPlay />, title: "Launch clips",       desc: "Trigger sounds, melodies and loops." },
-                { icon: <IconLoop />, title: "Loop instantly",      desc: "Everything stays in time." },
-                { icon: <IconGrid />, title: "Improvise structure", desc: "Change your set on the fly." },
+                { icon: <IconPlay />, kind: "play", title: "Launch clips",       desc: "Trigger sounds, melodies and loops." },
+                { icon: <IconLoop />, kind: "loop", title: "Loop instantly",      desc: "Everything stays in time." },
+                { icon: <IconGrid />, kind: "grid", title: "Improvise structure", desc: "Change your set on the fly." },
               ].map(f => (
-                <li key={f.title} className="lp-feat-item">
+                <li key={f.title} className={`lp-feat-item lp-feat-item--${f.kind}`}>
                   <span className="lp-feat-icon">{f.icon}</span>
                   <div>
                     <strong>{f.title}</strong>
@@ -450,16 +451,8 @@ function Live12Page() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      <div className="lp-tail">
-        {/* ══ WHY LIVE ══ */}
-        <section className="lp-why">
-          <div className="lp-why-intro">
-            <p className="lp-kicker">Why Live</p>
-          </div>
-          <div className="lp-why-grid">
+          <div className="lp-why-grid lp-why-grid--in-new">
             {WHY.map(w => (
               <div key={w.title} className="lp-why-item">
                 <span className="lp-why-icon">{w.icon}</span>
@@ -468,21 +461,43 @@ function Live12Page() {
               </div>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ══ CTA STRIP ══ */}
+      <div className="lp-tail">
+        {/* ══ TRIAL SCREEN ══ */}
         <section className="lp-cta">
-          <h2 className="lp-cta-text">Start in Session View.</h2>
-          <div className="lp-cta-actions">
-            <button className="btn lp-cta-btn">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                <polygon points="1,0.5 11.5,6 1,11.5" />
-              </svg>
-              Watch in action
-            </button>
-            <Link to="/" className="lp-text-link lp-text-link--dark">
-              See all editions <span className="arr">→</span>
-            </Link>
+          <div className="lp-trial-media">
+            <img src="/live/live 12 product image.png" alt="Ableton Live 12 Suite product box" loading="lazy" />
+          </div>
+
+          <div className="lp-trial-copy">
+            <p className="lp-kicker">Start in Session View</p>
+            <h2 className="lp-cta-text">Start your free trial of Ableton Live.</h2>
+            <p className="lp-trial-body">
+              Explore Live 12 Suite's full features &mdash; free for 30 days.
+            </p>
+
+            <form className="lp-trial-form" action="https://www.ableton.com/en/trial/" method="get">
+              <label htmlFor="live-trial-os">Operating System</label>
+              <div className="lp-trial-controls">
+                <select
+                  id="live-trial-os"
+                  value={trialOs}
+                  onChange={(event) => setTrialOs(event.currentTarget.value)}
+                >
+                  <option value="mac">macOS Universal (5.4 GB)</option>
+                  <option value="windows">Windows 10 / 11 (64-bit)</option>
+                </select>
+                <button type="submit">Download</button>
+              </div>
+            </form>
+
+            <ul className="lp-trial-notes" aria-label="Trial details">
+              <li>No credit card required</li>
+              <li>Get started in minutes</li>
+              <li>Save and export your music</li>
+            </ul>
           </div>
         </section>
       </div>

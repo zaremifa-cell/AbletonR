@@ -24,6 +24,7 @@ Preserve:
 
 ## Verification
 
-- Inspect rendered output when visual work is changed.
-- Compare against the relevant reference.
+- Do not run agent browser or screenshot verification unless the user explicitly asks for it.
+- Ask for a user-provided screenshot when visual approval is needed.
+- Compare the user screenshot against the relevant reference.
 - State when exact verification was not performed.
