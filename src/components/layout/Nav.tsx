@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { mobileNavItems } from "@/data/nav";
 import type { PackSummary } from "@/data/packs";
 import { useCart } from "@/contexts/CartContext";
@@ -11,8 +11,34 @@ type NavProps = {
 function Nav({ activePack }: NavProps) {
   const { count: cartCount } = useCart();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isPacksGrid = location.pathname === "/packs";
+
+  const scrollToLearn = () => {
+    window.requestAnimationFrame(() => {
+      const target = document.getElementById("learn-section");
+      const container = document.querySelector<HTMLElement>(".home-page");
+      if (!target || !container) return;
+
+      container.scrollTo({
+        top: target.offsetTop,
+        left: 0,
+        behavior: "smooth",
+      });
+    });
+  };
+
+  const handleLearnClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    if (location.pathname !== "/") {
+      navigate("/");
+      window.setTimeout(scrollToLearn, 80);
+      return;
+    }
+
+    scrollToLearn();
+  };
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -62,7 +88,7 @@ function Nav({ activePack }: NavProps) {
             <NavLink to="/move">Move</NavLink>
             <NavLink to="/note">Note</NavLink>
             <NavLink to="/packs">Packs</NavLink>
-            <a href="#learn">Learn</a>
+            <a href="#learn-section" onClick={handleLearnClick}>Learn</a>
             <NavLink to="/shop">Shop</NavLink>
           </nav>
           {isPacksGrid ? (

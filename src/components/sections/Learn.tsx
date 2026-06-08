@@ -12,7 +12,12 @@ function Learn() {
         </p>
       </div>
       <div className="learn-grid">
-        <a href="https://learningmusic.ableton.com/" className="learn-item">
+        <a
+          href="https://learningmusic.ableton.com"
+          className="learn-item"
+          target="_blank"
+          rel="noreferrer"
+        >
           <span className="n">C01</span>
           <h3>Learning Music</h3>
           <p>
@@ -23,7 +28,12 @@ function Learn() {
             Open lesson <span className="arr">&rarr;</span>
           </span>
         </a>
-        <a href="https://learningsynths.ableton.com/" className="learn-item">
+        <a
+          href="https://learningsynths.ableton.com"
+          className="learn-item"
+          target="_blank"
+          rel="noreferrer"
+        >
           <span className="n">C02</span>
           <h3>Learning Synths</h3>
           <p>
@@ -34,7 +44,12 @@ function Learn() {
             Open lesson <span className="arr">&rarr;</span>
           </span>
         </a>
-        <a href="https://makingmusic.ableton.com/" className="learn-item">
+        <a
+          href="https://makingmusic.ableton.com"
+          className="learn-item"
+          target="_blank"
+          rel="noreferrer"
+        >
           <span className="n">C03</span>
           <h3>Making Music</h3>
           <p>

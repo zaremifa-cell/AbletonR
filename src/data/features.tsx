@@ -8,26 +8,26 @@ import {
 export const featureItems = [
   {
     icon: <SoundsIcon />,
-    title: "Sounds",
-    desc: "Find your next sound.",
-    href: "#sounds",
+    title: "Downloads",
+    desc: "Find sounds, devices and creative tools.",
+    href: "https://www.ableton.com/en/blog/categories/downloads/",
   },
   {
     icon: <MaxForLiveIcon />,
     title: "Max for Live",
     desc: "Expand and customize Live.",
-    href: "#max",
+    href: "https://www.ableton.com/en/shop/#max-for-live",
   },
   {
     icon: <TutorialsIcon />,
     title: "Tutorials",
     desc: "Learn new skills.",
-    href: "#tutorials",
+    href: "https://www.ableton.com/en/blog/categories/tutorials/",
   },
   {
     icon: <CommunityIcon />,
     title: "Community",
     desc: "Join other music makers.",
-    href: "#community",
+    href: "https://www.ableton.com/en/blog/categories/artists/",
   },
 ];

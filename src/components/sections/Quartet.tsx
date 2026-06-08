@@ -119,7 +119,15 @@ function Quartet() {
         </div>
       </div>
 
-      <article className="window note" id="note">
+      <div
+        className="window note"
+        id="note"
+        role="link"
+        tabIndex={0}
+        aria-label="View Note catalogue"
+        onClick={() => navigate("/note")}
+        onKeyDown={(event) => handleWindowKeyDown(event, "/note")}
+      >
         <div className="window-label">
           <span className="type-of">
             <span className="mono cat">04</span>
@@ -139,12 +147,12 @@ function Quartet() {
             <p className="window-desc">
               Drums, melodies and samples on iPhone and iPad. Sync to Live via Ableton Cloud.
             </p>
-            <a href="/note" className="window-go">
+            <span className="window-go">
               View catalogue <span className="arr">&rarr;</span>
-            </a>
+            </span>
           </div>
         </div>
-      </article>
+      </div>
     </section>
   );
 }
