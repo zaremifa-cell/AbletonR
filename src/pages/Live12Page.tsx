@@ -114,9 +114,22 @@ const WHY = [
   { icon: <IconBolt />, title: "Idea to track",         desc: "From the first spark of an idea to a finished song." },
 ];
 
+const LIVE_HERO_IMAGES = {
+  session: "/live/New Session View.jpg",
+  laptop: "/live.webp",
+};
+const HERO_SWEEP_DURATION_SECONDS = 12.2;
+const PERF_ITEM_COUNT = 4;
+
+function randomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 /* ── component ── */
 function Live12Page() {
   const [trialOs, setTrialOs] = useState("mac");
+  const [heroImageIndex, setHeroImageIndex] = useState(0);
+  const [activePerfIndex, setActivePerfIndex] = useState<number | null>(null);
 
   usePageMeta({
     title: "Live 12 — Ableton Programme",
@@ -135,6 +148,61 @@ function Live12Page() {
   });
 
   const pageRef = useRef<HTMLDivElement>(null);
+  const handleHeroSweepIteration = (event: React.AnimationEvent<HTMLSpanElement>) => {
+    const completedSweeps = Math.round(event.elapsedTime / HERO_SWEEP_DURATION_SECONDS);
+    if (completedSweeps % 2 === 1) {
+      setHeroImageIndex((current) => (current === 0 ? 1 : 0));
+    }
+  };
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let timeoutId: number | null = null;
+    let previousIndex = -1;
+    let isDisposed = false;
+
+    const chooseNextIndex = () => {
+      const options = Array.from({ length: PERF_ITEM_COUNT }, (_, index) => index).filter(
+        (index) => index !== previousIndex
+      );
+      return options[randomInt(0, options.length - 1)];
+    };
+
+    const runSequence = () => {
+      if (isDisposed) return;
+
+      const nextIndex = chooseNextIndex();
+      const blinkCount = randomInt(1, 4);
+      previousIndex = nextIndex;
+
+      let step = 0;
+      const tick = () => {
+        if (isDisposed) return;
+
+        const isOnStep = step % 2 === 0;
+        setActivePerfIndex(isOnStep ? nextIndex : null);
+        step += 1;
+
+        if (step < blinkCount * 2) {
+          timeoutId = window.setTimeout(tick, 210);
+          return;
+        }
+
+        setActivePerfIndex(null);
+        timeoutId = window.setTimeout(runSequence, randomInt(1000, 4000));
+      };
+
+      tick();
+    };
+
+    timeoutId = window.setTimeout(runSequence, randomInt(600, 1400));
+
+    return () => {
+      isDisposed = true;
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
+  }, []);
 
   useEffect(() => {
     const root = pageRef.current;
@@ -309,8 +377,26 @@ function Live12Page() {
             </ul>
           </div>
           <div className="lp-hero-visual">
-            <img src="/live.webp" alt="Live 12 interface" loading="eager" />
+            <img
+              className={`lp-hero-frame${heroImageIndex === 0 ? " is-active" : ""}`}
+              src={LIVE_HERO_IMAGES.session}
+              alt="Live 12 Session View interface"
+              loading="eager"
+            />
+            <img
+              className={`lp-hero-frame${heroImageIndex === 1 ? " is-active" : ""}`}
+              src={LIVE_HERO_IMAGES.laptop}
+              alt=""
+              aria-hidden="true"
+              loading="eager"
+            />
           </div>
+          <span className="lp-hero-sweep-wipe" aria-hidden="true" />
+          <span
+            className="lp-hero-sweep-line"
+            aria-hidden="true"
+            onAnimationIteration={handleHeroSweepIteration}
+          />
         </div>
       </section>
 
@@ -333,8 +419,11 @@ function Live12Page() {
               { icon: <IconScene />, title: "Trigger scenes", desc: "Move your song forward." },
               { icon: <IconLoop />,  title: "Loop instantly", desc: "Everything stays in time." },
               { icon: <IconTool />,  title: "Use any tool",   desc: "Move, Note, Draw and all Live tools at your fingertips." },
-            ].map(item => (
-              <div key={item.title} className="lp-perf-item">
+            ].map((item, index) => (
+              <div
+                key={item.title}
+                className={`lp-perf-item${activePerfIndex === index ? " is-random-active" : ""}`}
+              >
                 <span className="lp-perf-icon">{item.icon}</span>
                 <div>
                   <strong className="lp-perf-title">{item.title}</strong>

@@ -846,7 +846,7 @@ h1.hero-title .stop{display:block}
   padding:clamp(28px,3.2vh,40px) var(--pad);
   border-bottom:1px solid var(--ink);
   color:transparent;
-  background-color:#EFFF3A;
+  background-color:var(--lemon);
   background-image:linear-gradient(
       105deg,
       #f7f7f2 0%,
@@ -859,7 +859,7 @@ h1.hero-title .stop{display:block}
       #141414 70%,
       #141414 100%
     ),
-    linear-gradient(#EFFF3A, #EFFF3A);
+    linear-gradient(var(--lemon), var(--lemon));
   background-size:240% 100%, auto;
   background-position:120% 0, 0 0;
   background-repeat:no-repeat;
@@ -4836,6 +4836,30 @@ body:has(.lp){
 .lp-hero-inner{
   display:grid;grid-template-columns:1fr 1fr;
   height:100%;
+  position:relative;
+  --hero-wipe-start:45%;
+  --hero-line-width:2px;
+}
+.lp-hero-sweep-wipe,
+.lp-hero-sweep-line{
+  position:absolute;
+  top:0;
+  bottom:0;
+  pointer-events:none;
+}
+.lp-hero-sweep-wipe{
+  left:var(--hero-wipe-start);
+  z-index:4;
+  width:0;
+  background:var(--paper);
+  animation:lpHeroWipeWidth 12.2s linear infinite alternate;
+}
+.lp-hero-sweep-line{
+  left:0;
+  z-index:5;
+  width:var(--hero-line-width);
+  background:var(--lemon);
+  animation:lpHeroLineLeft 12.2s linear infinite alternate;
 }
 .lp-hero-copy{
   padding:clamp(32px,5svh,64px) var(--s4) clamp(24px,4svh,48px) var(--pad);
@@ -4872,72 +4896,105 @@ body:has(.lp){
 .lp-feat-icon svg{
   overflow:visible;
 }
-.lp-feat-item--play:hover .lp-feat-icon,
-.lp-feat-item--play:focus-within .lp-feat-icon{
-  color:#dfff72;
-  animation:lpHeroPlayBlink .78s steps(2,end) infinite;
-  filter:drop-shadow(0 0 8px rgba(223,255,114,.64));
+.lp-feat-item--play .lp-feat-icon{
+  animation:lpHeroPlayBlink 15s steps(2,end) infinite;
 }
-.lp-feat-item--play:hover .lp-feat-icon polygon,
-.lp-feat-item--play:focus-within .lp-feat-icon polygon{
-  fill:#dfff72;
-  stroke:#dfff72;
+.lp-feat-item--play .lp-feat-icon polygon{
+  animation:lpHeroPlayShape 15s steps(2,end) infinite;
 }
-.lp-feat-item--loop:hover .lp-feat-icon path,
-.lp-feat-item--loop:focus-within .lp-feat-icon path{
-  animation:lpHeroLoopArrow 1.25s ease-in-out infinite;
-}
-.lp-feat-item--loop:hover .lp-feat-icon path:nth-child(1),
-.lp-feat-item--loop:hover .lp-feat-icon path:nth-child(2),
-.lp-feat-item--loop:focus-within .lp-feat-icon path:nth-child(1),
-.lp-feat-item--loop:focus-within .lp-feat-icon path:nth-child(2){
-  animation-delay:0s;
-}
-.lp-feat-item--loop:hover .lp-feat-icon path:nth-child(3),
-.lp-feat-item--loop:hover .lp-feat-icon path:nth-child(4),
-.lp-feat-item--loop:focus-within .lp-feat-icon path:nth-child(3),
-.lp-feat-item--loop:focus-within .lp-feat-icon path:nth-child(4){
-  animation-delay:.32s;
-}
-.lp-feat-item--grid:hover .lp-feat-icon rect,
-.lp-feat-item--grid:focus-within .lp-feat-icon rect{
-  animation:lpHeroGridClick 1.45s ease-in-out infinite;
-}
-.lp-feat-item--grid:hover .lp-feat-icon rect:nth-child(1),
-.lp-feat-item--grid:focus-within .lp-feat-icon rect:nth-child(1){animation-delay:0s}
-.lp-feat-item--grid:hover .lp-feat-icon rect:nth-child(2),
-.lp-feat-item--grid:focus-within .lp-feat-icon rect:nth-child(2){animation-delay:.18s}
-.lp-feat-item--grid:hover .lp-feat-icon rect:nth-child(3),
-.lp-feat-item--grid:focus-within .lp-feat-icon rect:nth-child(3){animation-delay:.36s}
-.lp-feat-item--grid:hover .lp-feat-icon rect:nth-child(4),
-.lp-feat-item--grid:focus-within .lp-feat-icon rect:nth-child(4){animation-delay:.54s}
 @keyframes lpHeroPlayBlink{
-  0%,100%{
-    opacity:1;
-    filter:drop-shadow(0 0 9px rgba(223,255,114,.78));
-  }
-  50%{
-    opacity:.42;
-    filter:drop-shadow(0 0 2px rgba(223,255,114,.22));
-  }
+  0%,32%{color:#dfff72;filter:drop-shadow(0 0 8px rgba(223,255,114,.64))}
+  3%,9%,15%,21%,27%{opacity:.42;filter:drop-shadow(0 0 2px rgba(223,255,114,.22))}
+  6%,12%,18%,24%,30%{opacity:1;filter:drop-shadow(0 0 9px rgba(223,255,114,.78))}
+  33%,100%{color:var(--ink);opacity:1;filter:none}
 }
-@keyframes lpHeroLoopArrow{
-  0%,18%,100%{
+@keyframes lpHeroPlayShape{
+  0%,32%{fill:#dfff72;stroke:#dfff72}
+  33%,100%{fill:transparent;stroke:currentColor}
+}
+.lp-feat-item--loop .lp-feat-icon path:nth-child(1),
+.lp-feat-item--loop .lp-feat-icon path:nth-child(2){
+  animation:lpHeroLoopArrowTop 15s linear infinite;
+}
+.lp-feat-item--loop .lp-feat-icon path:nth-child(3),
+.lp-feat-item--loop .lp-feat-icon path:nth-child(4){
+  animation:lpHeroLoopArrowBottom 15s linear infinite;
+}
+@keyframes lpHeroLoopArrowTop{
+  0%,33%,52%,100%{
     stroke:var(--ink);
     filter:none;
   }
-  34%,62%{
-    stroke:#b2e769;
-    filter:drop-shadow(0 0 5px rgba(178,231,105,.68));
+  34%,51%{
+    stroke:#dfff72;
+    filter:drop-shadow(0 0 5px rgba(223,255,114,.68));
   }
 }
-@keyframes lpHeroGridClick{
-  0%,14%,100%{
+@keyframes lpHeroLoopArrowBottom{
+  0%,44%,66%,100%{
+    stroke:var(--ink);
+    filter:none;
+  }
+  45%,62%{
+    stroke:#dfff72;
+    filter:drop-shadow(0 0 5px rgba(223,255,114,.68));
+  }
+}
+.lp-feat-item--grid .lp-feat-icon rect:nth-child(1){
+  animation:lpHeroGridClickOne 15s linear infinite;
+}
+.lp-feat-item--grid .lp-feat-icon rect:nth-child(2){
+  animation:lpHeroGridClickTwo 15s linear infinite;
+}
+.lp-feat-item--grid .lp-feat-icon rect:nth-child(3){
+  animation:lpHeroGridClickThree 15s linear infinite;
+}
+.lp-feat-item--grid .lp-feat-icon rect:nth-child(4){
+  animation:lpHeroGridClickFour 15s linear infinite;
+}
+@keyframes lpHeroGridClickOne{
+  0%,66%,100%{
     fill:transparent;
     stroke:var(--ink);
     filter:none;
   }
-  28%,48%{
+  67%,74%{
+    fill:#dfff72;
+    stroke:#dfff72;
+    filter:drop-shadow(0 0 5px rgba(223,255,114,.68));
+  }
+}
+@keyframes lpHeroGridClickTwo{
+  0%,74%,100%{
+    fill:transparent;
+    stroke:var(--ink);
+    filter:none;
+  }
+  75%,82%{
+    fill:#dfff72;
+    stroke:#dfff72;
+    filter:drop-shadow(0 0 5px rgba(223,255,114,.68));
+  }
+}
+@keyframes lpHeroGridClickThree{
+  0%,82%,100%{
+    fill:transparent;
+    stroke:var(--ink);
+    filter:none;
+  }
+  83%,90%{
+    fill:#dfff72;
+    stroke:#dfff72;
+    filter:drop-shadow(0 0 5px rgba(223,255,114,.68));
+  }
+}
+@keyframes lpHeroGridClickFour{
+  0%,90%,100%{
+    fill:transparent;
+    stroke:var(--ink);
+    filter:none;
+  }
+  91%,98%{
     fill:#dfff72;
     stroke:#dfff72;
     filter:drop-shadow(0 0 5px rgba(223,255,114,.68));
@@ -4948,11 +5005,39 @@ body:has(.lp){
 .lp-hero-actions{display:flex;align-items:center;gap:var(--s4);flex-wrap:wrap}
 .lp-hero-visual{
   display:flex;align-items:center;justify-content:center;
-  padding:clamp(24px,4svh,56px) var(--s3) clamp(16px,3svh,40px);
+  position:relative;
+  padding:0;
   overflow:hidden;
-  background:#FAFAFA;
+  background:var(--paper);
 }
-.lp-hero-visual img{width:100%;height:auto;display:block}
+.lp-hero-frame{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  object-position:center;
+  opacity:0;
+}
+.lp-hero-frame.is-active{opacity:1}
+@keyframes lpHeroLineLeft{
+  0%{left:0}
+  45%{left:var(--hero-wipe-start)}
+  100%{left:calc(100% - var(--hero-line-width))}
+}
+@keyframes lpHeroWipeWidth{
+  0%,45%{width:0}
+  100%{width:calc(100% - var(--hero-wipe-start))}
+}
+@media(prefers-reduced-motion:reduce){
+  .lp-hero-sweep-wipe,
+  .lp-hero-sweep-line{
+    animation:none;
+  }
+  .lp-hero-sweep-wipe,
+  .lp-hero-sweep-line{opacity:0}
+}
 
 /* ── SECTION 2: PERFORM ── */
 .lp-perform{
@@ -4989,8 +5074,7 @@ body:has(.lp){
   transition:background .18s ease,color .18s ease;
 }
 .lp-perf-item:nth-child(odd){border-right:1px solid var(--line-strong)}
-.lp-perf-item:hover,
-.lp-perf-item:focus-within{
+.lp-perf-item.is-random-active{
   background:var(--push);
   animation:lpPushFlash .55s ease;
 }
