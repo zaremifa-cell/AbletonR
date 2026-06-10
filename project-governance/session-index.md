@@ -13,6 +13,66 @@ Required fields:
 
 ## Sessions
 
+### 2026-06-10 10:50 EEST
+
+- Task summary: Fixed the mobile Move hero image sizing and centered the `Portable standalone instrument` screen.
+- Files touched:
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-10-1050-session.md`
+- Result: The mobile Move opening image now starts directly under the header and the hero section follows the image height, with the hero copy as an absolute overlay so it does not create extra grey space. The large hero headline and orange second line were reduced on mobile while the body copy size was preserved, and the overlay was raised with a `28px` bottom inset so the final body-copy line remains visible. The mobile `Portable standalone instrument`, `Four tracks`, and `Sample the world` media now use full-width ratio-locked frames, with the tracks/sample frames offset past mobile section padding to remove the remaining left grey strip. The mobile `From sketch to full track` section is now a horizontal scroller with separate copy and image panels; the image panel is enlarged to a viewport-height square so the image fills the grey screen height, and a mobile-only animated `Swipe right` hint makes the horizontal scroll discoverable as plain white text without a backing effect. The final `What's in the box` image now uses the same horizontal scrolling pattern with large-viewport-height sizing to cover the phone screen below the header. Build passed.
+- Unresolved issues: No browser or screenshot visual verification was performed; final mobile visual approval depends on user review on the phone.
+- Session log: `project-governance/sessions/2026-06-10-1050-session.md`
+
+### 2026-06-10 10:42 EEST
+
+- Task summary: Repositioned the mobile Note book App Store badge and improved mobile magnifier handling.
+- Files touched:
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-10-1042-session.md`
+- Result: The mobile-only App Store badge in the Note book section now sits higher and further right inside the book image, using `right:38px` and `bottom:34px`. The mobile magnifier has a wider interaction area, smaller lens, touch-friendly drag behavior, and active/focus visibility states. Desktop Note positioning was not changed. Build passed.
+- Unresolved issues: No browser or screenshot visual verification was performed; final badge placement and magnifier feel depend on user review on the phone.
+- Session log: `project-governance/sessions/2026-06-10-1042-session.md`
+
+### 2026-06-10 09:54 EEST
+
+- Task summary: Fixed the mobile Live trial/download area and removed phone-only vertical snap scrolling.
+- Files touched:
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-10-0954-session.md`
+- Result: On phone viewports, the Live page now scrolls normally instead of snapping section by section, Live sections use natural height, the trial area can flow normally, and the Download button is a normal full-width 52px-high button instead of a compressed square. Build passed.
+- Unresolved issues: No browser or screenshot visual verification was performed; final mobile visual approval depends on user review on the phone.
+- Session log: `project-governance/sessions/2026-06-10-0954-session.md`
+
+### 2026-06-10 09:47 EEST
+
+- Task summary: Fixed mobile homepage scrolling and product quartet compression.
+- Files touched:
+  - `src/pages/HomePage.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-10-0947-session.md`
+- Result: Mobile homepage no longer uses screen-by-screen snap scrolling, the page scrolls normally, and the four product windows have expanded single-column mobile heights instead of being squeezed into one viewport. The mobile active-window state now tracks window scroll. Build passed.
+- Unresolved issues: No browser or screenshot visual verification was performed; final mobile visual approval depends on user review on the phone.
+- Session log: `project-governance/sessions/2026-06-10-0947-session.md`
+
+### 2026-06-10 08:47 EEST
+
+- Task summary: Adjusted homepage quartet imagery by switching Push and Note to user-provided image assets.
+- Files touched:
+  - `src/components/sections/Quartet.tsx`
+  - `src/styles.css`
+  - `public/push-homepage-expanded.webp`
+  - `public/push image.png`
+  - `public/note image.png`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-10-0847-session.md`
+- Result: The Push quartet now uses the user-provided `/push image.png` asset instead of the previous generated expanded-background asset. A scoped 10% reduction was tried and then reverted after user feedback that the previous size was better. The Note quartet uses the user-provided `/note image.png` asset instead of the previous `/note.webp` image and temporary scale override. Live and Move keep their existing image behavior. Build passed.
+- Unresolved issues: No browser or screenshot visual verification was performed; final visual approval depends on user screenshot review before applying similar changes to other product windows.
+- Session log: `project-governance/sessions/2026-06-10-0847-session.md`
+
 ### 2026-06-05 Day Brief
 
 - Task summary: Captured the full June 5 chat context as a durable working guide covering accepted changes, rejected directions, user criteria, and implementation notes for Note, Live, Push, footer, and shared button behavior.

@@ -65,7 +65,7 @@ function Quartet() {
           <span className="status mono">Available</span>
         </div>
         <div className="window-image">
-          <img src="/push.webp" alt="Push 3 standalone pad controller" loading="lazy" />
+          <img src="/push image.png" alt="Push 3 standalone pad controller" loading="lazy" />
         </div>
         <div className="window-foot">
           <div className="window-name">
@@ -136,7 +136,7 @@ function Quartet() {
           <span className="status mono">Available</span>
         </div>
         <div className="window-image">
-          <img src="/note.webp" alt="Note app on iPhone" loading="lazy" />
+          <img src="/note image.png" alt="Note app on iPhone" loading="lazy" />
         </div>
         <div className="window-foot">
           <div className="window-name">

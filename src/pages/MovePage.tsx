@@ -194,6 +194,7 @@ function MovePage() {
       </section>
 
       <section className="move-section move-section--cloud">
+        <span className="move-swipe-hint" aria-hidden="true">Swipe right</span>
         <div className="move-media move-media--cloud">
           <img src="/move/Cloud.webp" alt="Move sending a sketch to Ableton Cloud and Live" />
         </div>
@@ -205,6 +206,7 @@ function MovePage() {
       </section>
 
       <section className="move-section move-section--box" aria-labelledby="move-box-title">
+        <span className="move-swipe-hint" aria-hidden="true">Swipe right</span>
         <img src="/move/Whats in the box.webp" alt="Ableton Move box contents" />
         <div className="move-box-copy">
           <h2 id="move-box-title">What's in the box</h2>

@@ -43,9 +43,8 @@ function HomePage() {
       ticking = false;
       if (!media.matches) { clearActive(); return; }
 
-      const rootRect = root.getBoundingClientRect();
-      const viewportCenter = rootRect.top + root.clientHeight / 2;
-      const threshold = root.clientHeight * 0.18;
+      const viewportCenter = window.innerHeight / 2;
+      const threshold = window.innerHeight * 0.22;
       let active: HTMLElement | null = null;
       let activeDistance = Infinity;
 
@@ -69,6 +68,7 @@ function HomePage() {
 
     if (windows.length) {
       root.addEventListener("scroll", requestUpdate, { passive: true });
+      window.addEventListener("scroll", requestUpdate, { passive: true });
       window.addEventListener("resize", requestUpdate);
       if (media.addEventListener) media.addEventListener("change", updateActive);
       else media.addListener(updateActive);
@@ -76,6 +76,7 @@ function HomePage() {
 
     return () => {
       root.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
       if (media.removeEventListener) media.removeEventListener("change", updateActive);
       else media.removeListener(updateActive);
