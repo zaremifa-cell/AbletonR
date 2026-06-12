@@ -14,6 +14,7 @@ export type AddToCartInput = {
 
 export type CartLine = CartItem & {
   product: ShopProduct;
+  unitPrice: number;
   lineTotal: number;
 };
 
@@ -23,6 +24,14 @@ export const currency = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 0,
 });
 
+export const formatCurrency = (value: number) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
+    maximumFractionDigits: Number.isInteger(value) ? 0 : 2,
+  }).format(value);
+
 export const getCartCount = (items: CartItem[]) =>
   items.reduce((total, item) => total + item.quantity, 0);
 
@@ -30,7 +39,9 @@ export const getCartLines = (items: CartItem[]) =>
   items.reduce<CartLine[]>((lines, item) => {
     const product = getShopProduct(item.slug);
     if (!product) return lines;
-    lines.push({ ...item, product, lineTotal: product.price * item.quantity });
+    const selectedOption = product.options?.find((option) => option.label === item.option);
+    const unitPrice = selectedOption?.price ?? product.price;
+    lines.push({ ...item, product, unitPrice, lineTotal: unitPrice * item.quantity });
     return lines;
   }, []);
 

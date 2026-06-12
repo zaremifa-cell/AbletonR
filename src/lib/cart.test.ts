@@ -14,15 +14,16 @@ describe("cart helpers", () => {
   it("builds cart lines and subtotal from product data", () => {
     const items = [
       { slug: "live-12", quantity: 1, option: "Suite" },
-      { slug: "packs", quantity: 2 },
+      { slug: "max-for-live", quantity: 2, option: "Max for Live" },
       { slug: "missing", quantity: 1 },
     ];
 
     const lines = getCartLines(items);
 
     expect(lines).toHaveLength(2);
-    expect(lines[0]).toMatchObject({ slug: "live-12", lineTotal: 749 });
-    expect(getSubtotal(items)).toBe(907);
+    expect(lines[0]).toMatchObject({ slug: "live-12", unitPrice: 599, lineTotal: 599 });
+    expect(lines[1]).toMatchObject({ slug: "max-for-live", unitPrice: 149, lineTotal: 298 });
+    expect(getSubtotal(items)).toBe(897);
   });
 
   it("builds cart lines for individual Packs archive items", () => {
@@ -39,12 +40,17 @@ describe("cart helpers", () => {
     });
   });
 
-  it("does not add shipping for download-only Packs", () => {
+  it("does not add shipping for digital or download-only products", () => {
+    expect(getEstimatedShipping([{ slug: "live-12", quantity: 1 }])).toBe(0);
     expect(getEstimatedShipping([{ slug: "64-pad-lab", quantity: 1 }])).toBe(0);
     expect(getEstimatedShipping([{ slug: "packs", quantity: 1 }])).toBe(0);
+    expect(getEstimatedShipping([{ slug: "max-for-live", quantity: 1 }])).toBe(0);
+    expect(getEstimatedShipping([{ slug: "merchandise", quantity: 1 }])).toBe(0);
   });
 
-  it("adds shipping when a physical product is in the cart", () => {
+  it("adds shipping for Push or Move physical products", () => {
+    expect(getEstimatedShipping([{ slug: "push", quantity: 1 }])).toBe(24);
+    expect(getEstimatedShipping([{ slug: "move", quantity: 1 }])).toBe(24);
     expect(
       getEstimatedShipping([
         { slug: "64-pad-lab", quantity: 1 },

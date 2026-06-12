@@ -96,9 +96,9 @@ function Nav({ activePack }: NavProps) {
               <span className={`nav-pack-title${activePack ? " is-active" : ""}`}>
                 {activePack?.title ?? "Packs / Max for Live"}
               </span>
-              <a href="#trial" className="btn">
+              <Link to="/live#trial" className="btn">
                 Try Live Free <span className="arr">&rarr;</span>
-              </a>
+              </Link>
             </div>
           ) : (
             <div className="nav-end">
@@ -108,9 +108,9 @@ function Nav({ activePack }: NavProps) {
               <Link to="/shop/cart" className="nav-cart">
                 Cart <span>{cartCount}</span>
               </Link>
-              <a href="#trial" className="btn">
+              <Link to="/live#trial" className="btn">
                 Try Live Free <span className="arr">&rarr;</span>
-              </a>
+              </Link>
             </div>
           )}
         </div>

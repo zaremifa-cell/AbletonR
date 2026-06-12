@@ -27,6 +27,17 @@ function ScrollManager() {
   const location = useLocation();
 
   useEffect(() => {
+    if (!("scrollRestoration" in window.history)) return;
+
+    const previousScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+
+    return () => {
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
+  }, []);
+
+  useEffect(() => {
     window.requestAnimationFrame(() => {
       if (location.hash) {
         const targetId = decodeURIComponent(location.hash.slice(1));
@@ -36,11 +47,13 @@ function ScrollManager() {
 
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       document.scrollingElement?.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      document.querySelectorAll<HTMLElement>(scrollContainerSelectors.join(",")).forEach((element) => {
-        element.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      });
+      document
+        .querySelectorAll<HTMLElement>(scrollContainerSelectors.join(","))
+        .forEach((element) => {
+          element.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        });
     });
-  }, [location.pathname, location.hash]);
+  }, [location.pathname, location.hash, location.key]);
 
   return null;
 }

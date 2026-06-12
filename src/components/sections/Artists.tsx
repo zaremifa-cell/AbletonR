@@ -8,7 +8,7 @@ function Artists() {
           <div className="kicker">Section B &middot; In practice</div>
           <h2>How musicians use Live.</h2>
         </div>
-        <a href={ARTISTS_URL} className="all">
+        <a href={ARTISTS_URL} className="all" target="_blank" rel="noreferrer">
           All stories &rarr;
         </a>
       </div>
@@ -28,7 +28,7 @@ function Artists() {
             Walking through his Live 12 workflow &mdash; and why an unfinished loop is often more
             useful than a finished track.
           </p>
-          <a href={ARTISTS_URL} className="read">
+          <a href={ARTISTS_URL} className="read" target="_blank" rel="noreferrer">
             Read <span className="arr">&rarr;</span>
           </a>
         </article>
@@ -47,7 +47,7 @@ function Artists() {
             The Berlin duo opens a finished project and rebuilds it from the kick up, in Session
             view, on Push.
           </p>
-          <a href={ARTISTS_URL} className="read">
+          <a href={ARTISTS_URL} className="read" target="_blank" rel="noreferrer">
             Watch <span className="arr">&rarr;</span>
           </a>
         </article>
@@ -70,7 +70,7 @@ function Artists() {
             Field recordings on Note, arrangement in Live, mastering in-the-box. A pack of her
             source material is included.
           </p>
-          <a href={ARTISTS_URL} className="read">
+          <a href={ARTISTS_URL} className="read" target="_blank" rel="noreferrer">
             Read + Download <span className="arr">&rarr;</span>
           </a>
         </article>

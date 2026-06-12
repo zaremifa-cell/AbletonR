@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import type { FormEvent } from "react";
+import { Link, Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import { SHOP_PRODUCTS, getShopProduct, type ShopProduct } from "@/data/products";
-import { currency, getCartLines, getEstimatedShipping, getSubtotal } from "@/lib/cart";
+import { formatCurrency, getCartLines, getEstimatedShipping, getSubtotal } from "@/lib/cart";
 import { useCart } from "@/contexts/CartContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import Footer from "@/components/layout/Footer";
@@ -29,6 +30,29 @@ type CheckoutField = {
   inputMode?: "email" | "tel" | "text" | "numeric";
 };
 
+type LocalOrderLine = {
+  title: string;
+  option?: string;
+  quantity: number;
+  lineTotal: number;
+};
+
+type LocalOrder = {
+  id: string;
+  date: string;
+  reference: string;
+  products: string;
+  hasRentToOwn?: boolean;
+  subtotal: number;
+  estimated: number;
+  taxEstimate: number;
+  total: number;
+  lines: LocalOrderLine[];
+};
+
+const CURRENT_ACCOUNT_STORAGE_KEY = "ableton-shop-current-account";
+const ACCOUNT_ORDER_STORAGE_PREFIX = "ableton-shop-orders:";
+
 const EMPTY_CHECKOUT_DATA: CheckoutData = {
   email: "",
   phone: "",
@@ -41,6 +65,20 @@ const EMPTY_CHECKOUT_DATA: CheckoutData = {
   cardNumber: "",
   expiry: "",
   cvc: "",
+};
+
+const EMPTY_LOGIN_DATA = {
+  identifier: "",
+  password: "",
+};
+
+const EMPTY_REGISTER_DATA = {
+  email: "",
+  password: "",
+  firstName: "",
+  lastName: "",
+  country: "Bulgaria",
+  newsletter: false,
 };
 
 const CONTACT_FIELDS: CheckoutField[] = [
@@ -64,7 +102,12 @@ const CONTACT_FIELDS: CheckoutField[] = [
 
 const BILLING_FIELDS: CheckoutField[] = [
   { name: "fullName", label: "Full name", placeholder: "Full legal name", autoComplete: "name" },
-  { name: "address", label: "Address", placeholder: "Street and number", autoComplete: "street-address" },
+  {
+    name: "address",
+    label: "Address",
+    placeholder: "Street and number",
+    autoComplete: "street-address",
+  },
   { name: "city", label: "City", placeholder: "City", autoComplete: "address-level2" },
   { name: "country", label: "Country", placeholder: "Country", autoComplete: "country-name" },
   {
@@ -77,7 +120,12 @@ const BILLING_FIELDS: CheckoutField[] = [
 ];
 
 const PAYMENT_FIELDS: CheckoutField[] = [
-  { name: "cardName", label: "Name on card", placeholder: "Cardholder name", autoComplete: "cc-name" },
+  {
+    name: "cardName",
+    label: "Name on card",
+    placeholder: "Cardholder name",
+    autoComplete: "cc-name",
+  },
   {
     name: "cardNumber",
     label: "Card number",
@@ -101,10 +149,97 @@ const PAYMENT_FIELDS: CheckoutField[] = [
   },
 ];
 
+const SHOP_LANDING_PRODUCTS = SHOP_PRODUCTS.filter((product) => product.slug !== "merchandise");
+const LIVE_RENT_TO_OWN_OPTION = "Suite (Rent-to-own)";
+const LIVE_RENT_TO_OWN_MONTHS = 24;
+const isRentToOwnOption = (option?: string) => option === LIVE_RENT_TO_OWN_OPTION;
+const formatLineAmount = (amount: number, option?: string) =>
+  `${formatCurrency(amount)}${isRentToOwnOption(option) ? " / mo." : ""}`;
+const formatLineUnit = (amount: number, option?: string) =>
+  isRentToOwnOption(option) ? formatLineAmount(amount, option) : `${formatCurrency(amount)} each`;
+
 const normalizeDigits = (value: string) => value.replace(/\D/g, "");
 const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 const isFilled = (value: string) => value.trim().length > 0;
 const isValidExpiry = (value: string) => /^(0[1-9]|1[0-2])\/?([0-9]{2})$/.test(value.trim());
+const normalizeAccountId = (value: string) => value.trim().toLowerCase();
+const accountOrderStorageKey = (accountId: string) =>
+  `${ACCOUNT_ORDER_STORAGE_PREFIX}${encodeURIComponent(accountId)}`;
+
+function setCurrentAccount(accountId: string) {
+  const normalized = normalizeAccountId(accountId);
+  if (!normalized) return;
+  window.localStorage.setItem(CURRENT_ACCOUNT_STORAGE_KEY, normalized);
+}
+
+function getCurrentAccount() {
+  return window.localStorage.getItem(CURRENT_ACCOUNT_STORAGE_KEY) ?? "";
+}
+
+function clearCurrentAccount() {
+  window.localStorage.removeItem(CURRENT_ACCOUNT_STORAGE_KEY);
+}
+
+function getAccountOrders(accountId = getCurrentAccount()): LocalOrder[] {
+  const normalized = normalizeAccountId(accountId);
+  if (!normalized) return [];
+
+  try {
+    const parsed = JSON.parse(
+      window.localStorage.getItem(accountOrderStorageKey(normalized)) ?? "[]"
+    );
+    return Array.isArray(parsed) ? (parsed as LocalOrder[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveOrderForCurrentAccount(order: LocalOrder) {
+  const accountId = getCurrentAccount();
+  if (!accountId) return false;
+
+  const orders = getAccountOrders(accountId);
+  window.localStorage.setItem(
+    accountOrderStorageKey(accountId),
+    JSON.stringify([order, ...orders])
+  );
+  return true;
+}
+
+function createLocalOrder(
+  lines: ReturnType<typeof getCartLines>,
+  subtotal: number,
+  estimated: number,
+  taxEstimate: number,
+  total: number
+): LocalOrder {
+  const now = new Date();
+  const reference = `LOCAL-${now.getTime().toString(36).toUpperCase()}`;
+
+  return {
+    id: reference,
+    date: now.toISOString().slice(0, 10),
+    reference,
+    products: lines
+      .map((line) =>
+        isRentToOwnOption(line.option)
+          ? `${line.quantity} x ${line.product.title} (${line.option}, for ${LIVE_RENT_TO_OWN_MONTHS} months)`
+          : `${line.quantity} x ${line.product.title}`
+      )
+      .join(", "),
+    hasRentToOwn: lines.some((line) => isRentToOwnOption(line.option)),
+    subtotal,
+    estimated,
+    taxEstimate,
+    total,
+    lines: lines.map((line) => ({
+      title: line.product.title,
+      option: line.option,
+      quantity: line.quantity,
+      lineTotal: line.lineTotal,
+    })),
+  };
+}
 
 function isCheckoutStepValid(step: number, data: CheckoutData, hasCartItems: boolean): boolean {
   if (step === 1) {
@@ -193,12 +328,18 @@ function ShopLanding() {
           <h1>Shop</h1>
           <p className="shop-hero-copy">
             <span>Explore Live, Push, Move, Packs, education offers, and</span>
-            <span className="shop-hero-copy-line">selected merchandise in a polished portfolio buying flow.</span>
+            <span className="shop-hero-copy-line">
+              selected merchandise in a polished portfolio buying flow.
+            </span>
           </p>
         </div>
         <div className="shop-hero-links">
-          <Link to="/shop/cart" className="shop-text-link">View cart</Link>
-          <Link to="/shop/account" className="shop-text-link">Account</Link>
+          <Link to="/shop/cart" className="shop-text-link">
+            View cart
+          </Link>
+          <Link to="/shop/account" className="shop-text-link">
+            Account
+          </Link>
         </div>
       </section>
 
@@ -208,7 +349,7 @@ function ShopLanding() {
           <p>Software, hardware, and sound content for music making.</p>
         </div>
         <div className="shop-product-grid" ref={productRailRef}>
-          {SHOP_PRODUCTS.map((product) => (
+          {SHOP_LANDING_PRODUCTS.map((product) => (
             <ProductCard key={product.slug} product={product} />
           ))}
         </div>
@@ -228,32 +369,20 @@ function ShopLanding() {
   );
 }
 
-function ProductCard({
-  product,
-  compact,
-}: {
-  product: ShopProduct;
-  compact?: boolean;
-}) {
-  const { addToCart } = useCart();
-  const [added, setAdded] = useState(false);
-
-  const handleAddToCart = () => {
-    addToCart({ slug: product.slug });
-    setAdded(true);
-    window.setTimeout(() => setAdded(false), 1200);
-  };
-
+function ProductCard({ product, compact }: { product: ShopProduct; compact?: boolean }) {
   const isLiveArtwork = product.slug === "live-12";
+  const productPath = product.slug === "packs" ? "/packs" : `/shop/product/${product.slug}`;
 
   return (
     <article className={compact ? "shop-card shop-card--compact" : "shop-card"}>
       <Link
-        to={`/shop/product/${product.slug}`}
+        to={productPath}
         className={`shop-card-image${isLiveArtwork ? " shop-card-image--live" : ""}`}
       >
         {isLiveArtwork ? (
-          <span className="shop-card-live-label" aria-hidden="true">Live</span>
+          <span className="shop-card-live-label" aria-hidden="true">
+            Live
+          </span>
         ) : (
           <img src={product.image} alt={product.title} />
         )}
@@ -264,10 +393,12 @@ function ProductCard({
         <p>{product.description}</p>
       </div>
       <div className="shop-card-actions">
-        <Link to={`/shop/product/${product.slug}`} className="shop-text-link">Learn more</Link>
-        <button type="button" className={`shop-buy${added ? " is-added" : ""}`} onClick={handleAddToCart}>
+        <Link to={productPath} className="shop-text-link">
+          Learn more
+        </Link>
+        <Link to={productPath} className="shop-buy">
           Add to cart
-        </button>
+        </Link>
       </div>
     </article>
   );
@@ -275,11 +406,50 @@ function ProductCard({
 
 function ProductDetail() {
   const { productSlug } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const product = getShopProduct(productSlug ?? "") ?? SHOP_PRODUCTS[0];
-  const [option, setOption] = useState(product.options?.[0] ?? "");
+  const isLiveRentToOwn =
+    product.slug === "live-12" &&
+    new URLSearchParams(location.search).get("plan") === "rent-to-own";
+  const availableOptions = isLiveRentToOwn
+    ? [
+        {
+          label: "Intro",
+          price: 79,
+          disabled: true,
+          note: "Rent-to-own plan not available for this license",
+        },
+        {
+          label: "Standard",
+          price: 279,
+          disabled: true,
+          note: "Rent-to-own plan not available for this license",
+        },
+        {
+          label: LIVE_RENT_TO_OWN_OPTION,
+          price: 24.96,
+          displayLabel: "Suite",
+          note: `for ${LIVE_RENT_TO_OWN_MONTHS} months`,
+        },
+      ]
+    : (product.options ?? []).filter((item) => !item.hidden);
+  const [option, setOption] = useState(
+    isLiveRentToOwn ? LIVE_RENT_TO_OWN_OPTION : (availableOptions[0]?.label ?? "")
+  );
+  const defaultOption = isLiveRentToOwn
+    ? LIVE_RENT_TO_OWN_OPTION
+    : (product.options?.find((item) => !item.hidden)?.label ?? "");
+  const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const selectedOption = product.options?.find((item) => item.label === option);
+  const selectedPrice = selectedOption?.price ?? product.price;
+
+  useEffect(() => {
+    setOption(defaultOption);
+    setIsOptionOpen(false);
+  }, [defaultOption]);
 
   usePageMeta({
     title: `${product.title} — Ableton Shop`,
@@ -301,6 +471,10 @@ function ProductDetail() {
     },
   });
 
+  if (product.slug === "packs") {
+    return <Navigate to="/packs" replace />;
+  }
+
   return (
     <main className="shop-product-detail">
       <section className="shop-product-hero">
@@ -308,19 +482,73 @@ function ProductDetail() {
           <img src={product.image} alt={product.title} />
         </div>
         <div className="shop-product-copy">
-          <Link to="/shop" className="shop-text-link">Back to Shop</Link>
+          <Link to="/shop" className="shop-text-link">
+            Back to Shop
+          </Link>
           <span className="shop-card-category">{product.category}</span>
           <h1>{product.title}</h1>
           <p>{product.detail}</p>
-          <strong>{product.priceLabel}</strong>
+          <strong>
+            {formatCurrency(selectedPrice)}
+            {isLiveRentToOwn ? " / mo." : ""}
+          </strong>
+          {isLiveRentToOwn && <p>Rent-to-own for {LIVE_RENT_TO_OWN_MONTHS} months. Suite only.</p>}
 
           {product.options && (
-            <label className="shop-field">
+            <div className="shop-field shop-option-field">
               <span>Option</span>
-              <select value={option} onChange={(event) => setOption(event.target.value)}>
-                {product.options.map((item) => <option key={item}>{item}</option>)}
-              </select>
-            </label>
+              <button
+                type="button"
+                className="shop-option-trigger"
+                aria-haspopup="listbox"
+                aria-expanded={isOptionOpen}
+                onClick={() => setIsOptionOpen((open) => !open)}
+              >
+                <span>{option}</span>
+                <span className="shop-option-arrow" aria-hidden="true" />
+              </button>
+              {isOptionOpen && (
+                <div className="shop-option-menu" role="listbox" aria-label="Option">
+                  {availableOptions.map((item) => (
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected={item.label === option}
+                      aria-disabled={item.disabled ? "true" : undefined}
+                      className={[
+                        "shop-option-item",
+                        item.label === option ? " is-selected" : "",
+                        item.disabled ? "is-disabled" : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      key={item.label}
+                      disabled={item.disabled}
+                      onClick={() => {
+                        if (item.disabled) return;
+                        setOption(item.label);
+                        setIsOptionOpen(false);
+                      }}
+                    >
+                      <span aria-hidden="true">{item.label === option ? "✓" : ""}</span>
+                      <span>
+                        {item.displayLabel ?? item.label}
+                        {item.disabled ? (
+                          <small>{item.note}</small>
+                        ) : (
+                          <>
+                            {" "}
+                            — {formatCurrency(item.price)}
+                            {isLiveRentToOwn ? " / mo." : ""}
+                            {item.note ? <small>{item.note}</small> : null}
+                          </>
+                        )}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
 
           <label className="shop-field shop-field--quantity">
@@ -345,11 +573,15 @@ function ProductDetail() {
             >
               Add to cart
             </button>
-            <Link to="/shop/cart" className="shop-secondary">View cart</Link>
+            <Link to="/shop/cart" className="shop-secondary">
+              View cart
+            </Link>
           </div>
 
           <ul className="shop-meta-list">
-            {product.meta.map((item) => <li key={item}>{item}</li>)}
+            {product.meta.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
           </ul>
         </div>
       </section>
@@ -384,7 +616,9 @@ function CartPage() {
               Clear cart
             </button>
           )}
-          <Link to="/shop" className="shop-text-link">Continue shopping</Link>
+          <Link to="/shop" className="shop-text-link">
+            Continue shopping
+          </Link>
         </div>
       </header>
 
@@ -393,26 +627,41 @@ function CartPage() {
           {lines.length === 0 && <p className="shop-empty">Your cart is empty.</p>}
           {lines.map((line) => (
             <article className="shop-cart-line" key={`${line.slug}-${line.option ?? "default"}`}>
-              <img src={line.product.image} alt="" />
-              <div>
+              <img className="shop-cart-line-image" src={line.product.image} alt="" />
+              <div className="shop-cart-line-info">
                 <h2>{line.product.title}</h2>
                 <p>{line.option ?? line.product.category}</p>
-                <span>{currency.format(line.product.price)} each</span>
+                <span>{formatLineUnit(line.unitPrice, line.option)}</span>
+                {isRentToOwnOption(line.option) && (
+                  <span>for {LIVE_RENT_TO_OWN_MONTHS} months</span>
+                )}
               </div>
-              <input
-                aria-label={`Quantity for ${line.product.title}`}
-                type="number"
-                min="0"
-                max="9"
-                value={line.quantity}
-                onChange={(event) => updateCart(line.slug, Number(event.target.value) || 0, line.option)}
-              />
-              <strong>{currency.format(line.lineTotal)}</strong>
-              <button type="button" onClick={() => removeFromCart(line.slug, line.option)}>Remove</button>
+              <div className="shop-cart-line-actions">
+                <input
+                  aria-label={`Quantity for ${line.product.title}`}
+                  type="number"
+                  min="0"
+                  max="9"
+                  value={line.quantity}
+                  onChange={(event) =>
+                    updateCart(line.slug, Number(event.target.value) || 0, line.option)
+                  }
+                />
+                <strong>{formatLineAmount(line.lineTotal, line.option)}</strong>
+                <button type="button" onClick={() => removeFromCart(line.slug, line.option)}>
+                  Remove
+                </button>
+              </div>
             </article>
           ))}
         </div>
-        <OrderSummary subtotal={subtotal} estimated={estimated} taxEstimate={taxEstimate} total={total} checkout />
+        <OrderSummary
+          subtotal={subtotal}
+          estimated={estimated}
+          taxEstimate={taxEstimate}
+          total={total}
+          checkout
+        />
       </section>
     </main>
   );
@@ -435,13 +684,29 @@ function OrderSummary({
     <aside className="shop-summary">
       <h2>Summary</h2>
       <dl>
-        <div><dt>Subtotal</dt><dd>{currency.format(subtotal)}</dd></div>
-        <div><dt>Estimated shipping</dt><dd>{currency.format(estimated)}</dd></div>
-        <div><dt>Tax estimate</dt><dd>{currency.format(taxEstimate)}</dd></div>
-        <div><dt>Total</dt><dd>{currency.format(total)}</dd></div>
+        <div>
+          <dt>Subtotal</dt>
+          <dd>{formatCurrency(subtotal)}</dd>
+        </div>
+        <div>
+          <dt>Estimated shipping</dt>
+          <dd>{formatCurrency(estimated)}</dd>
+        </div>
+        <div>
+          <dt>Tax estimate</dt>
+          <dd>{formatCurrency(taxEstimate)}</dd>
+        </div>
+        <div>
+          <dt>Total</dt>
+          <dd>{formatCurrency(total)}</dd>
+        </div>
       </dl>
       <p>Checkout is presented as a portfolio interaction flow.</p>
-      {checkout && <Link to="/shop/checkout" className="shop-primary">Proceed to checkout</Link>}
+      {checkout && (
+        <Link to="/shop/checkout" className="shop-primary">
+          Proceed to checkout
+        </Link>
+      )}
     </aside>
   );
 }
@@ -470,6 +735,7 @@ function CheckoutPage() {
   };
   const completeOrder = () => {
     if (!checkoutComplete) return;
+    saveOrderForCurrentAccount(createLocalOrder(lines, subtotal, estimated, taxEstimate, total));
     clearCart();
     setConfirmed(true);
   };
@@ -481,7 +747,9 @@ function CheckoutPage() {
           <span>Order confirmation</span>
           <h1>Order flow complete.</h1>
           <p>The checkout journey is complete and the selected items are cleared from the cart.</p>
-          <Link to="/shop" className="shop-primary" onClick={clearCart}>Return to Shop</Link>
+          <Link to="/shop" className="shop-primary" onClick={clearCart}>
+            Return to Shop
+          </Link>
         </section>
       </main>
     );
@@ -494,14 +762,18 @@ function CheckoutPage() {
           <h1>Checkout</h1>
           <p>Complete the portfolio checkout flow and review the order summary.</p>
         </div>
-        <Link to="/shop/cart" className="shop-text-link">Back to cart</Link>
+        <Link to="/shop/cart" className="shop-text-link">
+          Back to cart
+        </Link>
       </header>
 
       <section className="shop-checkout-layout">
         <div className="shop-checkout-panel">
           <ol className="shop-steps">
             {["Contact", "Billing", "Payment", "Review", "Confirm"].map((label, index) => (
-              <li key={label} className={step === index + 1 ? "is-active" : ""}>{label}</li>
+              <li key={label} className={step === index + 1 ? "is-active" : ""}>
+                {label}
+              </li>
             ))}
           </ol>
           {step === 1 && (
@@ -535,7 +807,11 @@ function CheckoutPage() {
             <div className="shop-review">
               <h2>Review order</h2>
               {lines.map((line) => (
-                <p key={`${line.slug}-${line.option ?? "default"}`}>{line.quantity} x {line.product.title} — {currency.format(line.lineTotal)}</p>
+                <p key={`${line.slug}-${line.option ?? "default"}`}>
+                  {line.quantity} x {line.product.title} —{" "}
+                  {formatLineAmount(line.lineTotal, line.option)}
+                  {isRentToOwnOption(line.option) ? ` for ${LIVE_RENT_TO_OWN_MONTHS} months` : ""}
+                </p>
               ))}
               <div className="shop-review-details">
                 <span>Contact</span>
@@ -543,12 +819,18 @@ function CheckoutPage() {
                 <p>{checkoutData.phone}</p>
                 <span>Billing</span>
                 <p>{checkoutData.fullName}</p>
-                <p>{checkoutData.address}, {checkoutData.city}, {checkoutData.postalCode}</p>
+                <p>
+                  {checkoutData.address}, {checkoutData.city}, {checkoutData.postalCode}
+                </p>
                 <p>{checkoutData.country}</p>
                 <span>Payment</span>
                 <p>Card ending {normalizeDigits(checkoutData.cardNumber).slice(-4)}</p>
               </div>
-              {!hasCartItems && <p className="shop-form-error">Your cart is empty. Return to the cart before placing an order.</p>}
+              {!hasCartItems && (
+                <p className="shop-form-error">
+                  Your cart is empty. Return to the cart before placing an order.
+                </p>
+              )}
             </div>
           )}
           {step === 5 && (
@@ -556,25 +838,58 @@ function CheckoutPage() {
               <h2>Confirmation</h2>
               <p>Ready to complete the checkout flow.</p>
               <p>
-                The order can only be placed after contact, billing, payment, and cart details are complete.
+                The order can only be placed after contact, billing, payment, and cart details are
+                complete.
               </p>
-              {!checkoutComplete && <p className="shop-form-error">Some required checkout information is missing. Go back and complete the previous steps.</p>}
+              {!checkoutComplete && (
+                <p className="shop-form-error">
+                  Some required checkout information is missing. Go back and complete the previous
+                  steps.
+                </p>
+              )}
             </div>
           )}
           <div className="shop-step-actions">
             {step === 1 ? (
-              <Link to="/shop/cart" className="shop-secondary shop-step-back">Back</Link>
+              <Link to="/shop/cart" className="shop-secondary shop-step-back">
+                Back
+              </Link>
             ) : (
-              <button type="button" className="shop-secondary shop-step-back" onClick={() => setStep(step - 1)}>Back</button>
+              <button
+                type="button"
+                className="shop-secondary shop-step-back"
+                onClick={() => setStep(step - 1)}
+              >
+                Back
+              </button>
             )}
             {step < 5 ? (
-              <button type="button" className="shop-primary" disabled={!canContinue} onClick={() => setStep(step + 1)}>Continue</button>
+              <button
+                type="button"
+                className="shop-primary"
+                disabled={!canContinue}
+                onClick={() => setStep(step + 1)}
+              >
+                Continue
+              </button>
             ) : (
-              <button type="button" className="shop-primary" disabled={!checkoutComplete} onClick={completeOrder}>Place order</button>
+              <button
+                type="button"
+                className="shop-primary"
+                disabled={!checkoutComplete}
+                onClick={completeOrder}
+              >
+                Place order
+              </button>
             )}
           </div>
         </div>
-        <OrderSummary subtotal={subtotal} estimated={estimated} taxEstimate={taxEstimate} total={total} />
+        <OrderSummary
+          subtotal={subtotal}
+          estimated={estimated}
+          taxEstimate={taxEstimate}
+          total={total}
+        />
       </section>
     </main>
   );
@@ -615,198 +930,14 @@ function CheckoutForm({
   );
 }
 
-type AccountSection = {
-  title: string;
-  label: string;
-  summary: string;
-  rows: string[][];
-  actions: string[];
-  detailIntro: string;
-  detailRows: {
-    title: string;
-    meta: string;
-    body: string;
-    status: string;
-    actions: string[];
-  }[];
-};
+type AccountTab = "licenses" | "personal" | "orders" | "preferences" | "cloud";
 
-const ACCOUNT_SECTIONS: AccountSection[] = [
-  {
-    title: "Orders",
-    label: "Order history",
-    summary: "Recent purchases and archived invoices for this portfolio customer.",
-    rows: [
-      ["21 May 2026", "Order 10836699", "Push", "EUR 949.00"],
-      ["16 May 2026", "Order 10829414", "Orchestral Strings, Glitch and Wash", "EUR 0.00"],
-      ["03 Jun 2025", "Order 9853378", "Live 12 Intro", "EUR 99.00"],
-    ],
-    actions: ["View invoice", "Download receipt"],
-    detailIntro: "Archived orders, invoices, payment references, and products connected to this customer account.",
-    detailRows: [
-      {
-        title: "Order 10836699",
-        meta: "21 May 2026 / Push / EUR 949.00",
-        body: "Push 3 controller, standard shipping to Sofia. Invoice AB-2026-10836699 is available for company accounting.",
-        status: "Paid / Fulfilled",
-        actions: ["Open invoice", "Track shipment", "Start return"],
-      },
-      {
-        title: "Order 10829414",
-        meta: "16 May 2026 / Orchestral Strings, Glitch and Wash, Session Drums / EUR 0.00",
-        body: "Pack licenses assigned to this account through a promotional bundle. Downloads remain available in the product library.",
-        status: "Archived",
-        actions: ["View order", "Download packs"],
-      },
-      {
-        title: "Order 9853378",
-        meta: "03 Jun 2025 / Live 12 Intro / EUR 99.00",
-        body: "Software purchase with payment reference pi_1NEooWLrbwutfO9lwhlmch6n. License is active and eligible for upgrade offers.",
-        status: "Paid / Licensed",
-        actions: ["Open receipt", "View license"],
-      },
-    ],
-  },
-  {
-    title: "Licenses",
-    label: "Licenses & packs",
-    summary: "Registered software and hardware authorizations connected to the account.",
-    rows: [
-      ["Live 12 Intro", "Version 12.1.2", "macOS Universal", "Authorized"],
-      ["Push", "Serial ending 8412", "Standalone upgrade eligible", "Registered"],
-      ["Move", "Cloud sync enabled", "2 devices", "Active"],
-    ],
-    actions: ["View authorization history", "Upgrade offers"],
-    detailIntro: "Registered Ableton products, authorized machines, cloud-enabled devices, and available upgrades.",
-    detailRows: [
-      {
-        title: "Live 12 Intro",
-        meta: "Version 12.1.2 / macOS Universal / 3.8 GB",
-        body: "Authorized on Zlatko Studio MacBook and one spare activation remains available. Latest installer is ready in Downloads.",
-        status: "Authorized",
-        actions: ["Authorize another computer", "View authorization history", "Upgrade to Suite"],
-      },
-      {
-        title: "Push",
-        meta: "Serial ending 8412 / Registered hardware",
-        body: "Hardware warranty is active. Standalone Upgrade Kit offer is available for this registered Push unit.",
-        status: "Registered",
-        actions: ["Manage registration", "Get Upgrade Kit"],
-      },
-      {
-        title: "Move",
-        meta: "Cloud sync enabled / 2 connected devices",
-        body: "Move Sets sync with Ableton Cloud and can be continued in Note or Live when signed in.",
-        status: "Cloud active",
-        actions: ["Manage Cloud", "View synced sets"],
-      },
-    ],
-  },
-  {
-    title: "Downloads",
-    label: "Product library",
-    summary: "Installers, sound packs, and device content ready for re-download.",
-    rows: [
-      ["Live 12 Intro", "3.8 GB", "macOS / Windows", "Download"],
-      ["Session Drums", "1.2 GB", "Pack", "Download"],
-      ["MIDI Tools Collection", "420 MB", "Max for Live", "Download"],
-    ],
-    actions: ["Download all", "Installation help"],
-    detailIntro: "Installers and sound content attached to the account, with platform, size, and update status.",
-    detailRows: [
-      {
-        title: "Live 12 Intro",
-        meta: "12.1.2 / macOS Universal + Windows / 3.8 GB",
-        body: "Current production installer. Includes instruments, effects, and factory content available with the Intro license.",
-        status: "Current",
-        actions: ["Download macOS", "Download Windows", "Release notes"],
-      },
-      {
-        title: "Session Drums",
-        meta: "Pack / 1.2 GB / Updated 14 May 2026",
-        body: "Multi-sampled drum kits, groove presets, and device racks for Live 12.",
-        status: "Installed once",
-        actions: ["Download pack", "Installation help"],
-      },
-      {
-        title: "MIDI Tools Collection",
-        meta: "Max for Live / 420 MB / Requires Live 12",
-        body: "Generators, transformers, and performance utilities connected to the Live 12 MIDI workflow.",
-        status: "Available",
-        actions: ["Download tools", "View requirements"],
-      },
-    ],
-  },
-  {
-    title: "Billing info",
-    label: "Personal details",
-    summary: "Billing, shipping, subscriptions, and payment profile used at checkout.",
-    rows: [
-      ["Email", "zlatkofx@gmail.com", "Verified", "Edit"],
-      ["Billing address", "7 Anton Strashimirov Street, Plovdiv", "Bulgaria", "Edit"],
-      ["Payment", "Visa ending 4242", "Expires 08/28", "Edit"],
-    ],
-    actions: ["Manage addresses", "Tax information"],
-    detailIntro: "Personal details used for invoices, shipping, subscriptions, payment profile, and tax records.",
-    detailRows: [
-      {
-        title: "Email and password",
-        meta: "zlatkofx@gmail.com / Password last changed 12 Mar 2026",
-        body: "This email receives invoices, license notifications, download updates, and support communication.",
-        status: "Verified",
-        actions: ["Edit email", "Change password"],
-      },
-      {
-        title: "Billing and shipping",
-        meta: "Billing: 7 Anton Strashimirov Street, Plovdiv / Shipping: 1 Georgi Benkovski Street, Sofia",
-        body: "Billing address is used for invoices. Shipping address is used for hardware orders and returns.",
-        status: "Complete",
-        actions: ["Edit billing", "Edit shipping", "Add VAT ID"],
-      },
-      {
-        title: "Payment and tax",
-        meta: "Visa ending 4242 / Expires 08/28 / Bulgaria",
-        body: "Saved payment profile is used for demo checkout continuity. Tax estimates are calculated before order placement.",
-        status: "Ready for checkout",
-        actions: ["Update card", "View tax information"],
-      },
-    ],
-  },
-  {
-    title: "Profile",
-    label: "Preferences",
-    summary: "Newsletter, content, research, and cloud settings for the user profile.",
-    rows: [
-      ["Newsletter", "Ableton newsletter in English", "Subscribed", "Edit"],
-      ["Content", "Packs, Live Sets and devices", "Selected", "Edit"],
-      ["Cloud", "Move and Note Sets", "2 synced devices", "Manage"],
-    ],
-    actions: ["Edit preferences", "Manage Cloud"],
-    detailIntro: "Newsletter subscriptions, content preferences, product analytics, research participation, and cloud devices.",
-    detailRows: [
-      {
-        title: "Content preferences",
-        meta: "Packs, Live Sets and devices / Artist features / Advanced music-making techniques",
-        body: "These preferences influence account recommendations, newsletters, and learning content.",
-        status: "3 topics selected",
-        actions: ["Edit preferences", "Reset topics"],
-      },
-      {
-        title: "Subscriptions and research",
-        meta: "Ableton newsletter in English / Loop News in English / User research off",
-        body: "Marketing and research settings are managed separately from required account and order notifications.",
-        status: "Subscribed",
-        actions: ["Manage subscriptions", "Join user research"],
-      },
-      {
-        title: "Ableton Cloud",
-        meta: "Move and Note Sets / 2 synced devices / Last sync today",
-        body: "Cloud keeps sketches available across connected hardware, Note, and Live.",
-        status: "Active",
-        actions: ["Manage devices", "View cloud status"],
-      },
-    ],
-  },
+const ACCOUNT_TABS: Array<{ id: AccountTab; label: string }> = [
+  { id: "licenses", label: "Licenses & Packs" },
+  { id: "personal", label: "Personal details" },
+  { id: "orders", label: "Order history" },
+  { id: "preferences", label: "Content preferences" },
+  { id: "cloud", label: "Manage Cloud" },
 ];
 
 function AccountPage() {
@@ -816,17 +947,209 @@ function AccountPage() {
     canonicalPath: "/shop/account",
   });
 
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [activeSection, setActiveSection] = useState<AccountSection | null>(null);
+  const [loggedIn, setLoggedIn] = useState(() => Boolean(getCurrentAccount()));
+  const [loginData, setLoginData] = useState(EMPTY_LOGIN_DATA);
+  const [registerData, setRegisterData] = useState(EMPTY_REGISTER_DATA);
+  const [loginError, setLoginError] = useState("");
+  const [registerError, setRegisterError] = useState("");
+  const [activeTab, setActiveTab] = useState<AccountTab>("licenses");
+  const canLogIn = isFilled(loginData.identifier) && loginData.password.length >= 8;
+  const canRegister =
+    isValidEmail(registerData.email) &&
+    registerData.password.length >= 8 &&
+    isFilled(registerData.country);
+  const handleLoginSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!canLogIn) {
+      setLoginError("Enter your email or username and at least 8 password characters.");
+      return;
+    }
+
+    setLoginError("");
+    setCurrentAccount(loginData.identifier);
+    setLoggedIn(true);
+  };
+  const handleRegisterSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!canRegister) {
+      setRegisterError("Enter a valid email, password, and country or region.");
+      return;
+    }
+
+    setRegisterError("");
+    setCurrentAccount(registerData.email);
+    setLoggedIn(true);
+  };
+  const handleLogout = () => {
+    setLoggedIn(false);
+    clearCurrentAccount();
+    setActiveTab("licenses");
+    setLoginData(EMPTY_LOGIN_DATA);
+    setRegisterData(EMPTY_REGISTER_DATA);
+    setLoginError("");
+    setRegisterError("");
+  };
 
   if (!loggedIn) {
     return (
       <main className="shop-account">
         <section className="shop-login-panel">
-          <span>Account access</span>
-          <h1>Customer login</h1>
-          <p>Open the account view to inspect orders, licenses, downloads, and billing information.</p>
-          <button type="button" className="shop-primary" onClick={() => setLoggedIn(true)}>Enter account</button>
+          <div className="shop-auth-grid">
+            <section className="shop-auth-column" aria-labelledby="shop-login-title">
+              <h1 id="shop-login-title">Log in</h1>
+              <div className="shop-auth-rule" />
+              <div className="shop-auth-copy">
+                <h2>Why do I need to log in?</h2>
+                <p>
+                  To use any version of Live, manage downloads, or review orders, you need an
+                  Ableton account. It takes less than a minute to create one, and even less to log
+                  in if you already have one.
+                </p>
+              </div>
+              <form className="shop-login-form" onSubmit={handleLoginSubmit}>
+                <label className="shop-field">
+                  <span>E-mail or username</span>
+                  <input
+                    type="text"
+                    autoComplete="username"
+                    value={loginData.identifier}
+                    onChange={(event) => {
+                      setLoginData((current) => ({ ...current, identifier: event.target.value }));
+                      setLoginError("");
+                    }}
+                  />
+                </label>
+                <label className="shop-field shop-field--password">
+                  <span>Password</span>
+                  <a
+                    href="https://www.ableton.com/en/account/password_reset/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Forgot password?
+                  </a>
+                  <input
+                    type="password"
+                    autoComplete="current-password"
+                    value={loginData.password}
+                    onChange={(event) => {
+                      setLoginData((current) => ({ ...current, password: event.target.value }));
+                      setLoginError("");
+                    }}
+                  />
+                </label>
+                {loginError && <p className="shop-form-error">{loginError}</p>}
+                <button type="submit" className="shop-primary" disabled={!canLogIn}>
+                  Log in
+                </button>
+              </form>
+            </section>
+
+            <section className="shop-auth-column" aria-labelledby="shop-register-title">
+              <h1 id="shop-register-title">Register</h1>
+              <div className="shop-auth-rule" />
+              <div className="shop-auth-copy">
+                <h2>New customer? Please create an account.</h2>
+                <p>
+                  Your account lets you authorize and download Live plus your included library
+                  content.
+                </p>
+              </div>
+              <form className="shop-login-form" onSubmit={handleRegisterSubmit}>
+                <label className="shop-field">
+                  <span>Email</span>
+                  <input
+                    type="email"
+                    autoComplete="email"
+                    inputMode="email"
+                    value={registerData.email}
+                    onChange={(event) => {
+                      setRegisterData((current) => ({ ...current, email: event.target.value }));
+                      setRegisterError("");
+                    }}
+                  />
+                </label>
+                <label className="shop-field">
+                  <span>Password</span>
+                  <input
+                    type="password"
+                    autoComplete="new-password"
+                    value={registerData.password}
+                    onChange={(event) => {
+                      setRegisterData((current) => ({ ...current, password: event.target.value }));
+                      setRegisterError("");
+                    }}
+                  />
+                </label>
+                <label className="shop-field">
+                  <span>First name</span>
+                  <input
+                    type="text"
+                    autoComplete="given-name"
+                    placeholder="optional"
+                    value={registerData.firstName}
+                    onChange={(event) =>
+                      setRegisterData((current) => ({ ...current, firstName: event.target.value }))
+                    }
+                  />
+                  <small>So that we know what to call you if we email you.</small>
+                </label>
+                <label className="shop-field">
+                  <span>Last name</span>
+                  <input
+                    type="text"
+                    autoComplete="family-name"
+                    placeholder="optional"
+                    value={registerData.lastName}
+                    onChange={(event) =>
+                      setRegisterData((current) => ({ ...current, lastName: event.target.value }))
+                    }
+                  />
+                </label>
+                <label className="shop-field">
+                  <span>Country or Region</span>
+                  <select
+                    autoComplete="country-name"
+                    value={registerData.country}
+                    onChange={(event) =>
+                      setRegisterData((current) => ({ ...current, country: event.target.value }))
+                    }
+                  >
+                    <option>Bulgaria</option>
+                    <option>Germany</option>
+                    <option>United Kingdom</option>
+                    <option>United States</option>
+                  </select>
+                </label>
+                <label className="shop-auth-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={registerData.newsletter}
+                    onChange={(event) =>
+                      setRegisterData((current) => ({
+                        ...current,
+                        newsletter: event.target.checked,
+                      }))
+                    }
+                  />
+                  <span>Get free downloads, discounts and creative tips.</span>
+                </label>
+                <div className="shop-auth-mailing">
+                  <p>Join our mailing list for:</p>
+                  <ul>
+                    <li>Production tips, tutorials and inspiration</li>
+                    <li>Free samples, presets and Live sets</li>
+                    <li>Special offers, events and more</li>
+                  </ul>
+                  <p>We respect your privacy. Unsubscribe any time.</p>
+                </div>
+                {registerError && <p className="shop-form-error">{registerError}</p>}
+                <button type="submit" className="shop-primary" disabled={!canRegister}>
+                  Create account
+                </button>
+              </form>
+            </section>
+          </div>
         </section>
       </main>
     );
@@ -834,70 +1157,225 @@ function AccountPage() {
 
   return (
     <main className="shop-account">
-      <header className="shop-subpage-head">
-        <div>
-          <h1>Account</h1>
-          <p>Account area for orders, licenses, downloads, and billing information.</p>
-        </div>
-        <button type="button" className="shop-secondary" onClick={() => setLoggedIn(false)}>Log out</button>
-      </header>
-      {activeSection ? (
-        <section className="shop-account-detail">
-          <button type="button" className="shop-text-button" onClick={() => setActiveSection(null)}>
-            Back to account overview
-          </button>
-          <div className="shop-account-detail-head">
-            <span>{activeSection.label}</span>
-            <h2>{activeSection.title}</h2>
-            <p>{activeSection.detailIntro}</p>
-          </div>
-          <div className="shop-account-detail-list">
-            {activeSection.detailRows.map((item) => (
-              <article key={item.title} className="shop-account-detail-card">
-                <div>
-                  <span>{item.status}</span>
-                  <h3>{item.title}</h3>
-                  <small>{item.meta}</small>
-                  <p>{item.body}</p>
-                </div>
-                <div className="shop-account-actions">
-                  {item.actions.map((action) => (
-                    <button type="button" key={action}>{action}</button>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      ) : (
-        <section className="shop-account-grid" aria-label="Account overview">
-          {ACCOUNT_SECTIONS.map((section) => (
-            <article key={section.title}>
-              <button type="button" className="shop-account-card-button" onClick={() => setActiveSection(section)}>
-                <span>{section.label}</span>
-                <h2>{section.title}</h2>
-                <p>{section.summary}</p>
-                <div className="shop-account-records">
-                  {section.rows.map((row) => (
-                    <div className="shop-account-record" key={`${section.title}-${row[0]}`}>
-                      <strong>{row[0]}</strong>
-                      <small>{row[1]}</small>
-                      <small>{row[2]}</small>
-                      <em>{row[3]}</em>
-                    </div>
-                  ))}
-                </div>
-              </button>
-              <div className="shop-account-actions">
-                {section.actions.map((action) => (
-                  <button type="button" key={action} onClick={() => setActiveSection(section)}>{action}</button>
-                ))}
-              </div>
-            </article>
+      <header className="shop-account-head">
+        <nav className="shop-account-tabs" aria-label="Account sections">
+          {ACCOUNT_TABS.map((tab) => (
+            <button
+              type="button"
+              key={tab.id}
+              className={activeTab === tab.id ? "is-active" : ""}
+              aria-current={activeTab === tab.id ? "page" : undefined}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label}
+            </button>
           ))}
-        </section>
-      )}
+        </nav>
+        <button type="button" className="shop-text-button" onClick={handleLogout}>
+          Log out
+        </button>
+      </header>
+      <section className="shop-account-shell">
+        <div className="shop-account-main">
+          <AccountTabPanel activeTab={activeTab} />
+        </div>
+        <AccountSidebar activeTab={activeTab} />
+      </section>
     </main>
+  );
+}
+
+function AccountTabPanel({ activeTab }: { activeTab: AccountTab }) {
+  if (activeTab === "personal") return <AccountPersonalPanel />;
+  if (activeTab === "orders") return <AccountOrdersPanel />;
+  if (activeTab === "preferences") return <AccountPreferencesPanel />;
+  if (activeTab === "cloud") return <AccountCloudPanel />;
+  return <AccountLicensesPanel />;
+}
+
+function AccountLicensesPanel() {
+  return (
+    <div className="shop-account-panel">
+      <div className="shop-account-title-row">
+        <h1>Licenses</h1>
+      </div>
+      <section className="shop-account-empty-state" aria-labelledby="account-empty-licenses">
+        <h2 id="account-empty-licenses">No licenses registered</h2>
+        <p>
+          This account does not have any saved licenses, serial numbers, authorizations, or product
+          downloads. Real licenses require backend account records, so this frontend demo does not
+          invent them.
+        </p>
+      </section>
+      <div className="shop-account-title-row shop-account-title-row--packs">
+        <h1>Packs</h1>
+      </div>
+      <section className="shop-account-empty-state" aria-labelledby="account-empty-packs">
+        <h2 id="account-empty-packs">No packs attached</h2>
+        <p>
+          Purchased and registered Packs would appear here after the account is connected to real
+          customer data.
+        </p>
+      </section>
+    </div>
+  );
+}
+
+function AccountPersonalPanel() {
+  const personalSections = [
+    { title: "Email Address", value: "Not added" },
+    { title: "Password", value: "Not configured in this demo" },
+    { title: "Billing Address", value: "Not added" },
+    { title: "Shipping Address", value: "Not added" },
+    { title: "Email Subscriptions", value: "No subscriptions selected" },
+    { title: "User Research", value: "No research preferences saved" },
+  ];
+
+  return (
+    <div className="shop-account-panel">
+      <div className="shop-account-personal-grid">
+        {personalSections.map((section) => (
+          <section className="shop-account-personal-block" key={section.title}>
+            <h1>{section.title}</h1>
+            <p>{section.value}</p>
+          </section>
+        ))}
+        <section className="shop-account-personal-block shop-account-personal-block--wide">
+          <h1>Product Analytics</h1>
+          <p>
+            Help us develop better products by sending small amounts of usage data to our servers
+            from your Ableton products. Your data will never be shared with third parties and you
+            can opt out at any time.
+          </p>
+          <p>No analytics preference saved</p>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function AccountOrdersPanel() {
+  const [orders] = useState(() => getAccountOrders());
+
+  return (
+    <div className="shop-account-panel">
+      <table className="shop-account-orders">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Reference</th>
+            <th>Products</th>
+            <th>Total / Invoice</th>
+          </tr>
+        </thead>
+        <tbody>
+          {orders.length === 0 ? (
+            <tr>
+              <td colSpan={4}>No orders yet</td>
+            </tr>
+          ) : (
+            orders.map((order) => (
+              <tr key={order.id}>
+                <td>{order.date}</td>
+                <td>{order.reference}</td>
+                <td>{order.products}</td>
+                <td>
+                  {formatLineAmount(
+                    order.total,
+                    order.hasRentToOwn ? LIVE_RENT_TO_OWN_OPTION : undefined
+                  )}
+                  {order.hasRentToOwn ? ` for ${LIVE_RENT_TO_OWN_MONTHS} months` : ""}
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function AccountPreferencesPanel() {
+  return (
+    <div className="shop-account-panel shop-account-copy-panel">
+      <h1>See more of what interests you</h1>
+      <p>
+        Tell us about the music-making topics you’re interested in and we’ll include more of that
+        content in the emails we send you. You’ll still always get the latest product news, special
+        offers, surveys and featured articles.
+      </p>
+      <p>
+        <strong>
+          You need to be subscribed to the Ableton newsletter to set your content preferences.
+        </strong>
+      </p>
+    </div>
+  );
+}
+
+function AccountCloudPanel() {
+  return (
+    <div className="shop-account-panel shop-account-copy-panel">
+      <h1>Manage your Ableton Cloud settings</h1>
+      <p>
+        Ableton Cloud lets you sync up to eight Move or Note Sets so you can access them across
+        other Cloud-connected hardware and applications.
+      </p>
+      <h2>Connected devices</h2>
+      <p>
+        If you want to deactivate Ableton Cloud on one of your connected devices, click Remove for
+        that device. Once deactivated, you will no longer be able to access synced Sets on the
+        device.
+      </p>
+      <p>
+        Get started by enabling Ableton Cloud for all of your Ableton hardware and applications.
+        Once enabled, you can manage your connected devices here.
+      </p>
+    </div>
+  );
+}
+
+function AccountSidebar({ activeTab }: { activeTab: AccountTab }) {
+  const helpLinks =
+    activeTab === "cloud"
+      ? [
+          "Browse the Note Knowledge Base ›",
+          "View the Note Manual ›",
+          "View the Cloud Server Status ›",
+          "Contact the Support Team ›",
+        ]
+      : ["Browse the help section ›", "Contact our support team ›", "My support requests ›"];
+
+  return (
+    <aside className="shop-account-side">
+      <section className="shop-account-side-card shop-account-side-card--green">
+        <h2>Need help?</h2>
+        {helpLinks.map((link) => (
+          <a href="https://www.ableton.com/en/help/" target="_blank" rel="noreferrer" key={link}>
+            {link}
+          </a>
+        ))}
+      </section>
+      {activeTab !== "cloud" && (
+        <>
+          <section className="shop-account-side-card shop-account-side-card--green">
+            <h2>Learn</h2>
+            <a href="https://www.ableton.com/en/live/learn-live/" target="_blank" rel="noreferrer">
+              Learn the fundamentals of music making ›
+            </a>
+            <a href="https://www.ableton.com/en/blog/" target="_blank" rel="noreferrer">
+              Get started with synthesizers ›
+            </a>
+          </section>
+          <section className="shop-account-side-card shop-account-side-card--grey">
+            <h2>Get involved</h2>
+            <a href="https://www.ableton.com/en/help/" target="_blank" rel="noreferrer">
+              Participate in user research ›
+            </a>
+          </section>
+        </>
+      )}
+    </aside>
   );
 }
 

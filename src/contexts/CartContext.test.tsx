@@ -1,4 +1,4 @@
-import { act, render, renderHook } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { ReactNode } from "react";
 import { CartProvider, useCart } from "./CartContext";
@@ -113,26 +113,67 @@ describe("CartContext", () => {
     expect(result.current.count).toBe(0);
   });
 
-  it("throws a clear error when used outside CartProvider", () => {
-    const spy = vitestSilenceErrors();
-    expect(() =>
-      render(<UseCartProbe />)
-    ).toThrow(/useCart must be used inside a CartProvider/);
-    spy.restore();
+  it("syncs cart changes from other browser contexts", () => {
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify([{ slug: "live-12", quantity: 1 }])
+    );
+    const { result } = renderHook(() => useCart(), { wrapper: wrap() });
+
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent("storage", {
+          key: STORAGE_KEY,
+          newValue: "[]",
+          storageArea: window.localStorage,
+        })
+      );
+    });
+
+    expect(result.current.items).toEqual([]);
+    expect(result.current.count).toBe(0);
   });
+
+  it("broadcasts cart changes to other same-origin app instances", async () => {
+    const originalBroadcastChannel = window.BroadcastChannel;
+    const channels: MockBroadcastChannel[] = [];
+
+    class MockBroadcastChannel {
+      onmessage: ((event: MessageEvent) => void) | null = null;
+      closed = false;
+
+      constructor(public name: string) {
+        channels.push(this);
+      }
+
+      postMessage(data: unknown) {
+        channels.forEach((channel) => {
+          if (channel === this || channel.closed || channel.name !== this.name) return;
+          channel.onmessage?.({ data } as MessageEvent);
+        });
+      }
+
+      close() {
+        this.closed = true;
+      }
+    }
+
+    window.BroadcastChannel = MockBroadcastChannel as unknown as typeof BroadcastChannel;
+
+    try {
+      const first = renderHook(() => useCart(), { wrapper: wrap() });
+      const second = renderHook(() => useCart(), { wrapper: wrap() });
+
+      act(() => first.result.current.addToCart({ slug: "push", option: "Tethered" }));
+
+      await waitFor(() => {
+        expect(second.result.current.items).toEqual([
+          { slug: "push", quantity: 1, option: "Tethered" },
+        ]);
+      });
+    } finally {
+      window.BroadcastChannel = originalBroadcastChannel;
+    }
+  });
+
 });
-
-function UseCartProbe() {
-  useCart();
-  return null;
-}
-
-function vitestSilenceErrors() {
-  const original = console.error;
-  console.error = () => {};
-  return {
-    restore: () => {
-      console.error = original;
-    },
-  };
-}

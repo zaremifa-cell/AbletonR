@@ -3,13 +3,16 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useId,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
 import { type AddToCartInput, type CartItem, getCartLines } from "@/lib/cart";
 
 const STORAGE_KEY = "ableton-shop-cart";
+const CHANNEL_NAME = "ableton-shop-cart-sync";
 
 type CartContextValue = {
   items: CartItem[];
@@ -24,8 +27,11 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 function readInitialItems(): CartItem[] {
   if (typeof window === "undefined") return [];
+  return readStoredItems(window.localStorage.getItem(STORAGE_KEY));
+}
+
+function readStoredItems(raw: string | null): CartItem[] {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
     return raw ? (JSON.parse(raw) as CartItem[]) : [];
   } catch {
     return [];
@@ -46,15 +52,59 @@ export function CartProvider({ children, initialItems }: CartProviderProps) {
   const [items, setItems] = useState<CartItem[]>(
     () => initialItems ?? readInitialItems()
   );
+  const instanceId = useId();
+  const serializedItemsRef = useRef(JSON.stringify(items));
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    const serialized = JSON.stringify(items);
+    serializedItemsRef.current = serialized;
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      window.localStorage.setItem(STORAGE_KEY, serialized);
     } catch {
       // localStorage may be unavailable (private mode, quota); ignore.
     }
-  }, [items]);
+
+    if ("BroadcastChannel" in window && initialItems === undefined) {
+      const channel = new BroadcastChannel(CHANNEL_NAME);
+      channel.postMessage({ source: instanceId, items: serialized });
+      channel.close();
+    }
+  }, [initialItems, instanceId, items]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || initialItems !== undefined) return;
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== STORAGE_KEY) return;
+      if ((event.newValue ?? "[]") === serializedItemsRef.current) return;
+      serializedItemsRef.current = event.newValue ?? "[]";
+      setItems(readStoredItems(event.newValue));
+    };
+
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, [initialItems]);
+
+  useEffect(() => {
+    if (
+      typeof window === "undefined" ||
+      initialItems !== undefined ||
+      !("BroadcastChannel" in window)
+    ) {
+      return;
+    }
+
+    const channel = new BroadcastChannel(CHANNEL_NAME);
+    channel.onmessage = (event: MessageEvent<{ source?: string; items?: string }>) => {
+      if (event.data?.source === instanceId || !event.data?.items) return;
+      if (event.data.items === serializedItemsRef.current) return;
+      serializedItemsRef.current = event.data.items;
+      setItems(readStoredItems(event.data.items));
+    };
+
+    return () => channel.close();
+  }, [initialItems, instanceId]);
 
   const addToCart = useCallback(({ slug, quantity = 1, option }: AddToCartInput) => {
     setItems((current) => {

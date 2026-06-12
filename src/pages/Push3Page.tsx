@@ -99,7 +99,7 @@ function Push3Page() {
 
     const timeoutId = window.setTimeout(() => {
       setPreviousProductImage(null);
-    }, 3000);
+    }, 1500);
 
     return () => window.clearTimeout(timeoutId);
   }, [previousProductImage]);
@@ -171,6 +171,7 @@ function Push3Page() {
 
         <div className="push-scroll" ref={scrollRef} onScroll={updateWorkSectionActive}>
           <header className="push-intro">
+            <div className="push-scroll-cue" aria-hidden="true" />
             <p className="push-kicker">Overview</p>
             <h1 id="push-title">Push 3</h1>
             <p className="push-statement">Turn Live into something you can touch with Push.</p>
@@ -186,7 +187,9 @@ function Push3Page() {
               {PUSH_ROLES.map((role) => {
                 const roleImage = "image" in role ? role.image : undefined;
                 const isRoleImageActive = Boolean(roleImage && productImage === roleImage);
-                const isRoleImageDisabled = Boolean(roleImage && isRoleImageLocked && !isRoleImageActive);
+                const isRoleImageDisabled = Boolean(
+                  roleImage && isRoleImageLocked && !isRoleImageActive
+                );
 
                 return (
                   <article
@@ -196,7 +199,9 @@ function Push3Page() {
                       roleImage ? "push-role--has-control" : "",
                       isRoleImageActive ? "is-active" : "",
                       isRoleImageDisabled ? "is-disabled" : "",
-                    ].filter(Boolean).join(" ")}
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
                   >
                     {roleImage && (
                       <button
@@ -204,9 +209,13 @@ function Push3Page() {
                           "push-role-toggle",
                           isRoleImageActive ? "is-active" : "",
                           isRoleImageDisabled ? "is-disabled" : "",
-                        ].filter(Boolean).join(" ")}
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
                         type="button"
-                        aria-label={isRoleImageActive ? "Reset Push image" : `Show ${role.title} image`}
+                        aria-label={
+                          isRoleImageActive ? "Reset Push image" : `Show ${role.title} image`
+                        }
                         disabled={isRoleImageDisabled}
                         onClick={() => {
                           changeProductImage(isRoleImageActive ? DEFAULT_PUSH_IMAGE : roleImage);
@@ -228,7 +237,10 @@ function Push3Page() {
             <h2 className="push-work-mobile-title">Two ways to work.</h2>
             <div className="push-work-media-grid push-work-media-grid--single">
               <article className="push-work-card push-work-card--mobile-standalone">
-                <div className="push-work-mobile-label push-work-mobile-label--standalone" aria-hidden="true">
+                <div
+                  className="push-work-mobile-label push-work-mobile-label--standalone"
+                  aria-hidden="true"
+                >
                   <span className="mono">{PUSH_CONFIGS[0].title}</span>
                   <div className="push-work-mobile-cue">→</div>
                 </div>
@@ -242,7 +254,10 @@ function Push3Page() {
                 </div>
               </article>
               <article className="push-work-card">
-                <div className="push-work-mobile-label push-work-mobile-label--tethered" aria-hidden="true">
+                <div
+                  className="push-work-mobile-label push-work-mobile-label--tethered"
+                  aria-hidden="true"
+                >
                   <div className="push-work-mobile-cue push-work-mobile-cue--back">←</div>
                   <span className="mono">{tetheredConfig.title}</span>
                 </div>

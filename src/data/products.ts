@@ -10,8 +10,17 @@ export type ShopProduct = {
   image: string;
   detail: string;
   meta: string[];
-  options?: string[];
+  options?: ShopProductOption[];
   requiresShipping?: boolean;
+};
+
+export type ShopProductOption = {
+  label: string;
+  price: number;
+  disabled?: boolean;
+  displayLabel?: string;
+  hidden?: boolean;
+  note?: string;
 };
 
 export const SHOP_PRODUCTS: ShopProduct[] = [
@@ -19,27 +28,36 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
     slug: "live-12",
     title: "Live 12",
     category: "Live",
-    description: "The central Ableton software instrument for composing, recording, and performing.",
-    price: 749,
-    priceLabel: "From $99",
+    description:
+      "The central Ableton software instrument for composing, recording, and performing.",
+    price: 79,
+    priceLabel: "From $79",
     image: "/live.webp",
     detail:
       "Live 12 is the software layer of the Ableton system: Session View, Arrangement View, instruments, effects, and a workflow built for non-linear music making.",
     meta: ["Download license", "macOS / Windows", "Intro, Standard, and Suite editions"],
-    options: ["Intro", "Standard", "Suite", "Education license"],
+    options: [
+      { label: "Intro", price: 79 },
+      { label: "Standard", price: 279 },
+      { label: "Suite", price: 599 },
+      { label: "Suite (Rent-to-own)", price: 24.96, hidden: true },
+    ],
   },
   {
     slug: "push",
     title: "Push",
     category: "Push",
     description: "A tactile hardware surface for playing, sequencing, and controlling Live.",
-    price: 999,
-    priceLabel: "From $999",
+    price: 949,
+    priceLabel: "From $949",
     image: "/push/Push3 product.webp",
     detail:
       "Push turns Live into an instrument you can touch, with expressive pads, screen-led control, and standalone options.",
     meta: ["Ships from the catalogue flow", "Standalone option available", "USB-C connection"],
-    options: ["Tethered", "Standalone"],
+    options: [
+      { label: "Tethered", price: 949 },
+      { label: "Standalone", price: 1899 },
+    ],
     requiresShipping: true,
   },
   {
@@ -47,13 +65,16 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
     title: "Move",
     category: "Move",
     description: "Portable standalone sketching for fast ideas away from the studio.",
-    price: 449,
-    priceLabel: "$449",
+    price: 499,
+    priceLabel: "From $499",
     image: "/move/hero-girl.webp",
     detail:
       "Move is a compact instrument for starting ideas anywhere, then sending sketches into Ableton Cloud and Live.",
     meta: ["Hardware shipping item", "Includes Live Intro", "Battery powered"],
-    options: ["Move", "Move with protective case"],
+    options: [
+      { label: "Move", price: 499 },
+      { label: "Move with protective case", price: 519 },
+    ],
     requiresShipping: true,
   },
   {
@@ -66,19 +87,20 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
     image: "/packs/packs_footage/Tape.webp",
     detail: "A compact archive of instruments, effects, and sound material for expanding Live.",
     meta: ["Download content", "Requires Live", "Some Packs require Max for Live"],
-    options: ["Studio bundle", "Max for Live bundle"],
+    options: [{ label: "Browse Packs", price: 0 }],
   },
   {
-    slug: "note",
-    title: "Note",
-    category: "Note",
-    description: "A mobile idea-capture app for drums, melodies, and samples.",
-    price: 0,
-    priceLabel: "Free app",
-    image: "/note.webp",
-    detail: "Note captures musical ideas on iPhone and iPad, then sends them into Ableton Cloud and Live.",
-    meta: ["iOS app", "Ableton Cloud workflow", "Mobile capture"],
-    options: ["Note app"],
+    slug: "max-for-live",
+    title: "Max for Live",
+    category: "Max for Live",
+    description: "Build, customize, and extend Live with devices made in Max.",
+    price: 149,
+    priceLabel: "$149",
+    image: "/shop/max-for-live.png",
+    detail:
+      "Max for Live extends Live with custom instruments, audio effects, MIDI tools, and experimental devices.",
+    meta: ["Download license", "Requires Live Standard or above", "Device-building environment"],
+    options: [{ label: "Max for Live", price: 149 }],
   },
   {
     slug: "merchandise",
@@ -90,8 +112,11 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
     image: "/artist-fl.webp",
     detail: "A restrained merchandise capsule for the Ableton product system.",
     meta: ["Selected studio objects", "Size selection", "Portfolio checkout flow"],
-    options: ["T-shirt", "Tote", "Poster"],
-    requiresShipping: true,
+    options: [
+      { label: "T-shirt", price: 49 },
+      { label: "Tote", price: 49 },
+      { label: "Poster", price: 49 },
+    ],
   },
 ];
 
@@ -106,7 +131,7 @@ export const PACK_SHOP_PRODUCTS: ShopProduct[] = PACKS.map((pack) => ({
   detail:
     "A focused sound and device collection for building sketches quickly, then shaping them into finished Live sets with a clear studio workflow.",
   meta: [pack.format, "Download content", "Requires Live 12 Standard and Max for Live or above"],
-  options: [pack.title],
+  options: [{ label: pack.title, price: pack.price }],
   requiresShipping: false,
 }));
 

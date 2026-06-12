@@ -355,7 +355,14 @@ function Live12Page() {
               The original loop-based workflow that lets you play, experiment and perform without limits.
             </p>
             <div className="lp-hero-actions">
-              <button className="btn">Watch in action <span className="arr">▷</span></button>
+              <a
+                className="btn"
+                href="https://www.youtube.com/watch?v=G64-yM0Bs78"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Watch in action <span className="arr">▷</span>
+              </a>
               <a href="#lp-dual" className="lp-text-link">
                 Explore Session View <span className="arr">→</span>
               </a>
@@ -555,7 +562,7 @@ function Live12Page() {
 
       <div className="lp-tail">
         {/* ══ TRIAL SCREEN ══ */}
-        <section className="lp-cta">
+        <section className="lp-cta" id="trial">
           <div className="lp-trial-media">
             <img src="/live/live 12 product image.png" alt="Ableton Live 12 Suite product box" loading="lazy" />
           </div>

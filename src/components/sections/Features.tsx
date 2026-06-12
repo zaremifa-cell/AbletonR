@@ -8,7 +8,13 @@ function Features() {
       <div className="features-body">
         <div className="features-inner">
           {featureItems.map((item) => (
-            <a key={item.title} href={item.href} className="feature-card">
+            <a
+              key={item.title}
+              href={item.href}
+              className="feature-card"
+              target="_blank"
+              rel="noreferrer"
+            >
               <div className="feature-icon">{item.icon}</div>
               <h3 className="feature-title">{item.title}</h3>
               <p className="feature-desc">{item.desc}</p>

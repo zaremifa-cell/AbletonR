@@ -13,6 +13,201 @@ Required fields:
 
 ## Sessions
 
+### 2026-06-12 12:50 EEST
+
+- Task summary: Fixed rent-to-own cart/review/order-history display so it shows monthly amount and 24-month term instead of `each`.
+- Files touched:
+  - `src/pages/ShopPage.tsx`
+  - `src/pages/ShopPage.test.tsx`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-12-1250-session.md`
+- Result: `Suite (Rent-to-own)` now displays as `€24.96 / mo.` with `for 24 months` in cart lines, checkout review, and new account order history records. The incorrect `€24.96 each` label was removed for rent-to-own items. Targeted Shop tests and build passed.
+- Unresolved issues: Existing locally stored orders from before this change may not have rent-to-own metadata. No browser/screenshot verification was performed.
+- Session log: `project-governance/sessions/2026-06-12-1250-session.md`
+
+### 2026-06-12 12:43 EEST
+
+- Task summary: Updated Live rent-to-own flow so only Suite is active and Intro/Standard are disabled.
+- Files touched:
+  - `src/data/products.ts`
+  - `src/lib/cart.ts`
+  - `src/pages/RentToOwnPage.tsx`
+  - `src/pages/ShopPage.tsx`
+  - `src/pages/ShopPage.test.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-12-1243-session.md`
+- Result: `/rent-to-own` CTAs now route to `/shop/product/live-12?plan=rent-to-own`. Live product detail detects that mode, shows Intro and Standard as disabled rent-to-own-unavailable options, selects Suite as the only active plan, and adds `Suite (Rent-to-own)` at `€24.96 / mo.` for 24 months. Currency formatting now preserves fractional monthly prices. Targeted tests, full test suite, and build passed.
+- Unresolved issues: No browser/screenshot verification was performed; checkout remains the project’s portfolio checkout flow rather than a full specialized rent-to-own checkout UI.
+- Session log: `project-governance/sessions/2026-06-12-1243-session.md`
+
+### 2026-06-12 12:35 EEST
+
+- Task summary: Hid Merchandise from the Shop product rail and replaced the Max for Live image with the user-provided screenshot.
+- Files touched:
+  - `public/shop/max-for-live.png`
+  - `src/data/products.ts`
+  - `src/pages/ShopPage.tsx`
+  - `src/pages/ShopPage.test.tsx`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-12-1235-session.md`
+- Result: Merchandise remains in product data but is filtered out of the visible Shop landing product rail. Max for Live now uses `/shop/max-for-live.png`, copied from the user-provided image. A Shop test covers that Merchandise is hidden and Max for Live remains visible. Targeted Shop tests and build passed.
+- Unresolved issues: No browser/screenshot verification was performed.
+- Session log: `project-governance/sessions/2026-06-12-1235-session.md`
+
+### 2026-06-12 10:17 EEST
+
+- Task summary: Corrected Shop product options, option pricing, and card Add-to-cart routing for Live, Push, Move, Packs, and Max for Live.
+- Files touched:
+  - `src/data/products.ts`
+  - `src/lib/cart.ts`
+  - `src/pages/ShopPage.tsx`
+  - `src/lib/cart.test.ts`
+  - `src/pages/ShopPage.test.tsx`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-12-1017-session.md`
+- Result: Live, Push, and Move now use priced option data; cart totals use the selected option price; Shop card `Add to cart` navigates to the product selection screen instead of adding unspecified products directly. Packs card actions now route to `/packs`, and `/shop/product/packs` redirects to `/packs`. Note was removed from Shop and replaced with Max for Live at 149. Targeted cart/Shop tests, full test suite, and build passed.
+- Unresolved issues: Currency formatting remains on the existing project formatter. No browser/screenshot verification was performed.
+- Session log: `project-governance/sessions/2026-06-12-1017-session.md`
+
+### 2026-06-12 10:06 EEST
+
+- Task summary: Pointed the Live hero `Watch in action` CTA to the requested YouTube video in a new tab.
+- Files touched:
+  - `src/pages/Live12Page.tsx`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-12-1006-session.md`
+- Result: The opening Live page `Watch in action` control is now an `a.btn` linking to `https://www.youtube.com/watch?v=G64-yM0Bs78` with `target="_blank"` and `rel="noreferrer"`, preserving the existing button styling while keeping the portfolio page open. Build passed.
+- Unresolved issues: No browser/screenshot verification was performed.
+- Session log: `project-governance/sessions/2026-06-12-1006-session.md`
+
+### 2026-06-12 10:02 EEST
+
+- Task summary: Smoothed the Move `Four tracks, fast decisions.` screenshot loop on desktop and mobile.
+- Files touched:
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-12-1002-session.md`
+- Result: The right-side Move screenshot loop now uses a calmer 56s cycle with 4s screenshot intervals, crossfade-style opacity keyframes, a composed initial negative delay, and opacity compositing hints. The change is scoped to `.move-screenshot-loop`, so it applies to both desktop and mobile versions of the third Move section without layout changes. Build passed.
+- Unresolved issues: No agent browser/screenshot verification was performed; final transition feel depends on user review.
+- Session log: `project-governance/sessions/2026-06-12-1002-session.md`
+
+### 2026-06-12 09:52 EEST
+
+- Task summary: Added a desktop Push page scroll-down chevron cue above `Overview` and corrected it to a precise single-angle V after screenshot feedback.
+- Files touched:
+  - `src/pages/Push3Page.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-12-0952-session.md`
+- Result: Push desktop intro now includes an aria-hidden `.push-scroll-cue` above the `Overview` kicker. The cue is a single rotated border-based inverted chevron with a pulse/downward nudge animation, reduced-motion handling, and responsive hiding in the existing tablet/mobile Push layout.
+- Unresolved issues: No agent browser/screenshot verification was performed; exact visual approval depends on user review in the running browser.
+- Session log: `project-governance/sessions/2026-06-12-0952-session.md`
+
+### 2026-06-12 09:44 EEST
+
+- Task summary: Updated homepage Discover More, artist/story, and shared footer links to open in new tabs, and disabled browser scroll restoration for routed navigation.
+- Files touched:
+  - `src/App.tsx`
+  - `src/components/sections/Features.tsx`
+  - `src/components/sections/Artists.tsx`
+  - `src/components/layout/Footer.tsx`
+  - `src/components/layout/Footer.test.tsx`
+  - `src/components/sections/HomeLinks.test.tsx`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-12-0944-session.md`
+- Result: Discover More cards, all homepage artist/story CTA links, and every shared footer anchor now use `target="_blank"` with `rel="noreferrer"`. `ScrollManager` now sets `history.scrollRestoration` to manual and reacts to `location.key` so browser back/forward route visits reset scroll to the top. Targeted link tests, full test suite, and build passed.
+- Unresolved issues: No browser/screenshot visual verification was performed.
+- Session log: `project-governance/sessions/2026-06-12-0944-session.md`
+
+### 2026-06-11 11:05 EEST
+
+- Task summary: Reworked Shop account login/register/logout and removed real personal account data.
+- Files touched:
+  - `src/pages/ShopPage.tsx`
+  - `src/styles.css`
+  - `src/pages/ShopPage.test.tsx`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-11-1105-session.md`
+- Result: Account access now uses a reference-inspired two-column Log in / Register screen with email/username login, password field, forgot-password link, account creation fields, country selector, and mailing-list opt-in. Logout resets login/register state and returns to a clean form. The opened account now uses Ableton-reference-style tabs for Licenses & Packs, Personal details, Order history, Content preferences, and Manage Cloud. Personal/transactional fields stay empty or protected, with no fake orders, invoices, serials, payment details, billing address, or saved user profile. Shop account tests, full test suite, build, and targeted lint passed.
+- Unresolved issues: Login remains frontend-only demo state, not backend authentication. No browser/screenshot visual verification was performed.
+- Session log: `project-governance/sessions/2026-06-11-1105-session.md`
+
+### 2026-06-11 10:15 EEST
+
+- Task summary: Added BroadcastChannel cart synchronization for same-origin app instances and documented the cross-device limitation.
+- Files touched:
+  - `src/contexts/CartContext.tsx`
+  - `src/contexts/CartContext.test.tsx`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-11-1015-session.md`
+- Result: CartProvider now combines localStorage persistence, `storage` event sync, and `BroadcastChannel` sync with serialized-state guards to avoid loops. Added a test proving same-origin app instances receive cart changes. Full tests pass cleanly with 24 tests; build passed.
+- Unresolved issues: True phone-to-desktop sync across separate devices remains impossible without a shared backend/realtime store.
+- Session log: `project-governance/sessions/2026-06-11-1015-session.md`
+
+### 2026-06-11 10:10 EEST
+
+- Task summary: Added professional Shop cart/checkout integration test coverage and cleaned noisy test output.
+- Files touched:
+  - `src/pages/ShopPage.test.tsx`
+  - `src/contexts/CartContext.test.tsx`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-11-1010-session.md`
+- Result: Added route-level Shop tests for digital vs physical shipping summaries, remove/clear cart actions, custom Push option selection, add-to-cart navigation, checkout validation, review, and order completion. Removed the noisy negative CartContext test that printed an intentional React error. `npm test` now passes cleanly with 5 test files and 23 tests; build passed.
+- Unresolved issues: No browser/e2e visual tests were added; this pass covers unit/component behavior in jsdom.
+- Session log: `project-governance/sessions/2026-06-11-1010-session.md`
+
+### 2026-06-11 09:54 EEST
+
+- Task summary: Corrected Shop cart shipping logic so only Push and Move add estimated delivery.
+- Files touched:
+  - `src/data/products.ts`
+  - `src/lib/cart.test.ts`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-11-0954-session.md`
+- Result: Removed the incorrect shipping flag from Merchandise. Push and Move remain the only current shop products with `requiresShipping: true`; Live, Packs, individual Packs, Note, and Merchandise are covered by tests as no-shipping products. Cart helper tests and build passed.
+- Unresolved issues: None.
+- Session log: `project-governance/sessions/2026-06-11-0954-session.md`
+
+### 2026-06-11 09:49 EEST
+
+- Task summary: Replaced the Shop product option native mobile picker with a square in-page dropdown.
+- Files touched:
+  - `src/pages/ShopPage.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-11-0949-session.md`
+- Result: The Push product option control now uses a custom square trigger and full-width square dropdown menu instead of the rounded native iOS Liquid Glass picker. Build passed.
+- Unresolved issues: No browser or screenshot visual verification was performed; final iOS visual approval depends on user review on the phone.
+- Session log: `project-governance/sessions/2026-06-11-0949-session.md`
+
+### 2026-06-11 09:45 EEST
+
+- Task summary: Fixed the mobile Shop cart product row layout and added cross-context cart sync for clear/remove behavior.
+- Files touched:
+  - `src/pages/ShopPage.tsx`
+  - `src/contexts/CartContext.tsx`
+  - `src/contexts/CartContext.test.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-11-0945-session.md`
+- Result: Mobile cart rows now group quantity, price, and remove into a compact action row below the product image/details instead of stacking loosely with empty space. `CartProvider` now listens for `storage` events so cart changes from another browser context update the current view. Cart context tests and build passed.
+- Unresolved issues: No browser or screenshot visual verification was performed; final phone layout approval depends on user review on the phone.
+- Session log: `project-governance/sessions/2026-06-11-0945-session.md`
+
+### 2026-06-11 09:37 EEST
+
+- Task summary: Fixed the mobile Move `Swipe right` cue behavior and routed the global `Try Live Free` CTA to the Live trial/download section.
+- Files touched:
+  - `src/components/layout/Nav.tsx`
+  - `src/pages/Live12Page.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-11-0937-session.md`
+- Result: The mobile Move swipe hint on the horizontal cloud/box screens keeps its typewriter/fade behavior, but the reset now happens while the label is invisible to avoid the visible blink/reset bug. Both header `Try Live Free` CTAs now route to `/live#trial`, and the Live trial/download section has `id="trial"` for the existing hash scroll manager. Build passed.
+- Unresolved issues: No browser or screenshot visual verification was performed; final mobile visual approval depends on user review on the phone.
+- Session log: `project-governance/sessions/2026-06-11-0937-session.md`
+
 ### 2026-06-10 10:50 EEST
 
 - Task summary: Fixed the mobile Move hero image sizing and centered the `Portable standalone instrument` screen.

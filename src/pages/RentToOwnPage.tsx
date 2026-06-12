@@ -74,7 +74,7 @@ function RentToOwnPage() {
           <span className="mono">LIVE 12 SUITE</span>
           <strong>24 monthly payments</strong>
           <p>New licenses use a 24-month plan. Eligible upgrades range from 8 to 21 months.</p>
-          <Link to="/shop/product/live-12" className="btn">
+          <Link to="/shop/product/live-12?plan=rent-to-own" className="btn">
             Start plan <span className="arr">&rarr;</span>
           </Link>
         </aside>
@@ -133,7 +133,7 @@ function RentToOwnPage() {
           <p className="rto-kicker">Create with the full version</p>
           <h2>Start with Suite. Finish by owning it.</h2>
         </div>
-        <Link to="/shop/product/live-12" className="btn">
+        <Link to="/shop/product/live-12?plan=rent-to-own" className="btn">
           Open Live 12 <span className="arr">&rarr;</span>
         </Link>
       </section>
