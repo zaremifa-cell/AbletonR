@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import type { PackSummary } from "@/data/packs";
 import Nav from "@/components/layout/Nav";
-import HomePage from "@/pages/HomePage";
-import Live12Page from "@/pages/Live12Page";
-import LiveExperimentPage from "@/pages/LiveExperimentPage";
-import MovePage from "@/pages/MovePage";
-import NotePage from "@/pages/NotePage";
-import PacksPage from "@/pages/PacksPage";
-import Push3Page from "@/pages/Push3Page";
-import RentToOwnPage from "@/pages/RentToOwnPage";
-import ShopPage from "@/pages/ShopPage";
+import HomePage from "@/views/HomePage";
+import Live12Page from "@/views/Live12Page";
+import LiveExperimentPage from "@/views/LiveExperimentPage";
+import MovePage from "@/views/MovePage";
+import NotePage from "@/views/NotePage";
+import PacksPage from "@/views/PacksPage";
+import Push3Page from "@/views/Push3Page";
+import RentToOwnPage from "@/views/RentToOwnPage";
+import ShopPage from "@/views/ShopPage";
 
 const scrollContainerSelectors = [
   ".home-page",
@@ -59,7 +59,7 @@ function ScrollManager() {
 }
 
 function App() {
-  const [activePack, setActivePack] = useState<PackSummary | null>(null);
+  const [activePack] = useState<PackSummary | null>(null);
 
   return (
     <>
@@ -73,8 +73,8 @@ function App() {
         <Route path="/move" element={<MovePage />} />
         <Route path="/note" element={<NotePage />} />
         <Route path="/rent-to-own" element={<RentToOwnPage />} />
-        <Route path="/packs" element={<PacksPage onPackHover={setActivePack} />} />
-        <Route path="/packs/:packSlug" element={<PacksPage onPackHover={setActivePack} />} />
+        <Route path="/packs" element={<PacksPage />} />
+        <Route path="/packs/:packSlug" element={<PacksPage />} />
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/shop/product/:productSlug" element={<ShopPage />} />
         <Route path="/shop/cart" element={<ShopPage />} />

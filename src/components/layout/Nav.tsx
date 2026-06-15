@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "@/lib/navigation";
 import { mobileNavItems } from "@/data/nav";
 import type { PackSummary } from "@/data/packs";
 import { useCart } from "@/contexts/CartContext";

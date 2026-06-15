@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import { Link } from "@/lib/navigation";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 const PLAN_STEPS = [

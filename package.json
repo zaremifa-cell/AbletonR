@@ -7,7 +7,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "next dev",
+    "dev:vite": "vite",
     "typecheck": "tsc -b",
     "lint": "eslint . --max-warnings=0",
     "test": "vitest run",
@@ -20,8 +21,9 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
     "hooks:install": "husky",
     "optimize:images": "node scripts/optimize-images.mjs",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "build": "next build",
+    "build:vite": "tsc -b && vite build",
+    "preview": "next start"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,md,css}": [
@@ -30,8 +32,10 @@
     ]
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "eslint-config-next": "^16.2.9",
+    "next": "^16.2.9",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "react-router-dom": "^7.14.2"
   },
   "devDependencies": {
@@ -43,8 +47,8 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^25.9.1",
-    "@types/react": "^18.3.8",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.2.0",
     "eslint": "^9.39.4",
     "eslint-plugin-jsx-a11y": "^6.10.2",

@@ -1,8 +1,9 @@
 module.exports = {
   ci: {
     collect: {
-      staticDistDir: "./dist",
-      url: ["/"],
+      startServerCommand: "npm run dev -- --hostname 127.0.0.1 --port 3000",
+      startServerReadyPattern: "Ready",
+      url: ["http://127.0.0.1:3000/"],
       numberOfRuns: 1,
     },
     assert: {

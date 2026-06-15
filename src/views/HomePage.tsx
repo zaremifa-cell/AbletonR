@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import Artists from "@/components/sections/Artists";
 import Features from "@/components/sections/Features";

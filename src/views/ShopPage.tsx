@@ -1,6 +1,8 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
-import { Link, Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "@/lib/navigation";
 import { SHOP_PRODUCTS, getShopProduct, type ShopProduct } from "@/data/products";
 import { formatCurrency, getCartLines, getEstimatedShipping, getSubtotal } from "@/lib/cart";
 import { useCart } from "@/contexts/CartContext";
@@ -167,22 +169,26 @@ const accountOrderStorageKey = (accountId: string) =>
   `${ACCOUNT_ORDER_STORAGE_PREFIX}${encodeURIComponent(accountId)}`;
 
 function setCurrentAccount(accountId: string) {
+  if (typeof window === "undefined") return;
   const normalized = normalizeAccountId(accountId);
   if (!normalized) return;
   window.localStorage.setItem(CURRENT_ACCOUNT_STORAGE_KEY, normalized);
 }
 
 function getCurrentAccount() {
+  if (typeof window === "undefined") return "";
   return window.localStorage.getItem(CURRENT_ACCOUNT_STORAGE_KEY) ?? "";
 }
 
 function clearCurrentAccount() {
+  if (typeof window === "undefined") return;
   window.localStorage.removeItem(CURRENT_ACCOUNT_STORAGE_KEY);
 }
 
 function getAccountOrders(accountId = getCurrentAccount()): LocalOrder[] {
   const normalized = normalizeAccountId(accountId);
   if (!normalized) return [];
+  if (typeof window === "undefined") return [];
 
   try {
     const parsed = JSON.parse(
@@ -195,6 +201,7 @@ function getAccountOrders(accountId = getCurrentAccount()): LocalOrder[] {
 }
 
 function saveOrderForCurrentAccount(order: LocalOrder) {
+  if (typeof window === "undefined") return false;
   const accountId = getCurrentAccount();
   if (!accountId) return false;
 
@@ -404,15 +411,12 @@ function ProductCard({ product, compact }: { product: ShopProduct; compact?: boo
   );
 }
 
-function ProductDetail() {
-  const { productSlug } = useParams();
-  const location = useLocation();
+function ProductDetail({ productSlug, plan }: { productSlug?: string; plan?: string }) {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const product = getShopProduct(productSlug ?? "") ?? SHOP_PRODUCTS[0];
   const isLiveRentToOwn =
-    product.slug === "live-12" &&
-    new URLSearchParams(location.search).get("plan") === "rent-to-own";
+    product.slug === "live-12" && plan === "rent-to-own";
   const availableOptions = isLiveRentToOwn
     ? [
         {
@@ -1379,14 +1383,21 @@ function AccountSidebar({ activeTab }: { activeTab: AccountTab }) {
   );
 }
 
-function ShopPage() {
-  const { productSlug } = useParams();
-  const { pathname } = useLocation();
+type ShopRoute = "shop" | "cart" | "checkout" | "account" | "product";
 
-  if (pathname.endsWith("/cart")) return <CartPage />;
-  if (pathname.endsWith("/checkout")) return <CheckoutPage />;
-  if (pathname.endsWith("/account")) return <AccountPage />;
-  if (productSlug) return <ProductDetail />;
+function ShopPage({
+  route = "shop",
+  productSlug,
+  plan,
+}: {
+  route?: ShopRoute;
+  productSlug?: string;
+  plan?: string;
+}) {
+  if (route === "cart") return <CartPage />;
+  if (route === "checkout") return <CheckoutPage />;
+  if (route === "account") return <AccountPage />;
+  if (route === "product") return <ProductDetail productSlug={productSlug} plan={plan} />;
   return <ShopLanding />;
 }
 

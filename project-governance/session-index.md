@@ -13,6 +13,31 @@ Required fields:
 
 ## Sessions
 
+### 2026-06-15 11:00 EEST
+
+- Task summary: Started the Next.js migration on `codex/next-app-router-migration` by adding an App Router shell, moving legacy route components to `src/views`, preserving the existing visual/client behavior, and adapting tests/configs.
+- Files touched:
+  - `package.json`
+  - `package-lock.json`
+  - `next.config.ts`
+  - `tsconfig.json`
+  - `eslint.config.js`
+  - `playwright.config.ts`
+  - `lighthouserc.cjs`
+  - `src/app/**`
+  - `src/lib/navigation.tsx`
+  - `src/components/layout/SiteShell.tsx`
+  - `src/contexts/PackPreviewContext.tsx`
+  - `src/views/**`
+  - `src/test/setup.ts`
+  - `README.md`
+  - `project-governance/technical-standards.md`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-15-1100-session.md`
+- Result: Next App Router build now succeeds, Packs detail routes use `generateStaticParams`, Shop/Packs routing no longer depends on React Router at runtime, and typecheck/lint/unit tests/Next build all pass.
+- Unresolved issues: No browser verification was run; `next/image`, Storybook adapter review, React Router cleanup, and removal of legacy Vite entry files remain follow-up migration tasks.
+- Session log: `project-governance/sessions/2026-06-15-1100-session.md`
+
 ### 2026-06-15 10:08 EEST
 
 - Task summary: Fixed mobile Packs detail pages so the purchase footer with price and `Buy Now` is reachable after opening a pack, then added touch-visible pack labels and a mobile cart link beside `Try Live Free`.

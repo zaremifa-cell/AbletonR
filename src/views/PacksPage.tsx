@@ -1,14 +1,18 @@
+"use client";
+
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { PACKS, packImage, type PackSummary } from "@/data/packs";
+import { Link } from "@/lib/navigation";
+import { PACKS, packImage } from "@/data/packs";
 import { useCart } from "@/contexts/CartContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { usePackPreview } from "@/contexts/PackPreviewContext";
 
 type PacksPageProps = {
-  onPackHover: (pack: PackSummary | null) => void;
+  packSlug?: string;
 };
 
-function PacksGrid({ onPackHover }: PacksPageProps) {
+function PacksGrid() {
+  const { setActivePack } = usePackPreview();
   usePageMeta({
     title: "Packs — Ableton Programme",
     description:
@@ -30,8 +34,8 @@ function PacksGrid({ onPackHover }: PacksPageProps) {
             key={pack.slug}
             to={`/packs/${pack.slug}`}
             className="pack-tile"
-            onFocus={() => onPackHover({ slug: pack.slug, title: pack.title })}
-            onPointerEnter={() => onPackHover({ slug: pack.slug, title: pack.title })}
+            onFocus={() => setActivePack({ slug: pack.slug, title: pack.title })}
+            onPointerEnter={() => setActivePack({ slug: pack.slug, title: pack.title })}
           >
             <img src={packImage(pack.file)} alt={pack.title} loading={index < 18 ? "eager" : "lazy"} />
             <span className="pack-tile-meta">
@@ -46,8 +50,7 @@ function PacksGrid({ onPackHover }: PacksPageProps) {
   );
 }
 
-function PackDetail() {
-  const { packSlug } = useParams();
+function PackDetail({ packSlug }: { packSlug?: string }) {
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
   const pack = PACKS.find((item) => item.slug === packSlug) ?? PACKS[0];
@@ -115,10 +118,9 @@ function PackDetail() {
   );
 }
 
-function PacksPage({ onPackHover }: PacksPageProps) {
-  const { packSlug } = useParams();
-  if (packSlug) return <PackDetail />;
-  return <PacksGrid onPackHover={onPackHover} />;
+function PacksPage({ packSlug }: PacksPageProps) {
+  if (packSlug) return <PackDetail packSlug={packSlug} />;
+  return <PacksGrid />;
 }
 
 export default PacksPage;

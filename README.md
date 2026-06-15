@@ -6,11 +6,12 @@ A portfolio redesign concept for Ableton, built as a precise product archive for
 
 ## Stack
 
-- React 18
+- Next.js 16 App Router
+- React 19
 - TypeScript
-- Vite
-- React Router
+- Route-level metadata and static generation
 - Custom CSS design system
+- Vitest, React Testing Library, Playwright, Lighthouse CI
 - ESLint, Prettier, Husky, lint-staged
 
 ## Project Focus
@@ -28,11 +29,19 @@ npm install
 npm run dev
 ```
 
+The active runtime is Next.js. Legacy Vite comparison commands remain available during migration:
+
+```bash
+npm run dev:vite
+npm run build:vite
+```
+
 ## Quality Checks
 
 ```bash
 npm run typecheck
 npm run lint
+npm run test
 npm run build
 ```
 

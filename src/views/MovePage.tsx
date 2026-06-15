@@ -1,3 +1,5 @@
+"use client";
+
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 const MOVE_FEATURES = [

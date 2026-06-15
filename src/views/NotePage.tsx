@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import Footer from "@/components/layout/Footer";
 import { usePageMeta } from "@/hooks/usePageMeta";
@@ -322,8 +324,16 @@ function NotePage() {
 
         <div
           className={`note-lab-grid${hasLabVideoStarted ? " has-started" : ""}`}
+          role="button"
+          tabIndex={0}
           onClick={() => {
             if (isLabVideoPlaying) handleLabVideoToggle();
+          }}
+          onKeyDown={(event) => {
+            if ((event.key === "Enter" || event.key === " ") && isLabVideoPlaying) {
+              event.preventDefault();
+              handleLabVideoToggle();
+            }
           }}
         >
           <div className="note-lab-panel note-lab-panel--mockups">

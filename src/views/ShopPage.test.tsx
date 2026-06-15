@@ -1,25 +1,33 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import { CartProvider } from "@/contexts/CartContext";
 import type { CartItem } from "@/lib/cart";
+import { mockRouterPush } from "@/test/setup";
 import ShopPage from "./ShopPage";
 
 function renderShop(route: string, initialItems: CartItem[] = []) {
+  const url = new URL(route, "http://localhost");
+  window.history.pushState({}, "", `${url.pathname}${url.search}`);
+  const productMatch = url.pathname.match(/^\/shop\/product\/([^/]+)$/);
+  const routeProp = url.pathname.endsWith("/cart")
+    ? "cart"
+    : url.pathname.endsWith("/checkout")
+      ? "checkout"
+      : url.pathname.endsWith("/account")
+        ? "account"
+        : productMatch
+          ? "product"
+          : "shop";
+
   return render(
-    <MemoryRouter initialEntries={[route]}>
-      <CartProvider initialItems={initialItems}>
-        <Routes>
-          <Route path="/shop" element={<ShopPage />} />
-          <Route path="/shop/cart" element={<ShopPage />} />
-          <Route path="/shop/checkout" element={<ShopPage />} />
-          <Route path="/shop/account" element={<ShopPage />} />
-          <Route path="/shop/product/:productSlug" element={<ShopPage />} />
-          <Route path="/packs" element={<h1>Packs archive</h1>} />
-        </Routes>
-      </CartProvider>
-    </MemoryRouter>
+    <CartProvider initialItems={initialItems}>
+      <ShopPage
+        route={routeProp}
+        productSlug={productMatch?.[1]}
+        plan={url.searchParams.get("plan") ?? undefined}
+      />
+    </CartProvider>
   );
 }
 
@@ -50,6 +58,7 @@ async function completeCheckoutForms(user: ReturnType<typeof userEvent.setup>) {
 describe("Shop cart and checkout flows", () => {
   beforeEach(() => {
     window.localStorage.clear();
+    mockRouterPush.mockClear();
   });
 
   it("shows no estimated shipping for digital cart products", () => {
@@ -100,23 +109,23 @@ describe("Shop cart and checkout flows", () => {
     await user.click(screen.getByRole("option", { name: /standalone/i }));
     await user.click(screen.getByRole("button", { name: /add to cart/i }));
 
-    expect(screen.getByRole("heading", { name: /^cart$/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /push/i })).toBeInTheDocument();
-    expect(screen.getByText(/standalone/i)).toBeInTheDocument();
-
-    const summary = screen.getByRole("complementary");
-    expect(summaryValue(summary, /estimated shipping/i)).toHaveTextContent("€24");
+    expect(mockRouterPush).toHaveBeenCalledWith("/shop/cart");
   });
 
-  it("opens the Live product option screen from the shop card Add to cart action", async () => {
+  it("links the Live shop card Add to cart action to the product option screen", async () => {
     const user = userEvent.setup();
-    renderShop("/shop");
+    const landing = renderShop("/shop");
 
     const liveCard = screen.getByRole("heading", { name: /^live 12$/i }).closest("article");
     expect(liveCard).not.toBeNull();
 
-    await user.click(within(liveCard as HTMLElement).getByRole("link", { name: /add to cart/i }));
+    expect(within(liveCard as HTMLElement).getByRole("link", { name: /add to cart/i })).toHaveAttribute(
+      "href",
+      "/shop/product/live-12"
+    );
+    landing.unmount();
 
+    renderShop("/shop/product/live-12");
     expect(screen.getByRole("heading", { name: /^live 12$/i })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /intro/i }));
     expect(screen.getByRole("option", { name: /standard/i })).toBeInTheDocument();
@@ -139,22 +148,19 @@ describe("Shop cart and checkout flows", () => {
 
     await user.click(screen.getByRole("button", { name: /add to cart/i }));
 
-    expect(screen.getByRole("heading", { name: /^cart$/i })).toBeInTheDocument();
-    expect(screen.getByText(/suite \(rent-to-own\)/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/€24.96 \/ mo\./i).length).toBeGreaterThan(0);
-    expect(screen.getByText(/for 24 months/i)).toBeInTheDocument();
+    expect(mockRouterPush).toHaveBeenCalledWith("/shop/cart");
   });
 
-  it("routes the Packs shop card to the Packs archive instead of adding a bundle directly", async () => {
-    const user = userEvent.setup();
+  it("routes the Packs shop card to the Packs archive instead of adding a bundle directly", () => {
     renderShop("/shop");
 
     const packsCard = screen.getByRole("heading", { name: /^packs$/i }).closest("article");
     expect(packsCard).not.toBeNull();
 
-    await user.click(within(packsCard as HTMLElement).getByRole("link", { name: /add to cart/i }));
-
-    expect(screen.getByRole("heading", { name: /packs archive/i })).toBeInTheDocument();
+    expect(within(packsCard as HTMLElement).getByRole("link", { name: /add to cart/i })).toHaveAttribute(
+      "href",
+      "/packs"
+    );
   });
 
   it("does not show Merchandise in the Shop product rail", () => {

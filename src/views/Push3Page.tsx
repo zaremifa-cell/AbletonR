@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@/lib/navigation";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 const DEFAULT_PUSH_IMAGE = "/push/Push3 product.webp";
