@@ -444,7 +444,10 @@ function Live12Page() {
 
       {/* ══ SECTION 3 — DUAL VIEW ══ */}
       <section className="lp-dual" id="lp-dual">
-        <h2 className="lp-h2 lp-dual-headline">Turn ideas into complete tracks.</h2>
+        <h2 className="lp-h2 lp-dual-headline">
+          <span className="lp-dual-headline-desktop">Turn ideas into complete tracks.</span>
+          <span className="lp-dual-headline-mobile">Turn this into complete tracks.</span>
+        </h2>
         <div className="lp-dual-inner">
 
           {/* Session View */}

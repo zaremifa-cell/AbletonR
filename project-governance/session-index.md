@@ -13,6 +13,41 @@ Required fields:
 
 ## Sessions
 
+### 2026-06-15 10:08 EEST
+
+- Task summary: Fixed mobile Packs detail pages so the purchase footer with price and `Buy Now` is reachable after opening a pack, then added touch-visible pack labels and a mobile cart link beside `Try Live Free`.
+- Files touched:
+  - `src/components/layout/Nav.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-15-1008-session.md`
+- Result: Mobile `.pack-detail` now uses natural page height and visible overflow, the split layout becomes a vertical flow, the media block gets a mobile height, and the copy/footer can scroll to the price and `Buy Now` area. Mobile Packs tiles now show pack number/title and `[ View Pack ]` without hover, and the cart count appears next to `Try Live Free` only in the Packs mobile nav. Build passed.
+- Unresolved issues: No browser/screenshot visual verification was performed; final visual approval depends on user review on the phone.
+- Session log: `project-governance/sessions/2026-06-15-1008-session.md`
+
+### 2026-06-15 09:34 EEST
+
+- Task summary: Fixed the mobile Note page footer end so the page finishes in black instead of exposing the light grey fallback background below the footer links.
+- Files touched:
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-15-0934-session.md`
+- Result: Note page `html`/`body` fallback background is now black, and the Note footer wrapper keeps black background through the mobile safe-area bottom. Build passed.
+- Unresolved issues: No browser/screenshot visual verification was performed; final visual approval depends on user review on the phone.
+- Session log: `project-governance/sessions/2026-06-15-0934-session.md`
+
+### 2026-06-15 08:53 EEST
+
+- Task summary: Changed the mobile Live hero sweep into a staged auto-scroll, refined mobile perform-card proportions, and adjusted mobile dual-view captions/headline.
+- Files touched:
+  - `src/pages/Live12Page.tsx`
+  - `src/styles.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-15-0853-session.md`
+- Result: Phone-sized Live hero now uses a two-panel 200vw stage with separate mobile-only keyframes for global yellow-line travel, the automatic stage jump, and the grey wipe over the visual panel. The mobile perform grid was shortened from 152px rows to 126px rows, with text allowed to use the remaining horizontal space. The dual-view mobile headline uses a smaller inset `Turn this into complete tracks.` line, sits slightly lower after screenshot feedback, and includes an animated scroll cue rail that preserves the approved left start while extending farther right with a `--lp-cta-yellow` moving segment. The dual-view captions are smaller and moved downward without further changing the graph size after user feedback. Desktop behavior remains unchanged. Build passed.
+- Unresolved issues: No browser/screenshot visual verification was performed; final visual approval depends on user review on the phone.
+- Session log: `project-governance/sessions/2026-06-15-0853-session.md`
+
 ### 2026-06-12 12:50 EEST
 
 - Task summary: Fixed rent-to-own cart/review/order-history display so it shows monthly amount and 24-month term instead of `each`.
