@@ -25,11 +25,6 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-function readInitialItems(): CartItem[] {
-  if (typeof window === "undefined") return [];
-  return readStoredItems(window.localStorage.getItem(STORAGE_KEY));
-}
-
 function readStoredItems(raw: string | null): CartItem[] {
   try {
     return raw ? (JSON.parse(raw) as CartItem[]) : [];
@@ -49,14 +44,22 @@ type CartProviderProps = {
 };
 
 export function CartProvider({ children, initialItems }: CartProviderProps) {
-  const [items, setItems] = useState<CartItem[]>(
-    () => initialItems ?? readInitialItems()
-  );
+  const [items, setItems] = useState<CartItem[]>(() => initialItems ?? []);
+  const [isStorageReady, setIsStorageReady] = useState(initialItems !== undefined);
   const instanceId = useId();
   const serializedItemsRef = useRef(JSON.stringify(items));
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || initialItems !== undefined) return;
+
+    const storedItems = readStoredItems(window.localStorage.getItem(STORAGE_KEY));
+    serializedItemsRef.current = JSON.stringify(storedItems);
+    setItems(storedItems);
+    setIsStorageReady(true);
+  }, [initialItems]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !isStorageReady) return;
     const serialized = JSON.stringify(items);
     serializedItemsRef.current = serialized;
     try {
@@ -70,10 +73,10 @@ export function CartProvider({ children, initialItems }: CartProviderProps) {
       channel.postMessage({ source: instanceId, items: serialized });
       channel.close();
     }
-  }, [initialItems, instanceId, items]);
+  }, [initialItems, instanceId, isStorageReady, items]);
 
   useEffect(() => {
-    if (typeof window === "undefined" || initialItems !== undefined) return;
+    if (typeof window === "undefined" || initialItems !== undefined || !isStorageReady) return;
 
     const handleStorage = (event: StorageEvent) => {
       if (event.key !== STORAGE_KEY) return;
@@ -84,12 +87,13 @@ export function CartProvider({ children, initialItems }: CartProviderProps) {
 
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
-  }, [initialItems]);
+  }, [initialItems, isStorageReady]);
 
   useEffect(() => {
     if (
       typeof window === "undefined" ||
       initialItems !== undefined ||
+      !isStorageReady ||
       !("BroadcastChannel" in window)
     ) {
       return;
@@ -104,7 +108,7 @@ export function CartProvider({ children, initialItems }: CartProviderProps) {
     };
 
     return () => channel.close();
-  }, [initialItems, instanceId]);
+  }, [initialItems, instanceId, isStorageReady]);
 
   const addToCart = useCallback(({ slug, quantity = 1, option }: AddToCartInput) => {
     setItems((current) => {

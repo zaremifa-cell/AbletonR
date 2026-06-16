@@ -6,7 +6,6 @@ import { PACK_SHOP_PRODUCTS, SHOP_PRODUCTS } from "../src/data/products";
 const coreRoutes = [
   "/",
   "/live",
-  "/live-experiment",
   "/push",
   "/move",
   "/note",

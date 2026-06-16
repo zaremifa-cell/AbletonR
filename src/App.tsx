@@ -4,7 +4,6 @@ import type { PackSummary } from "@/data/packs";
 import Nav from "@/components/layout/Nav";
 import HomePage from "@/views/HomePage";
 import Live12Page from "@/views/Live12Page";
-import LiveExperimentPage from "@/views/LiveExperimentPage";
 import MovePage from "@/views/MovePage";
 import NotePage from "@/views/NotePage";
 import PacksPage from "@/views/PacksPage";
@@ -15,7 +14,6 @@ import ShopPage from "@/views/ShopPage";
 const scrollContainerSelectors = [
   ".home-page",
   ".lp",
-  ".lexp-page",
   ".push-scroll",
   ".move-page",
   ".note-page",
@@ -68,7 +66,6 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/live" element={<Live12Page />} />
-        <Route path="/live-experiment" element={<LiveExperimentPage />} />
         <Route path="/push" element={<Push3Page />} />
         <Route path="/move" element={<MovePage />} />
         <Route path="/note" element={<NotePage />} />

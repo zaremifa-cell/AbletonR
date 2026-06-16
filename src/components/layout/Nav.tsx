@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "@/lib/navigation";
 import { mobileNavItems } from "@/data/nav";
 import type { PackSummary } from "@/data/packs";
@@ -15,6 +15,7 @@ function Nav({ activePack }: NavProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDetailsElement>(null);
   const isPacksGrid = location.pathname === "/packs";
 
   const scrollToLearn = () => {
@@ -43,6 +44,7 @@ function Nav({ activePack }: NavProps) {
   };
 
   useEffect(() => {
+    if (mobileMenuRef.current) mobileMenuRef.current.open = false;
     setIsMobileMenuOpen(false);
   }, [location.pathname, location.hash]);
 
@@ -50,7 +52,9 @@ function Nav({ activePack }: NavProps) {
     if (!isMobileMenuOpen) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsMobileMenuOpen(false);
+      if (event.key !== "Escape") return;
+      if (mobileMenuRef.current) mobileMenuRef.current.open = false;
+      setIsMobileMenuOpen(false);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -74,16 +78,35 @@ function Nav({ activePack }: NavProps) {
           <Link to="/" className="logo logo-home" aria-label="Ableton home">
             <img className="logo-mark" src="/ableton-logo.svg" alt="" aria-hidden="true" />
           </Link>
-          <button
-            className="logo mobile-logo-toggle"
-            type="button"
-            aria-label={isMobileMenuOpen ? "Close Ableton menu" : "Open Ableton menu"}
-            aria-controls="mobile-product-menu"
-            aria-expanded={isMobileMenuOpen}
-            onClick={() => setIsMobileMenuOpen((open) => !open)}
+          <details
+            ref={mobileMenuRef}
+            className="mobile-nav-disclosure"
+            onToggle={(event) => setIsMobileMenuOpen(event.currentTarget.open)}
           >
-            <img className="logo-mark" src="/ableton-logo.svg" alt="" aria-hidden="true" />
-          </button>
+            <summary
+              className="logo mobile-logo-toggle"
+              role="button"
+              aria-label={isMobileMenuOpen ? "Close Ableton menu" : "Open Ableton menu"}
+              aria-controls="mobile-product-menu"
+              aria-expanded={isMobileMenuOpen}
+            >
+              <img className="logo-mark" src="/ableton-logo.svg" alt="" aria-hidden="true" />
+            </summary>
+            <div
+              className={`mobile-product-menu${isMobileMenuOpen ? " is-open" : ""}`}
+              id="mobile-product-menu"
+              aria-hidden={!isMobileMenuOpen}
+            >
+              <nav className="mobile-product-menu-panel" aria-label="Mobile product navigation">
+                {mobileNavItems.map((item, index) => (
+                  <Link key={item.label} to={item.to} className="mobile-product-link">
+                    <span className="mobile-product-index">{String(index + 1).padStart(2, "0")}</span>
+                    <span>{item.label}</span>
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          </details>
           <nav className="nav-main" aria-label="Primary">
             <NavLink to="/live">Live</NavLink>
             <NavLink to="/push">Push</NavLink>
@@ -118,20 +141,6 @@ function Nav({ activePack }: NavProps) {
               </Link>
             </div>
           )}
-        </div>
-        <div
-          className={`mobile-product-menu${isMobileMenuOpen ? " is-open" : ""}`}
-          id="mobile-product-menu"
-          aria-hidden={!isMobileMenuOpen}
-        >
-          <nav className="mobile-product-menu-panel" aria-label="Mobile product navigation">
-            {mobileNavItems.map((item, index) => (
-              <Link key={item.label} to={item.to} className="mobile-product-link">
-                <span className="mobile-product-index">{String(index + 1).padStart(2, "0")}</span>
-                <span>{item.label}</span>
-              </Link>
-            ))}
-          </nav>
         </div>
       </header>
     </>

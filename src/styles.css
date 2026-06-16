@@ -64,7 +64,7 @@ body{
   background:var(--paper);
   color:var(--ink);
   font-family:
-    "Roboto Condensed", "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", Arial,
+    var(--font-roboto-condensed), "Roboto Condensed", "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", Arial,
     sans-serif;
   font-size:15px;
   line-height:1.5;
@@ -206,6 +206,15 @@ svg {
 }
 .mobile-logo-toggle {
   display: none;
+}
+.mobile-nav-disclosure{
+  display:none;
+}
+.mobile-logo-toggle::-webkit-details-marker{
+  display:none;
+}
+.mobile-logo-toggle::marker{
+  content:"";
 }
 .logo-mark{
   display:block;
@@ -6845,7 +6854,7 @@ body:has(.lp){
   }
   .lp-dual-headline{
     font-size:clamp(30px,3.8vw,60px);
-    font-weight:700;
+    font-weight:300;
     width:50%;
     transform: translateY(clamp(10px, 0.8vw, 16px));
   }
@@ -9466,10 +9475,14 @@ footer{
   .logo-home {
     display: none;
   }
+  .mobile-nav-disclosure{
+    display:block;
+    justify-self:start;
+  }
   .mobile-logo-toggle{
     display:inline-flex;
-    justify-self:start;
     cursor:pointer;
+    list-style:none;
   }
   .mobile-logo-toggle:focus-visible{
     outline:1px solid var(--ink);
@@ -9506,14 +9519,22 @@ footer{
     right:0;
     top:100%;
     display:block;
+    z-index:80;
     pointer-events:none;
     opacity:0;
-    transform:translateY(-8px);
+    transform:translateY(-14px) scaleY(0.985);
+    transform-origin:top;
     transition:
-      opacity 0.22s ease,
-      transform 0.22s ease;
+      opacity 0.32s cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change:opacity, transform;
   }
   .mobile-product-menu.is-open{
+    pointer-events:auto;
+    opacity:1;
+    transform:translateY(0);
+  }
+  .mobile-nav-disclosure[open] .mobile-product-menu{
     pointer-events:auto;
     opacity:1;
     transform:translateY(0);
@@ -9530,12 +9551,15 @@ footer{
     display:grid;
     grid-template-columns:44px 1fr;
     align-items:center;
-    min-height:58px;
+    min-height:56px;
     padding:0 var(--pad);
     border-bottom:1px solid var(--line);
     color:var(--ink);
-    font-size:24px;
-    font-weight:300;
+    font-family:
+      var(--font-roboto-condensed), "Roboto Condensed", "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", Arial,
+      sans-serif;
+    font-size:22px;
+    font-weight:400;
     line-height:1;
   }
   .mobile-product-link:last-child {
@@ -9648,7 +9672,14 @@ footer{
     padding: 0;
   }
   .hero-copy {
+    position: static;
+    left: auto;
+    bottom: auto;
+    z-index: auto;
+    width: auto;
+    min-height: 0;
     padding: var(--s5) var(--pad) var(--s4);
+    pointer-events: auto;
   }
   .session-visual{
     width:100vw;
