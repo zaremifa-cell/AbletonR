@@ -345,6 +345,49 @@ svg {
   transform: translateX(3px);
 }
 
+.back-to-top{
+  position:fixed;
+  right:0;
+  bottom:0;
+  z-index:70;
+  width:52px;
+  height:52px;
+  display:grid;
+  place-items:center;
+  background:rgba(79,85,78,0.92);
+  color:var(--paper);
+  border:1px solid rgba(243,242,234,0.32);
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(14px);
+  transition:
+    opacity 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background 0.18s ease,
+    color 0.18s ease;
+}
+.back-to-top.is-visible{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
+}
+.back-to-top span{
+  width:14px;
+  height:14px;
+  border-left:2px solid currentColor;
+  border-top:2px solid currentColor;
+  transform:translateY(4px) rotate(45deg);
+}
+.back-to-top:hover,
+.back-to-top:focus-visible{
+  background:var(--lemon);
+  color:var(--ink);
+}
+.back-to-top:focus-visible{
+  outline:1px solid var(--ink);
+  outline-offset:4px;
+}
+
 /* ============================================================
    02B — RENT-TO-OWN PAGE
    ============================================================ */
@@ -1620,7 +1663,7 @@ h1.hero-title .stop {
 .push-section--tight .push-role-toggle.is-disabled::before{
   background: rgba(217, 217, 217, 0.24);
 }
-.push-role--has-control h2{
+.push-role--has-control h3{
   font-size:clamp(30px,3vw,46px);
   line-height:1;
   margin:0;
@@ -1678,14 +1721,14 @@ h1.hero-title .stop {
 .push-section--tight .push-role-n{
   color: rgba(217, 217, 217, 0.54);
 }
-.push-role h2{
+.push-role h3{
   font-size:20px;
   font-weight:400;
   line-height:1.1;
   letter-spacing:0;
   margin-bottom:var(--s2);
 }
-.push-section--tight .push-role h2{
+.push-section--tight .push-role h3{
   color:var(--paper);
 }
 .push-role p,
@@ -1856,7 +1899,11 @@ h1.hero-title .stop {
   background:transparent;
 }
 .push-work-note .mono{
+  font-family:var(--font-roboto-condensed), "Roboto Condensed", "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", Arial, sans-serif;
   color:var(--paper);
+  font-size:13px;
+  font-weight:400;
+  letter-spacing:0;
   text-transform:uppercase;
 }
 .push-work-config-copy{
@@ -3402,7 +3449,7 @@ body:has(.note-page) .nav-end .btn:hover{
   margin:0;
   white-space:pre-wrap;
   font-family:
-    "Roboto Condensed", "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", Arial,
+    var(--font-roboto-condensed), "Roboto Condensed", "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", Arial,
     sans-serif;
   font-size: clamp(5.2px, 0.42vw, 7.4px);
   line-height:1.02;
@@ -3415,6 +3462,9 @@ body:has(.note-page) .nav-end .btn:hover{
 .note-book-copy > pre{
   height:100%;
   overflow:hidden;
+}
+.note-book-pre--mobile{
+  display:none;
 }
 .note-book-magnifier{
   position:absolute;
@@ -3786,7 +3836,7 @@ body:has(.note-page) .nav-end .btn:hover{
   gap:14px;
   color:#f4f3ef;
   font-family:
-    "Roboto Condensed", "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", Arial,
+    var(--font-roboto-condensed), "Roboto Condensed", "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", Arial,
     sans-serif;
   font-size:clamp(34px,3.1vw,58px);
   font-weight:400;
@@ -9327,23 +9377,35 @@ footer{
   .note-book-copy{
     --note-lens-width:248px;
     --note-lens-height:108px;
-    right:12px;
-    width:58vw;
-    max-height:78%;
-    touch-action:none;
+    left:50%;
+    right:auto;
+    z-index:5;
+    width:min(72vw, 310px);
+    height:70%;
+    max-height:70%;
+    transform:translate(-50%, -50%);
+    cursor:default;
+    touch-action:auto;
   }
   .note-book-copy pre{
-    font-size:clamp(4.2px,1vw,6px);
-    line-height:1;
+    font-size:clamp(5.8px,1.48vw,7.8px);
+    line-height:1.34;
+    overflow-wrap:normal;
+    word-break:normal;
+    hyphens:none;
   }
-  .note-book-copy:active::after,
-  .note-book-copy:focus-within::after,
-  .note-book-copy:active .note-book-magnifier,
-  .note-book-copy:focus-within .note-book-magnifier{
-    opacity:1;
+  .note-book-pre--desktop{
+    display:none;
+  }
+  .note-book-pre--mobile{
+    display:block;
+  }
+  .note-book-copy::after,
+  .note-book-magnifier{
+    display:none;
   }
   .note-book-magnifier pre{
-    width:58vw;
+    width:min(72vw, 310px);
   }
   .note-book-app-store{
     right:38px;
@@ -9359,11 +9421,29 @@ footer{
   }
   .note-lab-grid{
     grid-template-columns:1fr;
-    gap:var(--s5);
+    gap:56px;
     width:min(560px, 100%);
   }
   .note-lab-panel{
     aspect-ratio:1 / 1.08;
+  }
+  .note-lab-play{
+    top:50%;
+    left:50%;
+    gap:12px;
+    white-space:nowrap;
+    font-size:clamp(30px, 8.2vw, 36px);
+    letter-spacing:0;
+    transform:translate(-50%, -50%);
+  }
+  .note-lab-play span{
+    width:34px;
+    border-width:2px;
+  }
+  .note-lab-play span::before{
+    border-top-width:7px;
+    border-bottom-width:7px;
+    border-left-width:11px;
   }
   .note-lab-panel--video{
     padding:var(--s5);
@@ -9576,6 +9656,16 @@ footer{
   }
   .mobile-product-link:active .mobile-product-index {
     color: rgba(243, 242, 234, 0.72);
+  }
+  .back-to-top{
+    width:44px;
+    height:44px;
+    right:0;
+    bottom:calc(4px + env(safe-area-inset-bottom));
+  }
+  .back-to-top span{
+    width:12px;
+    height:12px;
   }
   .rto-hero-copy{
     min-height:0;
@@ -9804,9 +9894,9 @@ footer{
     top:52px;
     z-index:6;
     color:var(--paper);
-    font-size:clamp(30px, 9.4vw, 40px);
+    font-size:clamp(28px, 8.6vw, 36px);
     line-height: 0.96;
-    font-weight:500;
+    font-weight:400;
     letter-spacing:0;
     text-align:center;
     pointer-events:none;
@@ -9855,9 +9945,13 @@ footer{
   .push-work-mobile-label span{
     position:relative;
     z-index:2;
-    font-size:12px;
+    font-family:var(--font-roboto-condensed), "Roboto Condensed", "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", Arial, sans-serif;
+    font-size:13px;
+    font-weight:400;
     letter-spacing:0;
+    line-height:1;
     text-transform:uppercase;
+    white-space:nowrap;
   }
   .push-work-mobile-label .push-work-mobile-cue{
     display:inline-flex;
@@ -9904,6 +9998,13 @@ footer{
   .push-work-note{
     flex-direction:column;
     gap:6px;
+  }
+  .push-work-note .mono{
+    font-family:var(--font-roboto-condensed), "Roboto Condensed", "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", Arial, sans-serif;
+    font-size:13px;
+    font-weight:400;
+    letter-spacing:0;
+    text-transform:uppercase;
   }
   .push-port-panel{
     min-width:620px;

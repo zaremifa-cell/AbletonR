@@ -151,6 +151,8 @@ Download Ableton Note and start today.
 
 Download on the App Store.`;
 
+const NOTE_BOOK_MOBILE_COPY = NOTE_BOOK_COPY.replace(/\n{2,}/g, "\n");
+
 function NotePage() {
   const labFeatureVideoRef = useRef<HTMLVideoElement>(null);
   const labPhoneVideoRef = useRef<HTMLVideoElement>(null);
@@ -269,9 +271,11 @@ function NotePage() {
           aria-label="Ableton Note page copy"
           onPointerMove={handleBookCopyPointerMove}
         >
-          <pre>{NOTE_BOOK_COPY}</pre>
+          <pre className="note-book-pre note-book-pre--desktop">{NOTE_BOOK_COPY}</pre>
+          <pre className="note-book-pre note-book-pre--mobile">{NOTE_BOOK_MOBILE_COPY}</pre>
           <div className="note-book-magnifier" aria-hidden="true">
-            <pre>{NOTE_BOOK_COPY}</pre>
+            <pre className="note-book-pre note-book-pre--desktop">{NOTE_BOOK_COPY}</pre>
+            <pre className="note-book-pre note-book-pre--mobile">{NOTE_BOOK_MOBILE_COPY}</pre>
           </div>
         </div>
         <img

@@ -227,7 +227,7 @@ function Push3Page() {
                       </button>
                     )}
                     {!roleImage && <span className="push-role-n mono">{role.label}</span>}
-                    <h2>{role.title}</h2>
+                    <h3>{role.title}</h3>
                     <p>{role.text}</p>
                   </article>
                 );
@@ -243,7 +243,7 @@ function Push3Page() {
                   className="push-work-mobile-label push-work-mobile-label--standalone"
                   aria-hidden="true"
                 >
-                  <span className="mono">{PUSH_CONFIGS[0].title}</span>
+                  <span className="push-work-config-title">{PUSH_CONFIGS[0].title}</span>
                   <div className="push-work-mobile-cue">→</div>
                 </div>
                 <div className="push-work-image-wrap">
@@ -261,7 +261,7 @@ function Push3Page() {
                   aria-hidden="true"
                 >
                   <div className="push-work-mobile-cue push-work-mobile-cue--back">←</div>
-                  <span className="mono">{tetheredConfig.title}</span>
+                  <span className="push-work-config-title">{tetheredConfig.title}</span>
                 </div>
                 <div className="push-work-image-wrap">
                   <img src={tetheredConfig.image} alt={`${tetheredConfig.title} hardware`} />
