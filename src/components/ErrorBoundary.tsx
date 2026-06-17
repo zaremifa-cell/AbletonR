@@ -24,7 +24,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    if (import.meta.env.DEV) {
+    if (process.env.NODE_ENV === "development") {
       console.error("ErrorBoundary caught:", error, info.componentStack);
     }
   }

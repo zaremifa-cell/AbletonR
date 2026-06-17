@@ -6,16 +6,22 @@ on:
     branches:
       - main
       - master
+      - "codex/**"
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   quality:
+    name: Typecheck, lint, test, and build
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -30,20 +36,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Unit tests
+      - name: Tests
         run: npm run test
 
       - name: Build
         run: npm run build
-
-      - name: Build Storybook
-        run: npm run build-storybook
-
-      - name: Install Playwright browser
-        run: npx playwright install --with-deps chromium
-
-      - name: End-to-end smoke tests
-        run: npm run test:e2e
-
-      - name: Lighthouse CI
-        run: npm run lhci

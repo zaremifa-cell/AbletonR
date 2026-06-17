@@ -5,14 +5,16 @@
 - Next.js App Router
 - React
 - TypeScript
-- Plain CSS in `src/styles.css`
+- Plain CSS through the `src/styles.css` entrypoint and feature files in `src/styles/`
 - Static assets in `public/`
 
-## Legacy Stack During Migration
+## Migration Cleanup Status
 
-- Vite remains available through `dev:vite` and `build:vite` only for comparison during migration.
-- Legacy visual route components live in `src/views/`; do not move them back to `src/pages`, because Next.js will treat that folder as Pages Router.
-- `src/App.tsx` and `src/main.tsx` remain as temporary legacy entry files until visual parity is confirmed.
+- Next.js App Router is the only application runtime.
+- Vite remains only as test and Storybook tooling through Vitest and Storybook's Vite builder.
+- Large page areas should move into `src/features/<feature>` when they own multiple components, local state helpers, or route-specific behavior.
+- Simpler visual page compositions can remain in `src/views/`.
+- Do not create `src/pages/`, because Next.js will treat that folder as Pages Router.
 
 ## Framework Rules
 
@@ -24,7 +26,7 @@
 
 ## Component Rules
 
-- Keep page-specific visual logic in the relevant `src/views/*` component during migration.
+- Keep page-specific visual logic in the relevant `src/views/*` component or `src/features/<feature>` module.
 - Add route-level Next metadata in `src/app/**/page.tsx` files.
 - Use local React state for page-local interactions.
 - Do not introduce global state for local UI behavior.
@@ -37,6 +39,7 @@
 - Check shared selectors before changing colors or typography.
 - Do not change `:root` tokens unless the user asks for a global change.
 - Avoid accidental edits to global elements like `.promo`, `.nav`, or shared utility classes when changing page-specific styles.
+- Split CSS by feature/component and shared behavior. Do not create global desktop/mobile folder trees; keep responsive rules near the feature when it is safe, or in `shared-responsive.css` when preserving cascade order is the lower-risk option.
 
 ## Build And Verification
 
@@ -64,3 +67,4 @@ The following rules were replaced by the Next.js migration:
 - Vite as the primary runtime.
 - React Router as the primary runtime router.
 - Static meta management through `usePageMeta` as the only SEO layer.
+- Legacy `src/App.tsx`, `src/main.tsx`, `index.html`, and `vite.config.ts` runtime files.

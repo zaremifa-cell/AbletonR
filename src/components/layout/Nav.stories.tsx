@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { MemoryRouter } from "react-router-dom";
 import Nav from "./Nav";
 import { CartProvider } from "@/contexts/CartContext";
 
@@ -8,11 +7,9 @@ const meta = {
   component: Nav,
   decorators: [
     (Story, context) => (
-      <MemoryRouter>
-        <CartProvider initialItems={context.parameters.cartItems ?? []}>
-          <Story />
-        </CartProvider>
-      </MemoryRouter>
+      <CartProvider initialItems={context.parameters.cartItems ?? []}>
+        <Story />
+      </CartProvider>
     ),
   ],
   parameters: {

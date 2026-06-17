@@ -3,11 +3,20 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, Navigate, useNavigate } from "@/lib/navigation";
-import { SHOP_PRODUCTS, getShopProduct, type ShopProduct } from "@/data/products";
+import { SHOP_PRODUCTS, getShopProduct } from "@/data/products";
 import { formatCurrency, getCartLines, getEstimatedShipping, getSubtotal } from "@/lib/cart";
 import { useCart } from "@/contexts/CartContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import Footer from "@/components/layout/Footer";
+import ProductCard from "./ProductCard";
+import {
+  clearCurrentAccount,
+  getAccountOrders,
+  getCurrentAccount,
+  saveOrderForCurrentAccount,
+  setCurrentAccount,
+  type LocalOrder,
+} from "./accountStorage";
 
 type CheckoutData = {
   email: string;
@@ -31,29 +40,6 @@ type CheckoutField = {
   autoComplete?: string;
   inputMode?: "email" | "tel" | "text" | "numeric";
 };
-
-type LocalOrderLine = {
-  title: string;
-  option?: string;
-  quantity: number;
-  lineTotal: number;
-};
-
-type LocalOrder = {
-  id: string;
-  date: string;
-  reference: string;
-  products: string;
-  hasRentToOwn?: boolean;
-  subtotal: number;
-  estimated: number;
-  taxEstimate: number;
-  total: number;
-  lines: LocalOrderLine[];
-};
-
-const CURRENT_ACCOUNT_STORAGE_KEY = "ableton-shop-current-account";
-const ACCOUNT_ORDER_STORAGE_PREFIX = "ableton-shop-orders:";
 
 const EMPTY_CHECKOUT_DATA: CheckoutData = {
   email: "",
@@ -164,54 +150,6 @@ const normalizeDigits = (value: string) => value.replace(/\D/g, "");
 const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 const isFilled = (value: string) => value.trim().length > 0;
 const isValidExpiry = (value: string) => /^(0[1-9]|1[0-2])\/?([0-9]{2})$/.test(value.trim());
-const normalizeAccountId = (value: string) => value.trim().toLowerCase();
-const accountOrderStorageKey = (accountId: string) =>
-  `${ACCOUNT_ORDER_STORAGE_PREFIX}${encodeURIComponent(accountId)}`;
-
-function setCurrentAccount(accountId: string) {
-  if (typeof window === "undefined") return;
-  const normalized = normalizeAccountId(accountId);
-  if (!normalized) return;
-  window.localStorage.setItem(CURRENT_ACCOUNT_STORAGE_KEY, normalized);
-}
-
-function getCurrentAccount() {
-  if (typeof window === "undefined") return "";
-  return window.localStorage.getItem(CURRENT_ACCOUNT_STORAGE_KEY) ?? "";
-}
-
-function clearCurrentAccount() {
-  if (typeof window === "undefined") return;
-  window.localStorage.removeItem(CURRENT_ACCOUNT_STORAGE_KEY);
-}
-
-function getAccountOrders(accountId = getCurrentAccount()): LocalOrder[] {
-  const normalized = normalizeAccountId(accountId);
-  if (!normalized) return [];
-  if (typeof window === "undefined") return [];
-
-  try {
-    const parsed = JSON.parse(
-      window.localStorage.getItem(accountOrderStorageKey(normalized)) ?? "[]"
-    );
-    return Array.isArray(parsed) ? (parsed as LocalOrder[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveOrderForCurrentAccount(order: LocalOrder) {
-  if (typeof window === "undefined") return false;
-  const accountId = getCurrentAccount();
-  if (!accountId) return false;
-
-  const orders = getAccountOrders(accountId);
-  window.localStorage.setItem(
-    accountOrderStorageKey(accountId),
-    JSON.stringify([order, ...orders])
-  );
-  return true;
-}
 
 function createLocalOrder(
   lines: ReturnType<typeof getCartLines>,
@@ -373,41 +311,6 @@ function ShopLanding() {
 
       <Footer newsletterKicker="Offers & Tutorials" />
     </main>
-  );
-}
-
-function ProductCard({ product, compact }: { product: ShopProduct; compact?: boolean }) {
-  const isLiveArtwork = product.slug === "live-12";
-  const productPath = product.slug === "packs" ? "/packs" : `/shop/product/${product.slug}`;
-
-  return (
-    <article className={compact ? "shop-card shop-card--compact" : "shop-card"}>
-      <Link
-        to={productPath}
-        className={`shop-card-image${isLiveArtwork ? " shop-card-image--live" : ""}`}
-      >
-        {isLiveArtwork ? (
-          <span className="shop-card-live-label" aria-hidden="true">
-            Live
-          </span>
-        ) : (
-          <img src={product.image} alt={product.title} />
-        )}
-      </Link>
-      <div className="shop-card-body">
-        <span className="shop-card-category">{product.category}</span>
-        <h3>{product.title}</h3>
-        <p>{product.description}</p>
-      </div>
-      <div className="shop-card-actions">
-        <Link to={productPath} className="shop-text-link">
-          Learn more
-        </Link>
-        <Link to={productPath} className="shop-buy">
-          Add to cart
-        </Link>
-      </div>
-    </article>
   );
 }
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getShopProduct, SHOP_PRODUCTS } from "@/data/products";
-import ShopPage from "@/views/ShopPage";
+import ShopPage from "@/features/shop/ShopPage";
 
 type ProductRouteProps = {
   params: Promise<{ productSlug: string }>;
