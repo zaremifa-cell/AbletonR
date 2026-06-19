@@ -1,6 +1,15 @@
 .DS_Store
 .idea/
+.cursor/
 .claude/
+.agents/
+.lighthouseci/
 node_modules/
+.next/
 dist/
+coverage/
+playwright-report/
+storybook-static/
+test-results/
 *.tsbuildinfo
+.vercel

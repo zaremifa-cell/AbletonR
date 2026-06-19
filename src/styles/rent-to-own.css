@@ -1,0 +1,195 @@
+/* ============================================================
+   02B — RENT-TO-OWN PAGE
+   ============================================================ */
+.rto-page{
+  min-height:calc(100svh - var(--site-chrome-h));
+  background:var(--paper);
+  color:var(--ink);
+}
+.rto-hero{
+  display:grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.38fr);
+  align-items:stretch;
+  min-height:0;
+  border-bottom:1px solid var(--line-strong);
+}
+.rto-hero-copy{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  gap:var(--s3);
+  padding:var(--s5) var(--pad) var(--s4);
+}
+.rto-kicker{
+  color:var(--ink);
+  font-size:12px;
+  font-weight:300;
+  line-height:1;
+}
+.rto-hero h1{
+  max-width:13ch;
+  font-size:clamp(34px, 4.6vw, 68px);
+  font-weight:400;
+  letter-spacing:0;
+  line-height: 0.94;
+}
+.rto-hero-copy > p:last-child{
+  max-width:48ch;
+  font-size:15px;
+  font-weight:400;
+  line-height:1.55;
+}
+.rto-panel{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  gap:var(--s2);
+  padding:var(--s4) var(--s3);
+  border-left:1px solid var(--line-strong);
+  background:var(--ink);
+  color:var(--paper);
+}
+.rto-panel span{
+  color: rgba(217, 217, 217, 0.72);
+  font-size:12px;
+}
+.rto-panel strong{
+  max-width:16ch;
+  font-size:22px;
+  font-weight:400;
+  letter-spacing:0;
+  line-height:1.08;
+}
+.rto-panel p{
+  max-width:36ch;
+  color: rgba(217, 217, 217, 0.72);
+  font-size:13px;
+  line-height:1.55;
+}
+.rto-panel .btn{
+  width:max-content;
+  background:var(--paper);
+  color:var(--ink);
+}
+.rto-panel .btn:hover{
+  background:var(--lemon);
+  color:var(--ink);
+}
+.rto-section{
+  padding:var(--s4) var(--pad);
+  border-bottom:1px solid var(--line-strong);
+}
+.rto-section--grid{
+  display:grid;
+  grid-template-columns: minmax(260px, 0.38fr) minmax(0, 1fr);
+  gap:var(--s4);
+}
+.rto-section-head{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  gap:var(--s3);
+  min-height:0;
+}
+.rto-section-head h2,
+.rto-comparison h2,
+.rto-cta h2{
+  max-width:15ch;
+  font-size:clamp(28px, 3vw, 46px);
+  font-weight:400;
+  letter-spacing:0;
+  line-height:1;
+}
+.rto-step-grid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  border-top:1px solid var(--line-strong);
+  border-left:1px solid var(--line-strong);
+}
+.rto-step{
+  min-height:230px;
+  padding:var(--s3);
+  border-right:1px solid var(--line-strong);
+  border-bottom:1px solid var(--line-strong);
+}
+.rto-step span,
+.rto-compare-grid span{
+  display:block;
+  margin-bottom:var(--s3);
+  color:var(--mute);
+  font-size:12px;
+}
+.rto-step h3,
+.rto-faq h3{
+  max-width:13ch;
+  font-size:22px;
+  font-weight:400;
+  line-height:1.08;
+}
+.rto-step p,
+.rto-faq p,
+.rto-compare-grid p{
+  max-width:31ch;
+  margin-top:var(--s2);
+  font-size:13px;
+  font-weight:400;
+  line-height:1.52;
+}
+.rto-comparison{
+  display:grid;
+  grid-template-columns: minmax(260px, 0.38fr) minmax(0, 1fr);
+  gap:var(--s4);
+  padding:var(--s4) var(--pad);
+  border-bottom:1px solid var(--line-strong);
+  background:#cfcfca;
+}
+.rto-compare-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:210px;
+  border-left:1px solid var(--line-strong);
+}
+.rto-compare-grid article{
+  padding:var(--s3);
+  border-right:1px solid var(--line-strong);
+}
+.rto-faq{
+  display:grid;
+  grid-template-columns: minmax(260px, 0.38fr) minmax(0, 1fr);
+  gap:var(--s4);
+}
+.rto-faq-list{
+  border-top:1px solid var(--line-strong);
+}
+.rto-faq-list article{
+  display:grid;
+  grid-template-columns: minmax(180px, 0.42fr) minmax(0, 1fr);
+  gap:var(--s3);
+  padding:var(--s3) 0;
+  border-bottom:1px solid var(--line-strong);
+}
+.rto-faq-list p{
+  margin-top:0;
+}
+.rto-cta{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:var(--s4);
+  padding:var(--s4) var(--pad);
+  background:var(--ink);
+  color:var(--paper);
+}
+.rto-cta .rto-kicker{
+  margin-bottom:var(--s3);
+  color: rgba(217, 217, 217, 0.72);
+}
+.rto-cta .btn{
+  flex-shrink:0;
+  background:var(--paper);
+  color:var(--ink);
+}
+.rto-cta .btn:hover{
+  background:var(--lemon);
+  color:var(--ink);
+}

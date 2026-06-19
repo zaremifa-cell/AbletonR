@@ -1,0 +1,71 @@
+.error-boundary {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  background: #d9d9d9;
+  color: #111;
+  font-family: "Roboto Condensed", system-ui, sans-serif;
+}
+
+.error-boundary-inner {
+  max-width: 560px;
+  text-align: left;
+}
+
+.error-boundary-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 12px;
+  font-weight: 400;
+  margin: 0 0 16px;
+  color: #111;
+}
+
+.error-boundary-title {
+  font-size: clamp(40px, 6vw, 64px);
+  font-weight: 300;
+  line-height: 1;
+  margin: 0 0 24px;
+  letter-spacing: -0.01em;
+}
+
+.error-boundary-copy {
+  font-size: 16px;
+  line-height: 1.45;
+  margin: 0 0 32px;
+  max-width: 44ch;
+}
+
+.error-boundary-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.error-boundary-button {
+  appearance: none;
+  border: 1px solid #111;
+  background: #111;
+  color: #d9d9d9;
+  padding: 12px 22px;
+  font: inherit;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background-color 0.15s ease;
+}
+
+.error-boundary-button:hover,
+.error-boundary-button:focus-visible {
+  background: #000;
+}
+
+.error-boundary-link {
+  color: #111;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-size: 14px;
+}
