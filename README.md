@@ -1,26 +1,51 @@
 # Ableton Programme
 
-A portfolio case study that reimagines Ableton's product ecosystem as a precise, editorial product archive. The project combines Ableton's software and hardware language with a restrained Braun-inspired catalogue system, then implements it as a production Next.js application.
+A UX/UI design case study implemented directly in frontend code.
 
-> Personal portfolio project. Not affiliated with, endorsed by, or connected to Ableton AG.
+This project is an independent redesign concept for Ableton's product ecosystem. It is not affiliated with, endorsed by, or connected to Ableton AG.
 
 ## Live Demo
 
 [https://ableton-r.vercel.app](https://ableton-r.vercel.app)
 
-## Why This Project Exists
+## Overview
 
-This project exists to demonstrate product-minded frontend work beyond a single landing page. It covers routing, responsive layout systems, data-driven product pages, interaction design, cart flows, documentation, automated tests, and production deployment.
+Ableton Programme explores how Ableton's software, hardware, learning, content, and shop surfaces could be structured as one coherent digital product archive.
 
-The goal is to show how a visually ambitious portfolio piece can still be structured like a maintainable application.
+The project represents a designer working through frontend development. The design decisions are not handed off from a mockup into a separate build phase; they are defined and refined directly in the interface: structure, user experience, navigation logic, visual hierarchy, spacing, rhythm, interaction states, and product feel.
 
-## Case Study Framing
+This is not about replacing design work with code for efficiency. It is about using frontend implementation as a more direct design medium. The goal is to reach the final interface more organically and precisely, with the visual, UX, and technical decisions shaping each other in the same working process.
 
-**Problem:** Ableton has a broad product ecosystem: Live, Push, Move, Note, Packs, education, shop, account, and purchase flows. A portfolio redesign needs to communicate that ecosystem without becoming a static Dribbble-style mockup.
+The result is a multi-page portfolio piece with product pages for Live, Push, Move, Note, Packs, shop flows, account-style screens, cart interactions, and responsive mobile patterns.
 
-**Approach:** Build a multi-page product archive with strong typographic hierarchy, strict responsive behavior, feature-scoped code, and real navigation/cart interactions.
+## Design Framing
 
-**Outcome:** A deployed Next.js application with product pages, dynamic pack routes, shop/product detail flows, account-style surfaces, mobile-specific interactions, unit tests, E2E coverage, and CI quality gates.
+**Problem:** Ableton has a broad product ecosystem. A redesign concept needs to communicate that range without flattening it into a single landing page or a purely decorative visual treatment.
+
+**Approach:** Treat the site as a product catalogue and interaction system. Build clear routes, strong typographic structure, deliberate spacing, mobile-specific navigation, and page-level identities while keeping the overall language restrained and usable.
+
+**Outcome:** A coded case study that lets the design be experienced directly: users can move through products, inspect details, open packs, interact with shop/account surfaces, and test the responsive behavior in a real browser.
+
+## Role
+
+This project reflects the way I work: as a designer who builds frontend interfaces.
+
+My background and judgement are rooted in design: interface structure, user experience, visual hierarchy, proportion, spacing, rhythm, and product feel. I use frontend development to implement that judgement directly in the final medium, whether the output is a website, browser-based product, application interface, or interactive prototype.
+
+I am positioning this work for frontend roles where design judgement matters: roles that need someone who can make product and interface decisions, then build them with care instead of only passing them across a handoff.
+
+That means the work is not split into separate designer-to-developer stages. The same person defining the aesthetic direction, interaction logic, and user flow is also shaping the rendered product in code.
+
+In this project, that includes:
+
+- defining the information architecture and page relationships
+- shaping user journeys across product, shop, and account surfaces
+- designing layout systems, spacing, rhythm, and visual hierarchy
+- setting interaction behavior for navigation, product previews, cart states, and mobile menus
+- translating the design directly into production-style frontend code
+- keeping implementation decisions accountable to the intended product experience
+
+The code exists in service of the design, but the implementation is also part of the design process. It is not presented as a generic frontend demo, and it is not only a static UI concept.
 
 ## Screenshots
 
@@ -32,27 +57,27 @@ The goal is to show how a visually ambitious portfolio piece can still be struct
 | --- | --- |
 | ![Shop mobile screenshot](public/readme/shop-mobile.png) | ![Note mobile screenshot](public/readme/note-mobile.png) |
 
-## Stack
+## Implementation
+
+The case study is implemented as a Next.js application so the design can be evaluated as an actual interface, not only as presentation images. The implementation demonstrates frontend capability, but the emphasis is on how code is used to express and test design decisions in the product itself.
 
 - Next.js 16 App Router
 - React 19
 - TypeScript
 - Route-level metadata and static generation
 - Feature-scoped CSS design system
+- Data-driven products and packs
+- Local/demo cart and account flows
 - Vitest and React Testing Library
-- Playwright E2E/audit tests
-- Storybook for isolated layout components
-- ESLint, Prettier, Husky, lint-staged
+- Playwright smoke/audit coverage
 - Vercel deployment
 
-## Architecture
-
-The application uses Next.js App Router as the production runtime. Route files stay small and focus on metadata, static params, and passing route props into page implementations.
+## Project Structure
 
 ```txt
 src/app/        App Router routes, metadata, static params, server wrappers
 src/features/   Larger feature modules with local UI and state helpers
-src/views/      Simpler page-level visual compositions
+src/views/      Page-level visual compositions
 src/components/ Shared layout, section, icon, and utility components
 src/contexts/   Client-side cart and preview state
 src/data/       Product, pack, footer, and navigation data
@@ -64,21 +89,7 @@ e2e/            Playwright coverage for key routes and user flows
 
 More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
-## Testing Strategy
-
-The project uses layered checks rather than relying on one broad test type:
-
-- **Type safety:** `npm run typecheck`
-- **Code quality:** `npm run lint`
-- **Unit and interaction tests:** `npm run test`
-- **Production build validation:** `npm run build`
-- **E2E route smoke tests:** `npm run test:e2e`
-- **UI audit script:** `npm run audit:ui`
-- **Storybook build:** `npm run build-storybook`
-
-GitHub Actions runs the core quality gate on every push and pull request: install, typecheck, lint, tests, and build.
-
-## Getting Started
+## Running Locally
 
 ```bash
 npm install
@@ -96,21 +107,14 @@ npm run test
 npm run build
 ```
 
-## Production Preview
-
-```bash
-npm run build
-npm run preview
-```
-
 ## Known Limitations
 
-- This is a portfolio concept, not an official Ableton product or commerce system.
+- This is a personal portfolio concept, not an official Ableton product or commerce system.
 - Checkout and account flows are local/demo flows; they do not process real payments or authenticate against a backend.
-- Some visual assets are static portfolio assets rather than CMS-managed content.
+- Some content and assets are static portfolio materials rather than CMS-managed production content.
+- The project prioritizes communicating design direction and interface behavior over recreating a complete commercial platform.
 - `next/image` migration is a future optimization pass; the current build preserves custom image behavior with standard image elements.
-- Storybook still uses the Vite builder as tooling, while the application runtime is Next.js.
 
 ## Repository Notes
 
-Internal design decisions and session notes live under `project-governance/`. They document the design and migration process, but the public-facing technical overview is [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Internal design decisions and session notes live under `project-governance/`. They document design direction, implementation decisions, and review context for the project.

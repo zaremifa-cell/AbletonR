@@ -13,6 +13,31 @@ Required fields:
 
 ## Sessions
 
+### 2026-06-19 10:25 EEST
+
+- Task summary: Rewrote the README to present Ableton Programme as a designer-led UX/UI case study implemented in code rather than a generic frontend project.
+- Files touched:
+  - `README.md`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-19-1025-session.md`
+- Result: The README now emphasizes interface structure, UX, interaction logic, visual hierarchy, spacing, rhythm, product feel, and direct design-to-code implementation. It also clarifies the author's positioning for frontend roles where design judgement matters, while keeping the independent/unofficial Ableton disclaimer clear.
+- Unresolved issues: None.
+- Session log: `project-governance/sessions/2026-06-19-1025-session.md`
+
+### 2026-06-19 09:05 EEST
+
+- Task summary: Restyled the mobile navigation dropdown away from the cream/beige surface toward the project's light grey chrome, with dark line-separated rows and dark graphite active/touch states.
+- Files touched:
+  - `src/components/layout/Nav.tsx`
+  - `src/views/NotePage.tsx`
+  - `src/styles/note.css`
+  - `src/styles/shared-responsive.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-19-0905-session.md`
+- Result: Mobile nav links now expose an active state, the dropdown panel uses `var(--paper)`, row separators use darker graphite hairlines, active/touch states use `var(--ink)`, and hash-link matching no longer allows `Home` and `Learn` to both be active on the home route. The Note App Store badge now links to the official Ableton Note App Store page. Nav unit test, typecheck, and lint passed.
+- Unresolved issues: No browser, mobile, or screenshot visual verification was performed because the user explicitly asked not to run those checks; final visual approval depends on user review.
+- Session log: `project-governance/sessions/2026-06-19-0905-session.md`
+
 ### 2026-06-15 11:00 EEST
 
 - Task summary: Started the Next.js migration on `codex/next-app-router-migration` by adding an App Router shell, moving legacy route components to `src/views`, preserving the existing visual/client behavior, and adapting tests/configs.

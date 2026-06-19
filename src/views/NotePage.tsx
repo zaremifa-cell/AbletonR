@@ -278,11 +278,18 @@ function NotePage() {
             <pre className="note-book-pre note-book-pre--mobile">{NOTE_BOOK_MOBILE_COPY}</pre>
           </div>
         </div>
-        <img
+        <a
           className="note-book-app-store"
-          src="/note/app-store-badge.png"
-          alt="Download on the App Store"
-        />
+          href="https://apps.apple.com/us/app/ableton-note/id1633243177"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Download Ableton Note on the App Store"
+        >
+          <img
+            src="/note/app-store-badge.png"
+            alt="Download on the App Store"
+          />
+        </a>
       </section>
 
       <section className="note-lab-section" aria-label="Ableton Note video study">

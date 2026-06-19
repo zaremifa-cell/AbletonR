@@ -871,6 +871,11 @@ body:has(.note-page) .nav-end .btn:hover{
   clip-path:inset(2px round 8px);
   pointer-events:auto;
 }
+.note-book-app-store img{
+  display:block;
+  width:100%;
+  height:auto;
+}
 .note-lab-section{
   position:relative;
   display:grid;

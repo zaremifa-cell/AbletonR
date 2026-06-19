@@ -1,4 +1,5 @@
 export const mobileNavItems = [
+  { label: "Home", to: "/" },
   { label: "Live", to: "/live" },
   { label: "Push", to: "/push" },
   { label: "Move", to: "/move" },

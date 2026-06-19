@@ -2275,11 +2275,9 @@ footer{
   }
   .mobile-product-menu-panel{
     margin:0;
-    border-top:1px solid var(--line-strong);
-    border-bottom:1px solid var(--line-strong);
-    background:rgba(243,242,234,0.98);
-    box-shadow:0 22px 60px rgba(22,22,20,0.18);
-    backdrop-filter:blur(18px);
+    border-top:1px solid rgba(79,85,78,0.58);
+    border-bottom:1px solid rgba(79,85,78,0.58);
+    background:var(--paper);
   }
   .mobile-product-link{
     display:grid;
@@ -2287,7 +2285,7 @@ footer{
     align-items:center;
     min-height:56px;
     padding:0 var(--pad);
-    border-bottom:1px solid var(--line);
+    border-bottom:1px solid rgba(79,85,78,0.42);
     color:var(--ink);
     font-family:
       var(--font-roboto-condensed), "Roboto Condensed", "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", Arial,
@@ -2300,16 +2298,23 @@ footer{
     border-bottom: 0;
   }
   .mobile-product-index{
-    color:var(--mute);
+    color:rgba(79,85,78,0.68);
     font-size:10px;
     letter-spacing:0;
+  }
+  .mobile-product-link.is-active{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .mobile-product-link.is-active .mobile-product-index{
+    color:rgba(243,242,234,0.72);
   }
   .mobile-product-link:active{
     background:var(--ink);
     color:var(--paper);
   }
   .mobile-product-link:active .mobile-product-index {
-    color: rgba(243, 242, 234, 0.72);
+    color:rgba(243,242,234,0.72);
   }
   .back-to-top{
     width:44px;

@@ -17,6 +17,12 @@ function Nav({ activePack }: NavProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDetailsElement>(null);
   const isPacksGrid = location.pathname === "/packs";
+  const isMobileItemActive = (to: string) => {
+    const [path, hash] = to.split("#");
+    if (hash) return location.pathname === path && location.hash === `#${hash}`;
+    if (path === "/") return location.pathname === "/" && !location.hash;
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
+  };
 
   const scrollToLearn = () => {
     window.requestAnimationFrame(() => {
@@ -98,12 +104,21 @@ function Nav({ activePack }: NavProps) {
               aria-hidden={!isMobileMenuOpen}
             >
               <nav className="mobile-product-menu-panel" aria-label="Mobile product navigation">
-                {mobileNavItems.map((item, index) => (
-                  <Link key={item.label} to={item.to} className="mobile-product-link">
-                    <span className="mobile-product-index">{String(index + 1).padStart(2, "0")}</span>
-                    <span>{item.label}</span>
-                  </Link>
-                ))}
+                {mobileNavItems.map((item, index) => {
+                  const isActive = isMobileItemActive(item.to);
+
+                  return (
+                    <Link
+                      key={item.label}
+                      to={item.to}
+                      className={`mobile-product-link${isActive ? " is-active" : ""}`}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      <span className="mobile-product-index">{String(index + 1).padStart(2, "0")}</span>
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
               </nav>
             </div>
           </details>

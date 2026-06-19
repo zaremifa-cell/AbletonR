@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import Nav from "./Nav";
@@ -20,7 +20,25 @@ describe("Nav", () => {
       "aria-expanded",
       "true"
     );
+    const mobileMenu = screen.getByRole("navigation", { name: /mobile product navigation/i });
+    expect(within(mobileMenu).getByRole("link", { name: /home/i })).toHaveAttribute("href", "/");
     expect(screen.getAllByRole("link", { name: /packs/i })).toHaveLength(2);
+  });
+
+  it("does not mark Home and Learn active at the same time on the home route", async () => {
+    window.history.pushState({}, "", "/");
+    const user = userEvent.setup();
+    render(
+      <CartProvider>
+        <Nav activePack={null} />
+      </CartProvider>
+    );
+
+    await user.click(screen.getByRole("button", { name: /open ableton menu/i }));
+
+    const mobileMenu = screen.getByRole("navigation", { name: /mobile product navigation/i });
+    expect(within(mobileMenu).getByRole("link", { name: /home/i })).toHaveAttribute("aria-current", "page");
+    expect(within(mobileMenu).getByRole("link", { name: /learn/i })).not.toHaveAttribute("aria-current");
   });
 
   it("reflects the cart count from CartProvider", () => {
