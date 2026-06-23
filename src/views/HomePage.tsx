@@ -38,15 +38,22 @@ function HomePage() {
     const media = window.matchMedia("(max-width: 720px)");
     const windows = Array.from(root.querySelectorAll<HTMLElement>(".quartet .window"));
     let ticking = false;
+    let activeWindow: HTMLElement | null = null;
 
-    const clearActive = () => windows.forEach((win) => win.classList.remove("is-active"));
+    const setActive = (nextActive: HTMLElement | null) => {
+      if (nextActive === activeWindow) return;
+      activeWindow = nextActive;
+      windows.forEach((win) => win.classList.toggle("is-active", win === activeWindow));
+    };
+
+    const clearActive = () => setActive(null);
 
     const updateActive = () => {
       ticking = false;
       if (!media.matches) { clearActive(); return; }
 
       const viewportCenter = window.innerHeight / 2;
-      const threshold = window.innerHeight * 0.22;
+      const threshold = window.innerHeight * 0.36;
       let active: HTMLElement | null = null;
       let activeDistance = Infinity;
 
@@ -59,7 +66,7 @@ function HomePage() {
       });
 
       if (activeDistance > threshold) active = null;
-      windows.forEach((win) => win.classList.toggle("is-active", win === active));
+      setActive(active);
     };
 
     const requestUpdate = () => {

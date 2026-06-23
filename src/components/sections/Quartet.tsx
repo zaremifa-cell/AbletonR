@@ -31,6 +31,14 @@ function Quartet() {
         <div className="window-image">
           <img src="/live.webp" alt="Live 12 Session View" loading="eager" />
         </div>
+        <div className="window-intro" aria-hidden="true">
+          <span className="window-intro-title">Live</span>
+          <span className="window-intro-copy">
+            DAW to unleash your musical
+            <br />
+            potential
+          </span>
+        </div>
         <div className="window-foot">
           <div className="window-name">
             Live 12
@@ -42,7 +50,7 @@ function Quartet() {
               in one document.
             </p>
             <span className="window-go">
-              View catalogue <span className="arr">&rarr;</span>
+              Learn more <span className="arr">&rarr;</span>
             </span>
           </div>
         </div>
@@ -67,6 +75,14 @@ function Quartet() {
         <div className="window-image">
           <img src="/push image.png" alt="Push 3 standalone pad controller" loading="lazy" />
         </div>
+        <div className="window-intro" aria-hidden="true">
+          <span className="window-intro-title">Push</span>
+          <span className="window-intro-copy">
+            An expressive standalone
+            <br />
+            instrument
+          </span>
+        </div>
         <div className="window-foot">
           <div className="window-name">
             Push
@@ -78,7 +94,7 @@ function Quartet() {
               pressure-sensitive pads.
             </p>
             <span className="window-go">
-              View catalogue <span className="arr">&rarr;</span>
+              Learn more <span className="arr">&rarr;</span>
             </span>
           </div>
         </div>
@@ -103,6 +119,14 @@ function Quartet() {
         <div className="window-image">
           <img src="/move.webp" alt="Move portable groovebox" loading="lazy" />
         </div>
+        <div className="window-intro" aria-hidden="true">
+          <span className="window-intro-title">Move</span>
+          <span className="window-intro-copy">
+            A portable groovebox for fast
+            <br />
+            decisions
+          </span>
+        </div>
         <div className="window-foot">
           <div className="window-name">
             Move
@@ -113,7 +137,7 @@ function Quartet() {
               A pocket-sized sketchpad. Capture a loop anywhere; finish it in Live when you&apos;re home.
             </p>
             <span className="window-go">
-              View catalogue <span className="arr">&rarr;</span>
+              Learn more <span className="arr">&rarr;</span>
             </span>
           </div>
         </div>
@@ -138,6 +162,14 @@ function Quartet() {
         <div className="window-image">
           <img src="/note image.png" alt="Note app on iPhone" loading="lazy" />
         </div>
+        <div className="window-intro" aria-hidden="true">
+          <span className="window-intro-title">Note</span>
+          <span className="window-intro-copy">
+            A playable iOS app for
+            <br />
+            forming musical ideas
+          </span>
+        </div>
         <div className="window-foot">
           <div className="window-name">
             Note
@@ -148,7 +180,7 @@ function Quartet() {
               Drums, melodies and samples on iPhone and iPad. Sync to Live via Ableton Cloud.
             </p>
             <span className="window-go">
-              View catalogue <span className="arr">&rarr;</span>
+              Learn more <span className="arr">&rarr;</span>
             </span>
           </div>
         </div>

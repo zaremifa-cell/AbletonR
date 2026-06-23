@@ -154,11 +154,15 @@ Download on the App Store.`;
 const NOTE_BOOK_MOBILE_COPY = NOTE_BOOK_COPY.replace(/\n{2,}/g, "\n");
 
 function NotePage() {
+  const notePageRef = useRef<HTMLElement>(null);
   const labFeatureVideoRef = useRef<HTMLVideoElement>(null);
   const labPhoneVideoRef = useRef<HTMLVideoElement>(null);
   const [bookPixelCount, setBookPixelCount] = useState(0);
+  const [isBookTitleHidden, setIsBookTitleHidden] = useState(false);
   const [isLabVideoPlaying, setIsLabVideoPlaying] = useState(false);
   const [hasLabVideoStarted, setHasLabVideoStarted] = useState(false);
+
+  const isMobileNoteViewport = useCallback(() => window.matchMedia("(max-width: 1100px)").matches, []);
 
   const handleBookCopyPointerMove = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     const target = event.currentTarget;
@@ -176,6 +180,16 @@ function NotePage() {
     target.style.setProperty("--note-lens-copy-x", `${lensWidth / 2 - x * scale}px`);
     target.style.setProperty("--note-lens-copy-y", `${lensHeight / 2 - y * scale}px`);
   }, []);
+
+  const handleBookSectionPointer = useCallback(() => {
+    if (isMobileNoteViewport()) setIsBookTitleHidden(true);
+  }, [isMobileNoteViewport]);
+
+  const handleNotePageScroll = useCallback(() => {
+    const root = notePageRef.current;
+    if (!root || !isMobileNoteViewport()) return;
+    if (root.scrollTop > 24) setIsBookTitleHidden(false);
+  }, [isMobileNoteViewport]);
 
   const handleLabVideoToggle = useCallback(() => {
     const videos = [labFeatureVideoRef.current, labPhoneVideoRef.current].filter(
@@ -229,6 +243,28 @@ function NotePage() {
     return () => window.clearTimeout(timeoutId);
   }, []);
 
+  useEffect(() => {
+    const isVisualViewportZoomed = () => (window.visualViewport?.scale ?? 1) > 1.01;
+
+    const restoreBookTitleOnScroll = () => {
+      if (isMobileNoteViewport() && !isVisualViewportZoomed()) setIsBookTitleHidden(false);
+    };
+
+    const hideBookTitleOnZoom = () => {
+      if (isMobileNoteViewport() && isVisualViewportZoomed()) setIsBookTitleHidden(true);
+    };
+
+    window.addEventListener("scroll", restoreBookTitleOnScroll, { passive: true });
+    window.visualViewport?.addEventListener("resize", hideBookTitleOnZoom);
+    window.visualViewport?.addEventListener("scroll", hideBookTitleOnZoom);
+
+    return () => {
+      window.removeEventListener("scroll", restoreBookTitleOnScroll);
+      window.visualViewport?.removeEventListener("resize", hideBookTitleOnZoom);
+      window.visualViewport?.removeEventListener("scroll", hideBookTitleOnZoom);
+    };
+  }, [isMobileNoteViewport]);
+
   usePageMeta({
     title: "Note — Ableton Programme",
     description:
@@ -247,14 +283,22 @@ function NotePage() {
   });
 
   return (
-    <main className="note-page">
-      <section className="note-book-section" aria-label="Ableton Note as a book">
+    <main className="note-page" ref={notePageRef} onScroll={handleNotePageScroll}>
+      <section
+        className="note-book-section"
+        aria-label="Ableton Note as a book"
+        onPointerEnter={handleBookSectionPointer}
+        onPointerDown={handleBookSectionPointer}
+      >
         <img
           className="note-book-image"
           src="/note/Note as Book.png"
           alt="Ableton Note presented as a book"
         />
-        <div className="note-book-pixel-title" aria-hidden="true">
+        <div
+          className={`note-book-pixel-title${isBookTitleHidden ? " is-hidden" : ""}`}
+          aria-hidden="true"
+        >
           {noteBookPixels.map((pixel, index) => (
             <span
               key={`note-book-pixel-${pixel.row}-${pixel.column}`}

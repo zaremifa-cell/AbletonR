@@ -13,6 +13,19 @@ Required fields:
 
 ## Sessions
 
+### 2026-06-22 09:55 EEST
+
+- Task summary: Changed only the initial/default appearance of the four home hero product windows to solid covers with larger centered Live, Push, Move, and Note text while preserving existing hover and mobile active behavior.
+- Files touched:
+  - `src/components/sections/Quartet.tsx`
+  - `src/styles/home.css`
+  - `src/styles/shared-responsive.css`
+  - `project-governance/session-index.md`
+  - `project-governance/sessions/2026-06-22-0955-session.md`
+- Result: Added a separate `.window-intro` layer over each product window. Existing image reveal, window order, sizing, fade timing, mobile active logic, and footer/CTA content remain underneath. Desktop hides the left hero copy only in the large-screen breakpoint; mobile keeps it.
+- Unresolved issues: No agent browser or screenshot visual verification was performed; final visual approval depends on user review.
+- Session log: `project-governance/sessions/2026-06-22-0955-session.md`
+
 ### 2026-06-19 10:25 EEST
 
 - Task summary: Rewrote the README to present Ableton Programme as a designer-led UX/UI case study implemented in code rather than a generic frontend project.
