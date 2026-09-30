@@ -91,12 +91,18 @@ More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 ## Running Locally
 
+Use **Node.js 22** and npm (matching the repository CI). No API keys or backend credentials are needed for the local/demo flows.
+
 ```bash
-npm install
+git clone https://github.com/zaremifa-cell/AbletonR.git
+cd AbletonR
+npm ci
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+For a production build, run `npm run build`, then `npm run preview`.
 
 ## Quality Checks
 
@@ -106,6 +112,21 @@ npm run lint
 npm run test
 npm run build
 ```
+
+The GitHub Actions workflow runs these four checks on pushes to `main` and pull requests. Browser tests are separate:
+
+```bash
+# Uses installed Google Chrome for desktop and mobile emulation
+npm run test:e2e
+
+# Alternative: install and use Playwright Chromium
+npx playwright install chromium
+CI=1 npm run test:e2e
+```
+
+Playwright starts its own development server on port 3000. Mobile coverage uses browser emulation, not a physical device.
+
+For a quick manual review, open Live, Push, Move, Note and Packs; add an item to the demo cart; then review the shop and navigation at a mobile viewport. Account and checkout screens are demonstrations—do not use real credentials or payment details.
 
 ## Known Limitations
 
@@ -118,3 +139,7 @@ npm run build
 ## Repository Notes
 
 Internal design decisions and session notes live under `project-governance/`. They document design direction, implementation decisions, and review context for the project.
+
+## Credits and licensing
+
+Created by Zlatko Anastasov. Repository code is provided under the [MIT license](LICENSE). Ableton names, logos and third-party product imagery remain the property of their respective owners; the code license does not grant rights to those materials.
