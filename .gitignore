@@ -13,3 +13,9 @@ storybook-static/
 test-results/
 *.tsbuildinfo
 .vercel
+
+# Local configuration and diagnostic output
+.env*
+!.env.example
+*.log
+.codex/
